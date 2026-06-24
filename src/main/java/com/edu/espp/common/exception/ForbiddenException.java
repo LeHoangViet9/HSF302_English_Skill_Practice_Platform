@@ -1,0 +1,9 @@
+package com.edu.espp.common.exception;
+
+import org.springframework.http.HttpStatus;
+
+public class ForbiddenException extends AppException{
+    public ForbiddenException(String message, HttpStatus status) {
+        super(message, status);
+    }
+}
