@@ -3,7 +3,7 @@ package com.edu.espp.common.exception;
 import org.springframework.http.HttpStatus;
 
 public class ResourceNotFoundException extends AppException{
-    public ResourceNotFoundException(String message, HttpStatus status) {
-        super(message, status);
+    public ResourceNotFoundException(String message) {
+        super(message,HttpStatus.NOT_FOUND);
     }
 }
