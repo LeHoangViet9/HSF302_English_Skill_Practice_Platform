@@ -5,7 +5,7 @@ import com.edu.espp.common.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authorization.AuthorizationDeniedException;
+//import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -63,19 +63,19 @@ public class GlobalExceptionHandle {
         return ResponseEntity.badRequest().body(response);
     }
 
-    @ExceptionHandler(AuthorizationDeniedException.class)
-    public ResponseEntity<ApiResponse<Object>> handleAuthorizationDenied(AuthorizationDeniedException exception) {
-        log.warn("Authorization denied: {}", exception.getMessage());
-
-        ApiResponse<Object> response = ApiResponse.builder()
-                .success(false)
-                .message("Bạn không có quyền truy cập chức năng này")
-                .error(exception.getMessage())
-                .status(HttpStatus.FORBIDDEN)
-                .build();
-
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-    }
+//    @ExceptionHandler(AuthorizationDeniedException.class)
+//    public ResponseEntity<ApiResponse<Object>> handleAuthorizationDenied(AuthorizationDeniedException exception) {
+//        log.warn("Authorization denied: {}", exception.getMessage());
+//
+//        ApiResponse<Object> response = ApiResponse.builder()
+//                .success(false)
+//                .message("Bạn không có quyền truy cập chức năng này")
+//                .error(exception.getMessage())
+//                .status(HttpStatus.FORBIDDEN)
+//                .build();
+//
+//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+//    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Object>> handleException(Exception exception) {
