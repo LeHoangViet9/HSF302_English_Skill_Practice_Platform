@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{fragments/layout :: head('Lịch sử học tập')}"></head>
+<body class="apple-theme">
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/layout :: sidebar(${user}, 'histories')}"></div>
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper" class="d-flex flex-column">
+        <!-- Navbar -->
+        <nav th:replace="~{fragments/layout :: navbar(${user})}"></nav>
+
+        <div class="container-fluid my-4 flex-grow-1 px-4">
+            <!-- Header Lịch sử -->
+            <div class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+                <div class="mb-3 mb-sm-0">
+                    <h2 class="apple-display-lg mb-1"><i class="fa-solid fa-clock-rotate-left me-2"></i> Lịch Sử Học Tập</h2>
+                    <p class="apple-lead" style="font-size: 17px; color: var(--apple-body-muted); margin-bottom: 0;">Xem lại danh sách kết quả các bài kiểm tra đã thực hiện</p>
+                </div>
+                <a href="/exams" class="btn-apple btn-apple-secondary-pill" style="font-size: 14px; padding: 10px 20px;">
+                    <i class="fa-solid fa-chevron-left me-1"></i> Về kho đề
+                </a>
+            </div>
+
+            <!-- Bảng Lịch sử -->
+            <div class="apple-store-utility-card p-4">
+                <div class="table-responsive">
+                    <table class="table table-borderless align-middle m-0" style="font-family: var(--apple-font-text);">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--apple-hairline); color: var(--apple-ink-muted-80);">
+                                <th class="pb-3" style="font-size: 14px; font-weight: 600;">STT</th>
+                                <th class="pb-3" style="font-size: 14px; font-weight: 600;">Tên đề thi</th>
+                                <th class="pb-3" style="font-size: 14px; font-weight: 600;">Ngày làm bài</th>
+                                <th class="pb-3 text-center" style="font-size: 14px; font-weight: 600;">Kết quả</th>
+                                <th class="pb-3 text-center" style="font-size: 14px; font-weight: 600;">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${histories == null || histories.isEmpty()}">
+                                <td colspan="5" class="text-center py-5 text-muted">Bạn chưa thực hiện bài thi nào.</td>
+                            </tr>
+                            <tr th:each="history, iterStat : ${histories}" style="border-bottom: 1px solid var(--apple-divider-soft);">
+                                <td class="py-3 fw-bold" th:text="${iterStat.count}">1</td>
+                                <td class="py-3">
+                                    <div class="fw-semibold text-dark" th:text="${history.examTitle}">Đề số 1</div>
+                                </td>
+                                <td class="py-3" th:text="${history.testedAt != null ? history.testedAt : 'Hôm nay'}">25/06/2026</td>
+                                <td class="py-3 text-center fw-bold text-success" style="font-size: 17px;" th:text="${history.score + ' đ'}">8.0 đ</td>
+                                <td class="py-3 text-center">
+                                    <span class="badge bg-success-subtle text-success px-3 py-2" style="border-radius: var(--apple-rounded-pill);">Hoàn thành</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
