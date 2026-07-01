@@ -1,4 +1,4 @@
-package com.edu.espp.common.dto;
+package com.edu.espp.dto;
 
 import com.edu.espp.entity.Lesson;
 import com.edu.espp.entity.SRSReview;

@@ -1,6 +1,6 @@
 package com.edu.espp.controller;
 
-import com.edu.espp.common.dto.StudentDashboardData;
+import com.edu.espp.dto.StudentDashboardData;
 import com.edu.espp.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

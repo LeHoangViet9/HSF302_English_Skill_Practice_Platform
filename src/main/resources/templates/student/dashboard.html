@@ -26,11 +26,6 @@
         </div>
 
         <div class="card">
-            <h3>Ôn tập</h3>
-            <a class="btn" th:href="@{/student/flashcards/review}">Bắt đầu ôn</a>
-        </div>
-
-        <div class="card">
             <h3>Bài đã học</h3>
             <div class="number" th:text="${dashboard.learnedLessons}">0</div>
         </div>
@@ -44,6 +39,9 @@
             <h3>Tỷ lệ hoàn thành</h3>
             <div class="number" th:text="${#numbers.formatDecimal(dashboard.completionPercent, 1, 1) + '%'}">0%</div>
         </div>
+    </div>
+    <div>
+        <a class="btn" th:href="@{/student/flashcards/review}">Bắt đầu ôn</a>
     </div>
 
     <h2 class="section-title">Bài học gợi ý</h2>

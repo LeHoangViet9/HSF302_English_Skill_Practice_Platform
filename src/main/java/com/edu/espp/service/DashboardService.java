@@ -3,7 +3,7 @@ package com.edu.espp.service;
 import com.edu.espp.Repository.LearningProgressRepository;
 import com.edu.espp.Repository.LessonRepository;
 import com.edu.espp.Repository.SRSReviewRepository;
-import com.edu.espp.common.dto.StudentDashboardData;
+import com.edu.espp.dto.StudentDashboardData;
 import com.edu.espp.entity.LearningProgress;
 import com.edu.espp.entity.Lesson;
 import com.edu.espp.entity.SRSReview;
