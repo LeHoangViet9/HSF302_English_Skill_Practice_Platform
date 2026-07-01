@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng điều khiển học viên</title>
+    <link rel="stylesheet" th:href="@{/student-module.css}">
+</head>
+<body>
+<nav class="student-navbar">
+    <a class="student-logo" th:href="@{/}">Home</a>
+
+    <div class="student-nav-center">
+        <a th:href="@{/courses}">Course</a>
+        <a th:href="@{/practice}">Practice</a>
+        <a th:href="@{/student/dashboard}">Dashboard</a>
+        <a th:href="@{/student/flashcards/review}">Flashcard</a>
+    </div>
+
+    <a class="student-profile-link" th:href="@{/student/profile}">
+        Profile
+    </a>
+</nav>
+
+<div class="page">
+    <h1 class="title">
+        Xin chào, <span th:text="${dashboard.studentName}">Học viên</span>
+    </h1>
+
+    <div class="stats">
+        <div class="card">
+            <h3>Tổng số flashcard</h3>
+            <div class="number" th:text="${dashboard.totalFlashcards}">0</div>
+        </div>
+
+        <div class="card">
+            <h3>Cần ôn hôm nay</h3>
+            <div class="number" th:text="${dashboard.dueFlashcardsToday}">0</div>
+        </div>
+
+        <div class="card">
+            <h3>Bài đã học</h3>
+            <div class="number" th:text="${dashboard.learnedLessons}">0</div>
+        </div>
+
+        <div class="card">
+            <h3>Bài đã hoàn thành</h3>
+            <div class="number" th:text="${dashboard.completedLessons}">0</div>
+        </div>
+
+        <div class="card">
+            <h3>Tỷ lệ hoàn thành</h3>
+            <div class="number" th:text="${#numbers.formatDecimal(dashboard.completionPercent, 1, 1) + '%'}">0%</div>
+        </div>
+    </div>
+    <div>
+        <a class="btn" th:href="@{/student/flashcards/review}">Bắt đầu ôn</a>
+    </div>
+
+    <h2 class="section-title">Bài học gợi ý</h2>
+
+    <div class="card" th:if="${dashboard.suggestedLesson != null}">
+        <div class="lesson-title" th:text="${dashboard.suggestedLesson.title}">
+            Basic English Vocabulary
+        </div>
+        <p>
+            Cấp độ:
+            <span th:text="${dashboard.suggestedLesson.level}">A1</span>
+        </p>
+        <p>
+            Loại bài học:
+            <span th:text="${dashboard.suggestedLesson.type}">VOCABULARY</span>
+        </p>
+    </div>
+
+    <div class="card" th:if="${dashboard.suggestedLesson == null}">
+        Chưa có bài học nào trong hệ thống.
+    </div>
+
+    <h2 class="section-title">Bài học gần đây</h2>
+
+    <div class="card" th:if="${dashboard.recentLesson != null}">
+        <div class="lesson-title" th:text="${dashboard.recentLesson.title}">
+            Bài học gần đây
+        </div>
+        <p>
+            Cấp độ:
+            <span th:text="${dashboard.recentLesson.level}">A1</span>
+        </p>
+        <p>
+            Loại bài học:
+            <span th:text="${dashboard.recentLesson.type}">VOCABULARY</span>
+        </p>
+    </div>
+
+    <div class="card" th:if="${dashboard.recentLesson == null}">
+        Bạn chưa học bài nào.
+    </div>
+
+    <h2 class="section-title">Lịch ôn tập sắp tới</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Từ vựng / Cấu trúc</th>
+            <th>Nghĩa</th>
+            <th>Ngày ôn tiếp theo</th>
+            <th>Khoảng cách ôn</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="review : ${dashboard.upcomingReviews}">
+            <td th:text="${review.content.wordOrStructure}">apple</td>
+            <td th:text="${review.content.meaning}">quả táo</td>
+            <td th:text="${#temporals.format(review.nextReviewDate, 'dd/MM/yyyy HH:mm')}">01/07/2026</td>
+            <td th:text="${review.srsInterval + ' ngày'}">1 ngày</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

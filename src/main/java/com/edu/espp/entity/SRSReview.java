@@ -27,7 +27,15 @@ public class SRSReview {
     @JoinColumn(name = "content_id", nullable = false)
     private LessonContent content;
 
+    @Builder.Default
+    private Integer repetition = 0;
+
+    @Builder.Default
     private Integer srsInterval = 1;
+
+    @Builder.Default
     private Double easeFactor = 2.5;
+
+    @Builder.Default
     private LocalDateTime nextReviewDate = LocalDateTime.now();
 }

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class LessonContent {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,10 +22,13 @@ public class LessonContent {
     @JoinColumn(name = "lesson_id", nullable = false)
     private Lesson lesson;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "NVARCHAR(255)")
     private String wordOrStructure;
 
+    @Column(columnDefinition = "NVARCHAR(100)")
     private String ipa;
+
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String meaning;
 
     @Column(columnDefinition = "NVARCHAR(MAX)")

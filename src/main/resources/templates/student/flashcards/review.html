@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn tập Flashcard</title>
+    <link rel="stylesheet" th:href="@{/student-module.css}">
+</head>
+
+<body>
+<nav class="student-navbar">
+    <a class="student-logo" th:href="@{/student/dashboard}">Back</a>
+</nav>
+
+<div class="page">
+    <h1 class="page-title">Ôn tập Flashcard</h1>
+
+    <div th:if="${#lists.isEmpty(reviews)}" class="empty-message">
+        Hôm nay bạn chưa có flashcard nào cần ôn.
+    </div>
+
+    <div class="flashcard-container" th:if="${!#lists.isEmpty(reviews)}">
+
+        <div class="flashcard-item" th:each="review : ${reviews}">
+
+            <div class="flashcard" onclick="flipCard(this)">
+                <div class="flashcard-inner">
+
+                    <div class="flashcard-front">
+                        <h2 th:text="${review.content.wordOrStructure}">Word</h2>
+
+                        <p class="ipa"
+                           th:if="${review.content.ipa != null}"
+                           th:text="${review.content.ipa}">
+                            IPA
+                        </p>
+
+                        <p>Bấm vào thẻ để xem đáp án</p>
+                    </div>
+
+                    <div class="flashcard-back">
+                        <h3 th:text="${review.content.meaning}">Meaning</h3>
+
+                        <p th:if="${review.content.explanation != null}"
+                           th:text="${review.content.explanation}">
+                            Explanation
+                        </p>
+
+                        <p class="example"
+                           th:if="${review.content.example != null}">
+                            <strong>Ví dụ:</strong>
+                            <span th:text="${review.content.example}">Example</span>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <form class="review-buttons"
+                  th:action="@{/student/flashcards/{contentId}/review(contentId=${review.content.id})}"
+                  method="post">
+
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                <button class="again" type="submit" name="result" value="AGAIN">Again</button>
+                <button class="hard" type="submit" name="result" value="HARD">Hard</button>
+                <button class="good" type="submit" name="result" value="GOOD">Good</button>
+                <button class="easy" type="submit" name="result" value="EASY">Easy</button>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function flipCard(card) {
+        card.classList.toggle("flipped");
+    }
+</script>
+
+</body>
+</html>
