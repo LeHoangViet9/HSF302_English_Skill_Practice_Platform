@@ -9,17 +9,23 @@ import com.edu.espp.entity.Question;
 import com.edu.espp.repository.ExamRepository;
 import com.edu.espp.repository.QuestionRepository;
 import com.edu.espp.service.question.QuestionService;
+import com.fasterxml.jackson.core.type.TypeReference; // 🌟 Thêm import này
+import com.fasterxml.jackson.databind.ObjectMapper;       // 🌟 Thêm import này
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap; // 🌟 Thêm import này
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
     private final ExamRepository examRepository;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public QuestionResponse getQuestionById(Long id) {
@@ -129,12 +135,27 @@ public class QuestionServiceImpl implements QuestionService {
 
     private QuestionResponse convertToResponse(Question question) {
         if (question == null) return null;
+
+        Map<String, String> parsedOptions = new HashMap<>();
+        try {
+            if (question.getOptions() != null && !question.getOptions().isBlank()) {
+                parsedOptions = objectMapper.readValue(
+                        question.getOptions(),
+                        new TypeReference<Map<String, String>>() {}
+                );
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi parse JSON options tại Question ID " + question.getId() + ": " + e.getMessage());
+        }
+
         return QuestionResponse.builder()
                 .id(question.getId())
+                .examId(question.getExam() != null ? question.getExam().getId() : null)
                 .skill(question.getSkill())
                 .questionText(question.getQuestionText())
                 .audioUrl(question.getAudioUrl())
-                .options(question.getOptions())
+                .options(parsedOptions)
+                .correctAnswer(question.getCorrectAnswer())
                 .explanation(question.getExplanation())
                 .build();
     }

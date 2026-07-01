@@ -19,4 +19,5 @@ public class ExamResponse {
 
     private Integer duration; // tính bằng phút
     private Integer totalQuestions;
+    private String description;
 }

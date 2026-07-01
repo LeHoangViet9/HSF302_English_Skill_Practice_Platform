@@ -1,51 +1,57 @@
 package com.edu.espp.advise;
 
-import com.edu.espp.common.dto.response.ApiResponse;
 import com.edu.espp.common.exception.AppException;
+//import org.springframework.security.authorization.AuthorizationDeniedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-//import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.stream.Collectors;
 
-@RestControllerAdvice
+@ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandle {
 
-    @ExceptionHandler(AppException.class)
-    public ResponseEntity<ApiResponse<Object>> handleAppException(AppException exception) {
-        ApiResponse<Object> response = ApiResponse.builder()
-                .success(false)
-                .message(exception.getMessage())
-                .error(exception.getMessage())
-                .status(exception.getStatus())
-                .build();
+    @ExceptionHandler(NoResourceFoundException.class)
+    public String handleNoResourceFoundException(NoResourceFoundException exception, Model model) {
+        // Log một dòng ngắn gọn ở chế độ WARN để mình biết nếu cần, không bắn exception đỏ lòm nữa
+        log.warn("Không tìm thấy tài nguyên tĩnh: {}", exception.getResourcePath());
 
-        return ResponseEntity.status(exception.getStatus()).body(response);
+        model.addAttribute("title", "Tài Nguyên Không Tồn Tại");
+        model.addAttribute("status", HttpStatus.NOT_FOUND.value());
+        model.addAttribute("errorMessage", "Tài nguyên bạn yêu cầu hiện không có trên hệ thống.");
+        return "error";
     }
 
+    // 1. Lỗi ứng dụng tự định nghĩa
+    @ExceptionHandler(AppException.class)
+    public String handleAppException(AppException exception, Model model) {
+        model.addAttribute("title", "Lỗi Ứng Dụng");
+        model.addAttribute("status", exception.getStatus().value());
+        model.addAttribute("errorMessage", exception.getMessage());
+        return "error"; // Trả về file templates/error.html
+    }
+
+    // 2. Lỗi Validate dữ liệu đầu vào
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Object>> handleValidationExceptions(MethodArgumentNotValidException exception) {
+    public String handleValidationExceptions(MethodArgumentNotValidException exception, Model model) {
         String fieldErrorsMessage = exception.getBindingResult().getAllErrors().stream()
                 .map(error -> error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
 
-        ApiResponse<Object> response = ApiResponse.builder()
-                .success(false)
-                .message("Dữ liệu không hợp lệ: " + fieldErrorsMessage)
-                .error(fieldErrorsMessage)
-                .status(HttpStatus.BAD_REQUEST)
-                .build();
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        model.addAttribute("title", "Dữ Liệu Không Hợp Lệ");
+        model.addAttribute("status", HttpStatus.BAD_REQUEST.value());
+        model.addAttribute("errorMessage", "Chi tiết: " + fieldErrorsMessage);
+        return "error";
     }
 
+    // 3. Lỗi IllegalArgumentException (Ví dụ: quá giờ làm bài)
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiResponse<Object>> handleIllegalArgumentException(IllegalArgumentException ex) {
+    public String handleIllegalArgumentException(IllegalArgumentException ex, Model model) {
         String exceptionMsg = ex.getMessage();
         String finalMessage = exceptionMsg;
 
@@ -53,41 +59,31 @@ public class GlobalExceptionHandle {
             finalMessage = "Thời gian làm bài bị vượt quá giới hạn: " + exceptionMsg + " phút";
         }
 
-        ApiResponse<Object> response = ApiResponse.builder()
-                .success(false)
-                .message(finalMessage)
-                .error(exceptionMsg)
-                .status(HttpStatus.BAD_REQUEST)
-                .build();
-
-        return ResponseEntity.badRequest().body(response);
+        model.addAttribute("title", "Yêu Cầu Không Hợp Lệ");
+        model.addAttribute("status", HttpStatus.BAD_REQUEST.value());
+        model.addAttribute("errorMessage", finalMessage);
+        return "error";
     }
 
+//     4. Lỗi Không có quyền truy cập
 //    @ExceptionHandler(AuthorizationDeniedException.class)
-//    public ResponseEntity<ApiResponse<Object>> handleAuthorizationDenied(AuthorizationDeniedException exception) {
+//    public String handleAuthorizationDenied(AuthorizationDeniedException exception, Model model) {
 //        log.warn("Authorization denied: {}", exception.getMessage());
 //
-//        ApiResponse<Object> response = ApiResponse.builder()
-//                .success(false)
-//                .message("Bạn không có quyền truy cập chức năng này")
-//                .error(exception.getMessage())
-//                .status(HttpStatus.FORBIDDEN)
-//                .build();
-//
-//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+//        model.addAttribute("title", "Truy Cập Bị Từ Chối");
+//        model.addAttribute("status", HttpStatus.FORBIDDEN.value());
+//        model.addAttribute("errorMessage", "Bạn không có quyền truy cập vào chức năng này.");
+//        return "error";
 //    }
 
+    // 5. Lỗi hệ thống chung (500)
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Object>> handleException(Exception exception) {
+    public String handleException(Exception exception, Model model) {
         log.error("Unhandled exception", exception);
 
-        ApiResponse<Object> response = ApiResponse.builder()
-                .success(false)
-                .message("Hệ thống gặp sự cố, vui lòng thử lại sau")
-                .error(exception.getMessage())
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .build();
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        model.addAttribute("title", "Lỗi Hệ Thống");
+        model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        model.addAttribute("errorMessage", "Hệ thống gặp sự cố, vui lòng thử lại sau.");
+        return "error";
     }
 }

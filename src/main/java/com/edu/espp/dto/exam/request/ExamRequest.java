@@ -21,4 +21,6 @@ public class ExamRequest {
     private Integer duration; // tính bằng phút
     @NotNull(message = "Số lượng câu hỏi không được để trống")
     private Integer totalQuestions;
+    @NotBlank(message = "Mô tả đề thi không được để trống")
+    private String description;
 }

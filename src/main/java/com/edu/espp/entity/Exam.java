@@ -30,6 +30,8 @@ public class Exam {
     private Integer duration;
     private Integer totalQuestions;
 
+    private String description;
+
     @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
 }

@@ -48,6 +48,12 @@ public class SupportTicketServiceImpl implements SupportTicketService {
     }
 
     @Override
+    public List<SupportTicketResponse> getAllTickets() {
+        List<SupportTicket> tickets = supportTicketRepository.findAllByOrderByCreatedAtDesc();
+        return tickets.stream().map(this::convertToResponse).toList();
+    }
+
+    @Override
     @Transactional
     public SupportTicketResponse updateTicketStatus(Long ticketId, TicketStatus status) {
         SupportTicket ticket = supportTicketRepository.findById(ticketId)

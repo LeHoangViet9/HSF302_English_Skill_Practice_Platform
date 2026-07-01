@@ -23,6 +23,7 @@ public class Question {
     private Exam exam;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private QuestionSkill skill; // LISTENING, READING, SPEAKING, WRITING
 
     @Column(nullable = false, columnDefinition = "NVARCHAR(MAX)")

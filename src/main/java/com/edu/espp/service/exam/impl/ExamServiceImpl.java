@@ -11,6 +11,8 @@ import com.edu.espp.dto.question.response.QuestionResponse;
 import com.edu.espp.entity.*;
 import com.edu.espp.repository.*;
 import com.edu.espp.service.exam.ExamService;
+import com.fasterxml.jackson.core.type.TypeReference; // 🌟 Thêm import này
+import com.fasterxml.jackson.databind.ObjectMapper;       // 🌟 Thêm import này
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashMap; // 🌟 Thêm import này
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +32,9 @@ public class ExamServiceImpl implements ExamService {
     private final UserRepository userRepository;
     private final ExamHistoryRepository examHistoryRepository;
     private final ExamAttemptDetailRepository examAttemptDetailRepository;
+
+    // 🌟 Khởi tạo một ObjectMapper instance để dùng chung tái sử dụng
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private static final String EXAM_NOT_FOUND_MSG = "Không tìm thấy bài thi";
 
@@ -135,6 +141,7 @@ public class ExamServiceImpl implements ExamService {
                 .title(request.getTitle())
                 .type(request.getType())
                 .duration(request.getDuration())
+                .description(request.getDescription())
                 .totalQuestions(request.getTotalQuestions())
                 .build();
 
@@ -159,6 +166,7 @@ public class ExamServiceImpl implements ExamService {
         exam.setTitle(request.getTitle());
         exam.setType(request.getType());
         exam.setDuration(request.getDuration());
+        exam.setDescription(request.getDescription());
         exam.setTotalQuestions(request.getTotalQuestions());
 
         return convertToResponse(examRepository.save(exam));
@@ -179,18 +187,35 @@ public class ExamServiceImpl implements ExamService {
                 .title(exam.getTitle())
                 .type(exam.getType())
                 .duration(exam.getDuration())
+                .description(exam.getDescription())
                 .totalQuestions(exam.getTotalQuestions())
                 .build();
     }
 
     private QuestionResponse convertQuestionToResponse(Question question) {
         if (question == null) return null;
+
+        Map<String, String> parsedOptions = new HashMap<>();
+        try {
+            if (question.getOptions() != null && !question.getOptions().isBlank()) {
+                // Parse chuỗi JSON String từ database sang cấu trúc Map thực thụ
+                parsedOptions = objectMapper.readValue(
+                        question.getOptions(),
+                        new TypeReference<Map<String, String>>() {}
+                );
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi parse JSON options tại Question ID " + question.getId() + ": " + e.getMessage());
+        }
+
         return QuestionResponse.builder()
                 .id(question.getId())
+                .examId(question.getExam() != null ? question.getExam().getId() : null)
                 .skill(question.getSkill())
                 .questionText(question.getQuestionText())
                 .audioUrl(question.getAudioUrl())
-                .options(question.getOptions())
+                .options(parsedOptions)
+                .correctAnswer(question.getCorrectAnswer())
                 .explanation(question.getExplanation())
                 .build();
     }

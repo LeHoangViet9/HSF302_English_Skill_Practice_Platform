@@ -19,9 +19,8 @@ public class QuestionRequest {
     private QuestionSkill skill;
     @NotBlank(message = "Nội dung câu hỏi không được để trống")
     private String questionText;
-    @NotBlank(message = "URL âm thanh không được để trống")
     private String audioUrl;
-    @NotBlank(message = "Lựa chọn không được để trống")
+    
     private String options;
     @NotBlank(message = "Đáp án đúng không được để trống")
     private String correctAnswer;

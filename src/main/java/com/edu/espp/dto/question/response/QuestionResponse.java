@@ -6,15 +6,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class QuestionResponse {
     private Long id;
+    private Long examId;
     private QuestionSkill skill;
     private String questionText;
     private String audioUrl;
-    private String options;
+    private Map<String, String> options;
+    private String correctAnswer;
     private String explanation;
 }
