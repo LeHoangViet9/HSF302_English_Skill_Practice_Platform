@@ -3,6 +3,7 @@ package com.edu.espp.service;
 import com.edu.espp.Repository.LearningProgressRepository;
 import com.edu.espp.Repository.LessonRepository;
 import com.edu.espp.Repository.SRSReviewRepository;
+import com.edu.espp.Repository.UserRepository;
 import com.edu.espp.dto.StudentDashboardData;
 import com.edu.espp.entity.LearningProgress;
 import com.edu.espp.entity.Lesson;
@@ -21,6 +22,7 @@ public class DashboardService {
     private final SRSReviewRepository srsReviewRepository;
     private final LessonRepository lessonRepository;
     private final LearningProgressRepository learningProgressRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public StudentDashboardData getStudentDashboard(Long userId) {
@@ -49,7 +51,12 @@ public class DashboardService {
         List<SRSReview> upcomingReviews = srsReviewRepository
                 .findTop5ByUser_IdOrderByNextReviewDateAsc(userId);
 
+        String studentName = userRepository.findById(userId)
+                .map(user -> user.getFullName())
+                .orElse("Học viên");
+
         return new StudentDashboardData(
+                studentName,
                 totalFlashcards,
                 dueFlashcardsToday,
                 learnedLessons,

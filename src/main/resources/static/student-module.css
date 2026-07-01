@@ -27,19 +27,20 @@ body {
 }
 
 .student-navbar {
-    height: 60px;
+    height: 64px;
     background: #ffffff;
     border-bottom: 1px solid var(--color-border);
-    display: flex;
+    display: grid;
+    grid-template-columns: 140px 1fr 140px;
     align-items: center;
-    justify-content: flex-start;
-    padding: 0 32px;
+    padding: 0 28px;
     position: sticky;
     top: 0;
     z-index: 10;
 }
 
 .student-logo {
+    justify-self: start;
     font-size: 22px;
     font-weight: 900;
     color: var(--color-primary);
@@ -48,6 +49,42 @@ body {
 
 .student-logo:hover {
     color: var(--color-primary-dark);
+}
+
+.student-nav-center {
+    justify-self: center;
+    display: flex;
+    align-items: center;
+    gap: 26px;
+}
+
+.student-nav-center a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 15px;
+    padding: 8px 10px;
+    border-radius: 999px;
+}
+
+.student-nav-center a:hover {
+    color: var(--color-primary);
+    background: #eff6ff;
+}
+
+.student-profile-link {
+    justify-self: end;
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 15px;
+    padding: 8px 14px;
+    border-radius: 999px;
+}
+
+.student-profile-link:hover {
+    color: var(--color-primary);
+    background: #eff6ff;
 }
 
 .page {

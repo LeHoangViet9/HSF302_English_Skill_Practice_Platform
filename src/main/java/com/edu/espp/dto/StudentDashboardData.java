@@ -13,6 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 public class StudentDashboardData {
 
+    private String studentName;
+
     private long totalFlashcards;
     private long dueFlashcardsToday;
 
