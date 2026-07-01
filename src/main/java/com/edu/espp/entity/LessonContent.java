@@ -26,7 +26,7 @@ public class LessonContent {
 
     private String ipa;
     private String meaning;
-
+    private Integer contentOrder;  //Hiện tại một bài học có nhiều content thêm để có thứ tự hiển thị
     @Column(columnDefinition = "NVARCHAR(MAX)")
     private String explanation;
 
