@@ -1,0 +1,27 @@
+package com.edu.espp.common.dto;
+
+import com.edu.espp.entity.Lesson;
+import com.edu.espp.entity.SRSReview;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class StudentDashboardData {
+
+    private long totalFlashcards;
+    private long dueFlashcardsToday;
+
+    private long learnedLessons;
+    private long completedLessons;
+    private double completionPercent;
+
+    private Lesson recentLesson;
+    private Lesson suggestedLesson;
+
+    private List<SRSReview> upcomingReviews;
+}

@@ -27,6 +27,9 @@ public class LearningProgress {
     @JoinColumn(name = "lesson_id", nullable = false)
     private Lesson lesson;
 
+    @Builder.Default
     private Boolean isCompleted = false;
+
+    @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 }
