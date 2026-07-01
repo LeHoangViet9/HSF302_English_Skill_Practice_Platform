@@ -1,0 +1,89 @@
+/* ==========================================================================
+   Register / verify-email pages — reuses tokens từ auth-shared.css
+   ========================================================================== */
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.field-hint {
+    font-size: 12px;
+    color: var(--color-text-sub);
+    margin: 4px 0 0;
+}
+
+.btn-register {
+    width: 100%;
+    height: 50px;
+    background: var(--color-secondary);
+    color: white;
+    font-weight: 800;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: var(--radius-full);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(93, 187, 105, 0.30);
+    transition: filter 150ms, transform 100ms, box-shadow 150ms;
+}
+
+.btn-register:hover {
+    filter: brightness(1.08);
+}
+
+.btn-register:active {
+    transform: scale(0.97);
+}
+
+.btn-register:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.auth-success-title {
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--color-text);
+    text-align: center;
+    margin: 0 0 12px;
+}
+
+.auth-success-desc {
+    font-size: 14px;
+    color: var(--color-text-sub);
+    text-align: center;
+    line-height: 1.7;
+    margin: 0 0 24px;
+}
+
+.auth-success-desc strong {
+    color: var(--color-primary-dark);
+}
+
+.btn-resend {
+    width: 100%;
+    background: transparent;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-text-sub);
+    padding: 11px 28px;
+    cursor: pointer;
+    transition: border-color 150ms, color 150ms;
+}
+
+.btn-resend:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.resend-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+}

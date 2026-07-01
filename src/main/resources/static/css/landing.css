@@ -1,0 +1,470 @@
+/* =====================================================
+   SakuJi Landing Page — landing.css
+   Palette: cherry-blossom pink, dark charcoal footer
+   No animations / transitions (per spec)
+   ===================================================== */
+
+/* ---------- Google Font ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+/* ---------- Reset & Base ---------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --color-bg: #fdf0f0;
+    /* very soft pink background */
+    --color-card-bg: #ffffff;
+    --color-primary: #e87878;
+    /* salmon/rose pink */
+    --color-primary-dark: #d45f5f;
+    --color-accent: #4caf82;
+    /* CTA green button */
+    --color-accent-dark: #3d9e6f;
+    --color-text: #1a1a2e;
+    --color-muted: #777;
+    --color-step-num: #d4a0a0;
+    /* muted pink for step numbers */
+    --color-footer-bg: #2d2d2d;
+    --color-footer-text: #aaa;
+    --color-footer-heading: #fff;
+    --color-border: #f0d8d8;
+    --font-main: 'Nunito', sans-serif;
+    --radius-card: 16px;
+    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+/* ---------- NAVBAR ---------- */
+.lp-navbar {
+    background: #ffffff;
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 0 1.5rem;
+}
+
+.lp-navbar .navbar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+/* Logo */
+.lp-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: var(--color-primary);
+}
+
+.lp-logo img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+/* Nav links */
+.lp-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-left: 1.5rem;
+}
+
+.lp-nav-links a {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #444;
+}
+
+.lp-nav-links a:hover {
+    color: var(--color-primary);
+}
+
+/* Spacer */
+.lp-navbar-spacer {
+    flex: 1;
+}
+
+/* Navbar actions */
+.lp-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.btn-signin {
+    font-family: var(--font-main);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #444;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.4rem 0.75rem;
+}
+
+.btn-signin:hover {
+    color: var(--color-primary);
+}
+
+.btn-get-started {
+    font-family: var(--font-main);
+    font-weight: 700;
+    font-size: 0.9rem;
+    background: var(--color-accent);
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    padding: 0.5rem 1.25rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.btn-get-started:hover {
+    background: var(--color-accent-dark);
+    color: #fff;
+}
+
+/* ---------- HOW IT WORKS SECTION ---------- */
+.lp-how {
+    background: var(--color-bg);
+    padding: 4rem 1.5rem 3rem;
+}
+
+.lp-how .section-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.lp-how .section-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+}
+
+.lp-how .section-subtitle {
+    font-size: 0.95rem;
+    color: var(--color-muted);
+    margin-bottom: 2.5rem;
+}
+
+/* Step cards */
+.step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: left;
+}
+
+.step-card {
+    background: var(--color-card-bg);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: 1.4rem 1.75rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    border: 1px solid #f5e0e0;
+}
+
+.step-num {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--color-step-num);
+    min-width: 2.5rem;
+    line-height: 1;
+    margin-top: 2px;
+}
+
+.step-body h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 0.3rem;
+}
+
+.step-body p {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    line-height: 1.55;
+}
+
+.step-body p .highlight {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* ---------- MASCOT DIVIDER ---------- */
+.lp-mascot-divider {
+    background: var(--color-bg);
+    text-align: center;
+    padding: 1rem 0 0;
+}
+
+.lp-mascot-divider img {
+    width: 64px;
+    height: auto;
+}
+
+/* ---------- CTA SECTION ---------- */
+.lp-cta {
+    background: #f7eded;
+    padding: 3.5rem 1.5rem;
+    text-align: center;
+}
+
+.lp-cta .cta-mascot {
+    width: 56px;
+    margin-bottom: 1.25rem;
+}
+
+.lp-cta h2 {
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: var(--color-text);
+    margin-bottom: 0.6rem;
+}
+
+.lp-cta .cta-sub {
+    font-size: 0.95rem;
+    color: var(--color-muted);
+    margin-bottom: 1.75rem;
+}
+
+.lp-cta .cta-sub strong {
+    color: var(--color-text);
+    text-decoration: underline;
+    font-weight: 700;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.btn-cta-primary {
+    font-family: var(--font-main);
+    font-weight: 700;
+    font-size: 1rem;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: 28px;
+    padding: 0.75rem 1.75rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-cta-primary:hover {
+    background: var(--color-primary-dark);
+    color: #fff;
+}
+
+.btn-cta-secondary {
+    font-family: var(--font-main);
+    font-weight: 700;
+    font-size: 1rem;
+    background: #fff;
+    color: var(--color-text);
+    border: 1.5px solid #ddd;
+    border-radius: 28px;
+    padding: 0.75rem 1.75rem;
+    cursor: pointer;
+}
+
+.btn-cta-secondary:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+/* ---------- FOOTER ---------- */
+.lp-footer {
+    background: var(--color-footer-bg);
+    color: var(--color-footer-text);
+    padding: 3rem 1.5rem 1.5rem;
+}
+
+.lp-footer .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Brand column */
+.footer-brand .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 0.75rem;
+}
+
+.footer-brand .footer-logo img {
+    width: 24px;
+    height: 24px;
+}
+
+.footer-brand p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    max-width: 200px;
+    margin-bottom: 1rem;
+}
+
+.footer-social {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+}
+
+.social-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: #ccc;
+}
+
+.social-icon:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.footer-mascot img {
+    width: 52px;
+    height: auto;
+}
+
+/* Footer columns */
+.footer-col h4 {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--color-footer-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.9rem;
+}
+
+.footer-col ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-col ul li a {
+    font-size: 0.875rem;
+    color: var(--color-footer-text);
+}
+
+.footer-col ul li a:hover {
+    color: #fff;
+}
+
+/* Footer bottom */
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.25rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.footer-bottom small {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.lang-selector {
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    background: #3a3a3a;
+    color: #ccc;
+    border: 1px solid #555;
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 768px) {
+    .footer-top {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .lp-nav-links {
+        display: none;
+    }
+
+    .lp-how .section-title {
+        font-size: 1.5rem;
+    }
+
+    .lp-cta h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-top {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+}
