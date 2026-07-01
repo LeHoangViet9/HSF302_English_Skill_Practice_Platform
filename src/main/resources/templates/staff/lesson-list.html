@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Lessons</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+
+    <h2 class="mb-3">Manage Lessons</h2>
+
+    <a class="btn btn-primary mb-3" th:href="@{/staff/lessons/create}">
+        Add Lesson
+    </a>
+
+    <form class="row g-2 mb-3" method="get" th:action="@{/staff/lessons}">
+
+        <div class="col-md-4">
+            <input class="form-control"
+                   type="text"
+                   name="keyword"
+                   placeholder="Search lesson title..."
+                   th:value="${keyword}">
+        </div>
+
+        <div class="col-md-3">
+            <select class="form-select" name="type">
+                <option value="">All Types</option>
+
+                <option th:each="t : ${types}"
+                        th:value="${t}"
+                        th:text="${t}"
+                        th:selected="${selectedType == t}">
+                </option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <select class="form-select" name="level">
+                <option value="">All Levels</option>
+
+                <option th:each="l : ${levels}"
+                        th:value="${l}"
+                        th:text="${l}"
+                        th:selected="${selectedLevel == l}">
+                </option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <button class="btn btn-success w-100" type="submit">
+                Search
+            </button>
+        </div>
+
+    </form>
+
+    <table class="table table-bordered table-hover">
+
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Level</th>
+            <th>Description</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="lesson : ${lessons}">
+            <td th:text="${lesson.id}"></td>
+            <td th:text="${lesson.title}"></td>
+            <td th:text="${lesson.type}"></td>
+            <td th:text="${lesson.level}"></td>
+            <td th:text="${lesson.description}"></td>
+
+            <td>
+                <a class="btn btn-warning btn-sm"
+                   th:href="@{/staff/lessons/edit/{id}(id=${lesson.id})}">
+                    Edit
+                </a>
+
+                <a class="btn btn-danger btn-sm"
+                   th:href="@{/staff/lessons/delete/{id}(id=${lesson.id})}"
+                   onclick="return confirm('Are you sure you want to delete this lesson?')">
+                    Delete
+                </a>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+</html>

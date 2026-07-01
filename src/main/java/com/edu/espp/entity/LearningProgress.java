@@ -9,7 +9,10 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "learning_progress")
+@Table(
+        name = "learning_progress",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "lesson_id"})
+)  //Một user chỉ có một trạng thái hoàn thành cho một bài học.
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

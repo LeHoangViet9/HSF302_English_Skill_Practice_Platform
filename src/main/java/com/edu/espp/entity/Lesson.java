@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "lessons")
@@ -33,4 +35,16 @@ public class Lesson {
     @ManyToOne
     @JoinColumn(name = "created_by")
     private User createdBy;
+
+    @Column(columnDefinition = "NVARCHAR(MAX)")
+    private String description;
+
+    @Builder.Default
+    private Boolean isPublished = true;
+
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
 }

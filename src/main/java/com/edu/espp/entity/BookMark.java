@@ -9,11 +9,15 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "book_marks")
+@Table(
+        name = "book_marks",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "content_id"})
+) //Một user chỉ được bookmark một từ/cấu trúc một lần.
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+
 public class BookMark {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +32,5 @@ public class BookMark {
     private LessonContent content;
 
     private LocalDateTime bookmarkedAt = LocalDateTime.now();
+
 }

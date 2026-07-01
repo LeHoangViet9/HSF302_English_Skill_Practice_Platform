@@ -30,7 +30,7 @@ public class LessonContent {
 
     @Column(columnDefinition = "NVARCHAR(255)")
     private String meaning;
-
+    private Integer contentOrder;  //Hiện tại một bài học có nhiều content thêm để có thứ tự hiển thị
     @Column(columnDefinition = "NVARCHAR(MAX)")
     private String explanation;
 
