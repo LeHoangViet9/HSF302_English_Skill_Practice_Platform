@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/auth/auth-shared.css}">
+    <link rel="stylesheet" th:href="@{/css/auth/login.css}">
+</head>
+
+<body class="auth-page">
+
+    <div th:replace="~{fragments/auth-topbar :: authTopBar}"></div>
+
+    <main class="auth-main">
+
+
+        <div class="auth-card" th:with="errorCode=${param.error != null ? param.error[0] : null},
+                   isUnverified=${errorCode == 'EMAIL_NOT_VERIFIED'},
+                   isLocked=${errorCode == 'ACCOUNT_SUSPENDED'},
+                   isInvalidCredentials=${error != null and !isUnverified and !isLocked}">
+
+
+            <h1 class="auth-title">Chào mừng trở lại</h1>
+            <p class="auth-subtitle">Đăng nhập để tiếp tục hành trình học tiếng Anh</p>
+
+            <!-- Đăng xuất / xác minh / đặt lại mật khẩu thành công -->
+            <div class="auth-banner auth-success-banner" th:if="${param.logout != null or successMsg != null}">
+                <span th:if="${param.logout != null}">Bạn đã đăng xuất thành công.</span>
+                <span th:if="${successMsg != null}" th:text="${successMsg}"></span>
+            </div>
+
+            <!-- Tài khoản tạm khóa (LoginFailureHandler -> error=ACCOUNT_SUSPENDED) -->
+            <div class="auth-banner auth-locked-banner" th:if="${isLocked}">
+                <span th:text="${error}"></span>
+            </div>
+
+            <!-- Email chưa xác minh (LoginFailureHandler -> error=EMAIL_NOT_VERIFIED) -->
+            <div class="auth-banner auth-verify-banner" th:if="${isUnverified}">
+                <span th:text="${error}"></span>
+            </div>
+
+            <!-- Sai email/mật khẩu (LoginFailureHandler -> error=INVALID_CREDENTIALS) -->
+            <div class="auth-banner auth-error-banner" th:if="${isInvalidCredentials}">
+                <span th:text="${error}"></span>
+            </div>
+
+            <form class="login-form" id="loginForm" th:action="@{/login}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <div class="form-field">
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="email" class="form-input"
+                        th:classappend="${isInvalidCredentials} ? 'has-error' : ''"
+                        th:attr="aria-invalid=${isInvalidCredentials} ? 'true' : 'false'"
+                        placeholder="email@example.com" autocomplete="email" required="required" />
+                </div>
+
+                <div
+                    th:replace="~{fragments/password-input :: passwordInput('password','password','Mật khẩu', ${isInvalidCredentials}, true)}">
+                </div>
+
+                <button class="btn-login" type="submit">Đăng nhập</button>
+            </form>
+
+            <div class="auth-divider"><span>hoặc</span></div>
+
+            <!-- Backend chưa cấu hình oauth2Login() trong SecurityConfig.java -> nút hiển thị ở trạng thái disabled -->
+            <div th:replace="~{fragments/social-login :: socialLoginBtn(false)}"></div>
+
+            <p class="auth-redirect">Chưa có tài khoản? <a th:href="@{/register}">Đăng ký ngay</a></p>
+        </div>
+    </main>
+
+    <script th:src="@{/js/auth/auth.js}"></script>
+</body>
+
+</html>
