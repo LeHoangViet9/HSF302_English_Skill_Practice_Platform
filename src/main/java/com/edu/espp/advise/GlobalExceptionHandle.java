@@ -64,7 +64,14 @@ public class GlobalExceptionHandle {
         return "error";
     }
 
-    // 5. Lỗi hệ thống chung (500)
+    // 5. Lỗi không tìm thấy tài nguyên tĩnh (404) để tránh log lỗi hệ thống (như favicon.ico)
+    @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
+    @org.springframework.web.bind.annotation.ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handleNoResourceFound(org.springframework.web.servlet.resource.NoResourceFoundException ex) {
+        log.debug("Static resource not found: {}", ex.getResourcePath());
+    }
+
+    // 6. Lỗi hệ thống chung (500)
     @ExceptionHandler(Exception.class)
     public String handleException(Exception exception, Model model) {
         log.error("Unhandled exception", exception);

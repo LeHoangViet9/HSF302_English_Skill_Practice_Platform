@@ -28,6 +28,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         authSessionService.handleLoginSuccess(email, sessionId, ipAddress);
 
-        response.sendRedirect(request.getContextPath() + "/dashboard");
+        response.sendRedirect(request.getContextPath() + "/exams");
     }
 }
