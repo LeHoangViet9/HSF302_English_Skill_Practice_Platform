@@ -21,9 +21,7 @@ public class ExamHistoryController {
     // Xem lịch sử thi của một User cụ thể dưới dạng trang web công khai
     @GetMapping("/user/{userId}")
     public String getUserHistory(@PathVariable Long userId, Model model) {
-        Long currentUserId = 1L; // Hiện tại chưa có Security thì bạn tạm fix cứng để test
-
-        List<ExamHistoryResponse> histories = examHistoryService.getUserExamHistory(currentUserId);
+        List<ExamHistoryResponse> histories = examHistoryService.getUserExamHistory(userId);
         model.addAttribute("histories", histories);
         return "student/history/user-history";
     }

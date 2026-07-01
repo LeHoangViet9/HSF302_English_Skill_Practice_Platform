@@ -127,22 +127,11 @@
                 </th:block>
             </ul>
 
-            <!-- Profile & Switcher -->
+            <!-- Profile -->
             <div class="d-flex align-items-center">
-                <div class="me-3 text-light text-end d-none d-md-block">
+                <div class="text-light text-end">
                     <div class="fw-bold text-white small" th:text="${user.fullName}">Nguyen Van A</div>
                     <span class="badge bg-warning text-dark fw-bold px-2 py-1" th:text="${user.role}" style="font-size: 0.75rem;">STUDENT</span>
-                </div>
-                
-                <div class="dropdown">
-                    <button class="btn btn-outline-light btn-sm dropdown-toggle fw-bold" type="button" id="roleSwitcher" data-bs-toggle="dropdown">
-                        <i class="fa-solid fa-user-gear me-1"></i> Chuyển Vai Trò
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                        <li><h6 class="dropdown-header">Chế độ kiểm thử (Mock)</h6></li>
-                        <li><a class="dropdown-item" href="/exams?role=STUDENT"><i class="fa-solid fa-user me-2 text-primary"></i>Học viên (STUDENT)</a></li>
-                        <li><a class="dropdown-item" href="/exams?role=ADMIN"><i class="fa-solid fa-user-shield me-2 text-danger"></i>Quản trị viên (ADMIN)</a></li>
-                    </ul>
                 </div>
             </div>
         </div>

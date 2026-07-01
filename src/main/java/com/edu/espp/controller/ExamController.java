@@ -22,46 +22,28 @@ public class ExamController {
     private final ExamService examService;
 
     @GetMapping
-    public String getAllExams(HttpSession session, 
-                              @RequestParam(value = "role", required = false) String roleParam, 
-                              Model model) {
-        // 1. Lấy thông tin người dùng đang đăng nhập từ Session
+    public String getAllExams(HttpSession session, Model model) {
+        // 1. Lấy thông tin người dùng từ Session (sẽ được thay thế bằng Principal của Spring Security sau này)
         User user = (User) session.getAttribute("currentUser");
 
-        // 2. Logic dự phòng (Fallback / Mocking): Nếu chưa có user trong session (do chưa làm module đăng nhập / Spring Security)
-        // hoặc khi dev muốn chuyển đổi nhanh vai trò bằng query parameter (?role=ADMIN hoặc ?role=STUDENT)
+        // 2. Dự phòng khi chưa có Security: Tự động khởi tạo user mặc định nếu trống
         if (user == null) {
-            Role role = Role.STUDENT; // Vai trò mặc định là STUDENT
-            if (roleParam != null) {
-                try {
-                    role = Role.valueOf(roleParam.toUpperCase());
-                } catch (IllegalArgumentException e) {
-                    // Bỏ qua nếu giá trị vai trò không khớp enum
-                }
-            }
             user = User.builder()
                     .id(1L)
-                    .email(role == Role.ADMIN ? "admin@espp.com" : "student@espp.com")
-                    .fullName(role == Role.ADMIN ? "Quản trị viên (Mock)" : "Học viên (Mock)")
-                    .role(role)
+                    .email("student@espp.com")
+                    .fullName("Học viên (Default)")
+                    .role(Role.STUDENT)
                     .build();
-        } else if (roleParam != null) {
-            // Cho phép ghi đè vai trò từ query parameter để thuận tiện trong quá trình phát triển
-            try {
-                user.setRole(Role.valueOf(roleParam.toUpperCase()));
-            } catch (IllegalArgumentException e) {
-                // Bỏ qua
-            }
+            session.setAttribute("currentUser", user);
         }
 
-        // 3. Lấy danh sách tất cả đề thi từ ExamService
+        // 3. Lấy danh sách đề thi từ Service
         List<ExamResponse> exams = examService.getAllExams();
 
-        // 4. Truyền đối tượng user và exams sang Thymeleaf
         model.addAttribute("user", user);
         model.addAttribute("exams", exams);
 
-        // Trả về file templates/exam/list.html chung duy nhất
+        // Trả về templates/exam/list.html
         return "exam/list";
     }
 }

@@ -33,7 +33,6 @@ public class ExamServiceImpl implements ExamService {
     private final ExamHistoryRepository examHistoryRepository;
     private final ExamAttemptDetailRepository examAttemptDetailRepository;
 
-    // 🌟 Khởi tạo một ObjectMapper instance để dùng chung tái sử dụng
     private ObjectMapper objectMapper = new ObjectMapper();
 
     private static final String EXAM_NOT_FOUND_MSG = "Không tìm thấy bài thi";
