@@ -4,9 +4,12 @@ import com.edu.espp.common.enums.LevelLesson;
 import com.edu.espp.common.enums.TypeLesson;
 import com.edu.espp.entity.Lesson;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
+@Repository
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
     List<Lesson> findByTitleContainingIgnoreCase(String keyword);
@@ -26,4 +29,8 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
             TypeLesson type,
             LevelLesson level
     );
+
+    Optional<Lesson> findFirstByIdGreaterThanOrderByIdAsc(Long id);
+
+    Optional<Lesson> findFirstByOrderByIdAsc();
 }

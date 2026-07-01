@@ -1,12 +1,13 @@
 package com.edu.espp.service;
 
-import com.edu.espp.Repository.LessonContentRepository;
-import com.edu.espp.Repository.SRSReviewRepository;
-import com.edu.espp.Repository.UserRepository;
+
 import com.edu.espp.common.enums.ReviewResult;
 import com.edu.espp.entity.LessonContent;
 import com.edu.espp.entity.SRSReview;
 import com.edu.espp.entity.User;
+import com.edu.espp.repository.LessonContentRepository;
+import com.edu.espp.repository.SRSReviewRepository;
+import com.edu.espp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

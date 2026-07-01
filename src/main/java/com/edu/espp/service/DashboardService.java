@@ -1,13 +1,13 @@
 package com.edu.espp.service;
 
-import com.edu.espp.Repository.LearningProgressRepository;
-import com.edu.espp.Repository.LessonRepository;
-import com.edu.espp.Repository.SRSReviewRepository;
-import com.edu.espp.Repository.UserRepository;
 import com.edu.espp.dto.StudentDashboardData;
 import com.edu.espp.entity.LearningProgress;
 import com.edu.espp.entity.Lesson;
 import com.edu.espp.entity.SRSReview;
+import com.edu.espp.repository.LearningProgressRepository;
+import com.edu.espp.repository.LessonRepository;
+import com.edu.espp.repository.SRSReviewRepository;
+import com.edu.espp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,18 +31,19 @@ public class DashboardService {
         long dueFlashcardsToday = srsReviewRepository
                 .countByUser_IdAndNextReviewDateLessThanEqual(userId, LocalDateTime.now());
 
-        long learnedLessons = learningProgressRepository.countByUser_Id(userId);
+        long learnedLessons = learningProgressRepository.countByUserId(userId);
 
-        long completedLessons = learningProgressRepository.countByUser_IdAndIsCompletedTrue(userId);
+        long completedLessons = learningProgressRepository.countByUserIdAndIsCompletedTrue(userId);
 
         long totalLessons = lessonRepository.count();
 
+        // Ép kiểu chuẩn để tránh lỗi chia nguyên (Integer Division) ra 0
         double completionPercent = totalLessons == 0
                 ? 0
                 : (completedLessons * 100.0) / totalLessons;
 
         Lesson recentLesson = learningProgressRepository
-                .findTopByUser_IdOrderByUpdatedAtDesc(userId)
+                .findTopByUserIdOrderByUpdatedAtDesc(userId)
                 .map(LearningProgress::getLesson)
                 .orElse(null);
 
@@ -68,9 +69,10 @@ public class DashboardService {
         );
     }
 
+    // Tách riêng logic xử lý gợi ý bài học mượt mà
     private Lesson findSuggestedLesson(Long userId, Lesson recentLesson) {
         return learningProgressRepository
-                .findTopByUser_IdAndIsCompletedFalseOrderByUpdatedAtDesc(userId)
+                .findTopByUserIdAndIsCompletedFalseOrderByUpdatedAtDesc(userId)
                 .map(LearningProgress::getLesson)
                 .orElseGet(() -> {
                     if (recentLesson != null) {
@@ -78,7 +80,6 @@ public class DashboardService {
                                 .findFirstByIdGreaterThanOrderByIdAsc(recentLesson.getId())
                                 .orElseGet(() -> lessonRepository.findFirstByOrderByIdAsc().orElse(null));
                     }
-
                     return lessonRepository.findFirstByOrderByIdAsc().orElse(null);
                 });
     }
