@@ -1,17 +1,17 @@
-package com.edu.espp.repository;
+package com.edu.espp.Repository;
 
 import com.edu.espp.entity.LearningProgress;
-import org.springframework.data.jpa.repository.JpaRepository; // Đảm bảo có extends thằng này nhé m
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.Optional;
 
-@Repository
 public interface LearningProgressRepository extends JpaRepository<LearningProgress, Long> {
-    long countByUserId(Long userId);
 
-    long countByUserIdAndIsCompletedTrue(Long userId);
+    long countByUser_Id(Long userId);
 
-    Optional<LearningProgress> findTopByUserIdOrderByUpdatedAtDesc(Long userId);
+    long countByUser_IdAndIsCompletedTrue(Long userId);
 
-    Optional<LearningProgress> findTopByUserIdAndIsCompletedFalseOrderByUpdatedAtDesc(Long userId);
+    Optional<LearningProgress> findTopByUser_IdOrderByUpdatedAtDesc(Long userId);
+
+    Optional<LearningProgress> findTopByUser_IdAndIsCompletedFalseOrderByUpdatedAtDesc(Long userId);
 }
