@@ -12,7 +12,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     List<Question> findByExamIdAndSkill(Long examId, QuestionSkill skill);
 
-    List<Question> findAllByExamId(Long examId);
 
     List<Question> findBySkill(QuestionSkill skill);
 }
