@@ -28,6 +28,13 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         authSessionService.handleLoginSuccess(email, sessionId, ipAddress);
 
-        response.sendRedirect(request.getContextPath() + "/exams");
+        boolean isStudent = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("STUDENT") || a.getAuthority().equals("ROLE_STUDENT"));
+
+        if (isStudent) {
+            response.sendRedirect(request.getContextPath() + "/dashboard");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/exams");
+        }
     }
 }

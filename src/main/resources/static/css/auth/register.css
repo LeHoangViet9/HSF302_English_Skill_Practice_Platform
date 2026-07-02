@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Register / verify-email pages — reuses tokens từ auth-shared.css
+   Register / verify-email pages — Apple style
    ========================================================================== */
 
 .register-form {
@@ -12,30 +12,33 @@
     font-size: 12px;
     color: var(--color-text-sub);
     margin: 4px 0 0;
+    line-height: 1.4;
 }
 
 .btn-register {
     width: 100%;
-    height: 50px;
-    background: var(--color-secondary);
+    height: 48px;
+    background: var(--color-primary);
     color: white;
-    font-weight: 800;
-    font-size: 15px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 17px;
     border-radius: var(--radius-full);
     border: none;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(93, 187, 105, 0.30);
-    transition: filter 150ms, transform 100ms, box-shadow 150ms;
+    box-shadow: none;
+    transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-register:hover {
-    filter: brightness(1.08);
+    background: var(--color-primary-light);
 }
 
 .btn-register:active {
-    transform: scale(0.97);
+    transform: scale(0.95) !important;
 }
 
 .btn-register:disabled {
@@ -44,41 +47,46 @@
 }
 
 .auth-success-title {
-    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
     font-size: 22px;
     color: var(--color-text);
     text-align: center;
     margin: 0 0 12px;
+    letter-spacing: -0.01em;
 }
 
 .auth-success-desc {
     font-size: 14px;
     color: var(--color-text-sub);
     text-align: center;
-    line-height: 1.7;
+    line-height: 1.6;
     margin: 0 0 24px;
 }
 
 .auth-success-desc strong {
-    color: var(--color-primary-dark);
+    color: var(--color-primary);
 }
 
 .btn-resend {
     width: 100%;
     background: transparent;
-    border: 1.5px solid var(--color-border);
+    border: 1px solid var(--color-primary);
     border-radius: var(--radius-full);
-    font-weight: 600;
+    font-weight: 400;
     font-size: 14px;
-    color: var(--color-text-sub);
+    color: var(--color-primary);
     padding: 11px 28px;
     cursor: pointer;
-    transition: border-color 150ms, color 150ms;
+    transition: transform 0.15s ease, background-color 0.15s;
 }
 
 .btn-resend:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
+    background-color: rgba(0, 102, 204, 0.05);
+}
+
+.btn-resend:active {
+    transform: scale(0.95) !important;
 }
 
 .resend-form {

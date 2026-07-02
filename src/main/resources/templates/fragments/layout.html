@@ -9,13 +9,17 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Apple Design CSS -->
+    <link rel="stylesheet" th:href="@{/css/apple-design.css}">
+    
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
+        html, body {
+            font-family: var(--apple-font-text);
+            background-color: var(--apple-canvas-parchment);
+            color: var(--apple-ink);
+            overflow-x: hidden;
+            width: 100%;
         }
         
         /* Layout & Sidebar CSS */
@@ -23,27 +27,33 @@
             display: flex;
             width: 100%;
             align-items: stretch;
+            overflow-x: hidden;
         }
-        
+
         #sidebar-wrapper {
-            min-height: 100vh;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
             width: 260px;
-            background: #1e2229;
-            color: #a3b1c6;
-            transition: all 0.3s ease;
-            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+            background: var(--apple-surface-tile-1);
+            color: var(--apple-body-muted);
+            transition: margin 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            border-right: 1px solid var(--apple-surface-tile-3);
             z-index: 1000;
             flex-shrink: 0;
         }
-        
+
         #sidebar-wrapper .sidebar-brand {
             padding: 1.5rem 1.25rem;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #fff;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-family: var(--apple-font-display);
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--apple-body-on-dark);
+            border-bottom: 1px solid var(--apple-surface-tile-3);
             display: flex;
             align-items: center;
+            letter-spacing: -0.01em;
         }
         
         #sidebar-wrapper .list-group {
@@ -52,14 +62,14 @@
         
         #sidebar-wrapper .list-group-item {
             background-color: transparent;
-            color: #a3b1c6;
+            color: var(--apple-body-muted);
             border: none;
             padding: 0.8rem 1.5rem;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
+            font-size: 14px;
+            transition: all 0.15s ease;
             display: flex;
             align-items: center;
-            border-radius: 8px;
+            border-radius: var(--apple-rounded-sm);
             margin: 4px 10px;
             text-decoration: none;
         }
@@ -73,26 +83,31 @@
         }
         
         #sidebar-wrapper .list-group-item:hover {
-            color: #fff;
-            background-color: rgba(255, 255, 255, 0.08);
+            color: var(--apple-body-on-dark);
+            background-color: var(--apple-surface-tile-2);
         }
         
         #sidebar-wrapper .list-group-item:hover i {
-            transform: scale(1.15);
+            transform: scale(1.1);
+        }
+        
+        #sidebar-wrapper .list-group-item:active {
+            transform: scale(0.97);
         }
         
         #sidebar-wrapper .list-group-item.active {
-            color: #fff;
-            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
-            box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3);
+            color: var(--apple-on-primary) !important;
+            background-color: var(--apple-primary) !important;
         }
         
+
+
         #page-content-wrapper {
-            flex-grow: 1;
-            min-width: 0;
+            min-width: 100vw;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            transition: margin 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         /* Responsive Sidebar toggling */
@@ -105,6 +120,13 @@
             }
         }
         @media (min-width: 769px) {
+            #sidebar-wrapper {
+                margin-left: 0;
+            }
+            #page-content-wrapper {
+                min-width: 0;
+                width: 100%;
+            }
             #wrapper.toggled #sidebar-wrapper {
                 margin-left: -260px;
             }
@@ -112,70 +134,97 @@
         
         /* Navbar custom styles */
         .navbar-custom {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background-color: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid var(--apple-hairline);
         }
+        
         .navbar-admin {
-            background: #212529 !important;
+            background-color: var(--apple-surface-black) !important;
+            border-bottom: 1px solid var(--apple-surface-tile-3);
         }
         
         /* Content Styling */
         .page-header {
-            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
-            color: white;
-            border-radius: 15px;
-            padding: 30px;
+            background: var(--apple-surface-tile-1);
+            color: var(--apple-body-on-dark);
+            border-radius: var(--apple-rounded-lg);
+            padding: 32px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
         }
+        
+        .page-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: radial-gradient(circle at 80% 50%, rgba(0, 102, 204, 0.15), transparent 70%);
+            pointer-events: none;
+        }
+
         .exam-card {
-            border: none;
-            border-radius: 12px;
-            background-color: #ffffff;
-            transition: all 0.3s ease-in-out;
+            border: 1px solid var(--apple-hairline);
+            border-radius: var(--apple-rounded-lg);
+            background-color: var(--apple-canvas);
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s ease;
         }
         .exam-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.08) !important;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04) !important;
         }
         .icon-box {
-            width: 50px;
-            height: 50px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 10px;
+            border-radius: var(--apple-rounded-sm);
         }
         .icon-box-student {
-            background-color: rgba(42, 82, 152, 0.1);
-            color: #2a5298;
+            background-color: rgba(0, 102, 204, 0.08);
+            color: var(--apple-primary);
         }
         .icon-box-admin {
             background-color: rgba(255, 193, 7, 0.1);
             color: #ffc107;
         }
         .badge-type {
+            font-family: var(--apple-font-text);
+            font-size: 12px;
             font-weight: 600;
         }
         .btn-action {
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.2s;
+            border-radius: var(--apple-rounded-pill);
+            font-family: var(--apple-font-text);
+            font-weight: 400;
+            transition: transform 0.15s ease, background-color 0.2s;
+        }
+        .btn-action:active {
+            transform: scale(0.95) !important;
         }
     </style>
 </head>
 <body>
 
 <!-- Fragment cho NAVBAR chung -->
-<nav th:fragment="navbar(user)" class="navbar navbar-expand-lg navbar-dark shadow-sm mb-4" 
-     th:classappend="${user.role.name() == 'ADMIN' ? 'navbar-admin bg-dark' : 'navbar-custom'}">
+<nav th:fragment="navbar(user)" class="navbar navbar-expand-lg navbar-light shadow-none mb-4" 
+     th:classappend="${user.role.name() == 'ADMIN' ? 'navbar-admin navbar-dark' : 'navbar-custom'}">
     <div class="container-fluid px-4">
         <!-- Menu Toggle Button -->
-        <button class="btn btn-outline-light me-3" id="menu-toggle">
+        <button class="btn btn-apple btn-apple-pearl-capsule me-3" id="menu-toggle" 
+                th:style="${user.role.name() == 'ADMIN' ? 'background: #333; color: white; border-color: #444;' : ''}">
             <i class="fa-solid fa-bars"></i>
         </button>
         
-        <a class="navbar-brand fw-bold text-white d-flex align-items-center" href="/exams">
-            <i class="fa-solid fa-graduation-cap me-2 fs-4 text-warning"></i>
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="/exams"
+           th:classappend="${user.role.name() == 'ADMIN' ? 'text-white' : 'text-dark'}"
+           style="font-family: var(--apple-font-display); letter-spacing: -0.01em;">
+            <i class="fa-solid fa-graduation-cap me-2 fs-4" th:classappend="${user.role.name() == 'ADMIN' ? 'text-warning' : 'text-primary'}"></i>
             <span th:text="${user.role.name() == 'ADMIN' ? 'ES Admin Portal' : 'ESPP Platform'}">ESPP Platform</span>
         </a>
         
@@ -186,14 +235,17 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <!-- Profile (Align right) -->
             <div class="d-flex align-items-center ms-auto">
-                <div class="text-light text-end me-3">
-                    <div class="fw-bold text-white small" th:text="${user.fullName}">Nguyen Van A</div>
-                    <span class="badge bg-warning text-dark fw-bold px-2 py-1" th:text="${user.role}" style="font-size: 0.75rem;">STUDENT</span>
+                <div class="text-end me-3" th:classappend="${user.role.name() == 'ADMIN' ? 'text-light' : 'text-dark'}">
+                    <div class="fw-bold small" th:text="${user.fullName}">Nguyen Van A</div>
+                    <span class="badge fw-bold px-2 py-1" 
+                          th:classappend="${user.role.name() == 'ADMIN' ? 'bg-warning text-dark' : 'bg-primary-subtle text-primary'}"
+                          style="font-size: 0.75rem; border-radius: var(--apple-rounded-xs);" th:text="${user.role}">STUDENT</span>
                 </div>
                 <!-- Logout form -->
                 <form th:action="@{/logout}" method="post" class="d-inline">
-                    <button type="submit" class="btn btn-outline-light btn-sm">
-                        <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+                    <button type="submit" class="btn-apple btn-apple-dark-utility btn-sm"
+                            th:style="${user.role.name() == 'ADMIN' ? 'background: #f5f5f7; color: #1d1d1f !important;' : ''}">
+                        <i class="fa-solid fa-right-from-bracket me-1"></i> Đăng xuất
                     </button>
                 </form>
             </div>
@@ -202,9 +254,9 @@
 </nav>
 
 <!-- Fragment cho SIDEBAR chung -->
-<div th:fragment="sidebar(user, activeMenu)" id="sidebar-wrapper">
+<div th:fragment="sidebar(user, activeMenu)" id="sidebar-wrapper" class="apple-sidebar">
     <div class="sidebar-brand">
-        <i class="fa-solid fa-shield-halved text-warning me-2"></i>
+        <i class="fa-solid fa-shield-halved text-primary me-2" th:classappend="${user.role.name() == 'ADMIN' ? 'text-warning' : 'text-primary'}"></i>
         <span>Menu Chức Năng</span>
     </div>
     <div class="list-group list-group-flush">
@@ -216,6 +268,9 @@
             <a class="list-group-item" th:classappend="${activeMenu == 'questions' ? 'active' : ''}" href="/admin/questions">
                 <i class="fa-solid fa-circle-question"></i> Quản lý Câu hỏi
             </a>
+            <a class="list-group-item" th:classappend="${activeMenu == 'lessons' ? 'active' : ''}" href="/staff/lessons">
+                <i class="fa-solid fa-book"></i> Quản lý Bài học
+            </a>
             <a class="list-group-item" th:classappend="${activeMenu == 'support' ? 'active' : ''}" href="/admin/support-tickets">
                 <i class="fa-solid fa-envelope"></i> Hộp thư Hỗ trợ
             </a>
@@ -224,10 +279,23 @@
             </a>
         </th:block>
 
+        <!-- Sidebar Menu STAFF -->
+        <th:block th:if="${user.role.name() == 'STAFF'}">
+            <a class="list-group-item" th:classappend="${activeMenu == 'lessons' ? 'active' : ''}" href="/staff/lessons">
+                <i class="fa-solid fa-book"></i> Quản lý Bài học
+            </a>
+        </th:block>
+
         <!-- Sidebar Menu STUDENT -->
         <th:block th:if="${user.role.name() == 'STUDENT'}">
+            <a class="list-group-item" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}" href="/dashboard">
+                <i class="fa-solid fa-chart-line"></i> Bảng điều khiển
+            </a>
             <a class="list-group-item" th:classappend="${activeMenu == 'exams' ? 'active' : ''}" href="/exams">
                 <i class="fa-solid fa-book-open"></i> Kho Đề Thi
+            </a>
+            <a class="list-group-item" th:classappend="${activeMenu == 'flashcards' ? 'active' : ''}" href="/student/flashcards/review">
+                <i class="fa-solid fa-layer-group"></i> Ôn tập Flashcard
             </a>
             <a class="list-group-item" th:classappend="${activeMenu == 'support' ? 'active' : ''}" th:href="@{/student/support-tickets/user/{id}(id=${user.id})}">
                 <i class="fa-solid fa-circle-info"></i> Gửi Hỗ Trợ
@@ -240,9 +308,9 @@
 </div>
 
 <!-- Fragment cho FOOTER chung -->
-<footer th:fragment="footer" class="bg-white text-center py-4 border-top mt-auto shadow-sm">
-    <div class="container">
-        <p class="text-muted mb-0">&copy; 2026 ESPP Platform. All rights reserved.</p>
+<footer th:fragment="footer" class="apple-footer mt-auto" style="padding: 32px 24px; border-top: 1px solid var(--apple-hairline);">
+    <div class="container text-center">
+        <p class="mb-0" style="color: var(--apple-ink-muted-80);">&copy; 2026 ESPP Platform. All rights reserved.</p>
     </div>
 </footer>
 

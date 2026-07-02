@@ -40,16 +40,6 @@ VALUES
     (N'Đề thi thử Tiếng Anh B1 - Đề số 1', 'MOCK_TEST', 60, 10),
     (N'Bài kiểm tra nhanh kỹ năng Reading', 'QUIZ', 15, 6);
 
-
--- 1. Tìm và xóa hết các token liên quan của thằng học viên này ở bảng con trước
-DELETE FROM auth_tokens
-WHERE student_id = (SELECT auth_tokens.student_id FROM student_users WHERE email = 'leviet20051509@gmail.com');
-
--- 2. Giờ thằng học viên đã "sạch nợ", xóa thoải mái ở bảng mẹ
-DELETE FROM student_users
-WHERE email = 'leviet20051509@gmail.com';
-
-select * from users
 -- ====================================================================
 -- 3. CHÈN CÂU HỎI (Bảng questions)
 -- ====================================================================

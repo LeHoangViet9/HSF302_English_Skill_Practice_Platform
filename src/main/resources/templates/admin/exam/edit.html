@@ -1,96 +1,94 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chỉnh Sửa Đề Thi - Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
+<head th:replace="~{fragments/layout :: head('Chỉnh Sửa Đề Thi - Admin')}"></head>
+<body class="apple-theme">
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/layout :: sidebar(${user}, 'exams')}"></div>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm mb-4">
-    <div class="container">
-        <a class="navbar-brand fw-bold text-warning" href="/exams"><i class="fa-solid fa-screwdriver-wrench me-2"></i> ES Admin Portal</a>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link active fw-bold" href="/exams">Quản lý Đề thi</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/questions">Quản lý Câu hỏi</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/support-tickets">Hộp thư Hỗ trợ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/histories">Lịch sử Thi</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+    <!-- Page Content -->
+    <div id="page-content-wrapper" class="d-flex flex-column">
+        <!-- Navbar -->
+        <nav th:replace="~{fragments/layout :: navbar(${user})}"></nav>
 
-<div class="container my-5" style="max-width: 700px;">
-    <div class="card shadow border-0">
-        <div class="card-header bg-warning text-dark py-3">
-            <h4 class="mb-0 fw-bold"><i class="fa-solid fa-pen-to-square me-2"></i> Chỉnh Sửa Đề Thi</h4>
-        </div>
-        <div class="card-body p-4">
-
-            <form th:action="@{/admin/exams/{id}/update(id=${exam.id})}" th:object="${exam}" method="post">
-
-                <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger mb-4 shadow-sm" role="alert">
-                    <i class="fa-solid fa-triangle-exclamation me-2"></i> Vui lòng kiểm tra lại các thông tin nhập liệu bên dưới.
+        <div class="container-fluid my-4 flex-grow-1 px-4 d-flex justify-content-center">
+            <div class="apple-store-utility-card p-4" style="max-width: 700px; width: 100%; height: fit-content;">
+                <!-- Header -->
+                <div style="border-bottom: 1px solid var(--apple-hairline); padding-bottom: 16px; margin-bottom: 24px;">
+                    <h4 class="apple-tagline mb-0" style="font-size: 21px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-pen-to-square text-primary"></i> Chỉnh Sửa Đề Thi
+                    </h4>
                 </div>
 
-                <div class="mb-3">
-                    <label for="title" class="form-label fw-bold text-secondary">Tên đề thi <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="title" th:field="*{title}" required>
-                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Tên đề thi không hợp lệ</div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="type" class="form-label fw-bold text-secondary">Loại đề thi <span class="text-danger">*</span></label>
-                        <select class="form-select" id="type" th:field="*{type}" required>
-                            <option value="MOCK_TEST">MOCK_TEST (Thi thử)</option>
-                            <option value="QUIZ">QUIZ (Trắc nghiệm nhanh)</option>
-                        </select>
-                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('type')}" th:errors="*{type}">Loại không hợp lệ</div>
+                <!-- Form -->
+                <form th:action="@{/admin/exams/{id}/update(id=${exam.id})}" th:object="${exam}" method="post">
+                    
+                    <!-- Hiển thị lỗi chung -->
+                    <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger border-0 shadow-none mb-4" 
+                         style="background-color: #fce8e6; border: 1px solid #fad2cf !important; color: #c5221f; border-radius: var(--apple-rounded-md);" role="alert">
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i> Vui lòng kiểm tra lại các thông tin nhập liệu bên dưới.
                     </div>
 
-                    <div class="col-md-6 mb-3">
-                        <label for="duration" class="form-label fw-bold text-secondary">Thời gian thi (phút) <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control" id="duration" th:field="*{duration}" min="1" max="180" required>
-                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}">Thời gian không hợp lệ</div>
+                    <div class="mb-3">
+                        <label for="title" class="apple-caption-strong" style="color: var(--apple-ink); margin-bottom: 6px; display: block;">
+                            Tên đề thi <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="apple-text-field" id="title" th:field="*{title}" placeholder="Ví dụ: Đề thi thử Tiếng Anh B1 - Đề số 3" required>
+                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Tên đề thi không hợp lệ</div>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label for="totalQuestions" class="form-label fw-bold text-secondary">Số lượng câu hỏi <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" id="totalQuestions" th:field="*{totalQuestions}" min="1" max="200" required>
-                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('totalQuestions')}" th:errors="*{totalQuestions}">Số câu hỏi không hợp lệ</div>
-                </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="type" class="apple-caption-strong" style="color: var(--apple-ink); margin-bottom: 6px; display: block;">
+                                Loại đề thi <span class="text-danger">*</span>
+                            </label>
+                            <select class="apple-text-field" style="height: 48px; padding: 0 16px; font-size: 15px;" id="type" th:field="*{type}" required>
+                                <option value="MOCK_TEST">MOCK_TEST (Thi thử)</option>
+                                <option value="QUIZ">QUIZ (Trắc nghiệm nhanh)</option>
+                            </select>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('type')}" th:errors="*{type}">Loại không hợp lệ</div>
+                        </div>
 
-                <div class="mb-4">
-                    <label for="description" class="form-label fw-bold text-secondary">Mô tả đề thi <span class="text-danger">*</span></label>
-                    <textarea class="form-control" id="description" th:field="*{description}" rows="4" required></textarea>
-                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Mô tả không hợp lệ</div>
-                </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="duration" class="apple-caption-strong" style="color: var(--apple-ink); margin-bottom: 6px; display: block;">
+                                Thời gian thi (phút) <span class="text-danger">*</span>
+                            </label>
+                            <input type="number" class="apple-text-field" id="duration" th:field="*{duration}" min="1" max="180" placeholder="20" required>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}">Thời gian không hợp lệ</div>
+                        </div>
+                    </div>
 
-                <div class="d-flex justify-content-end gap-2">
-                    <a href="/exams" class="btn btn-outline-secondary px-4">Hủy bỏ</a>
-                    <button type="submit" class="btn btn-warning px-4 fw-bold">
-                        <i class="fa-solid fa-save me-1"></i> Cập Nhật Đề Thi
-                    </button>
-                </div>
-            </form>
+                    <div class="mb-3">
+                        <label for="totalQuestions" class="apple-caption-strong" style="color: var(--apple-ink); margin-bottom: 6px; display: block;">
+                            Số lượng câu hỏi <span class="text-danger">*</span>
+                        </label>
+                        <input type="number" class="apple-text-field" id="totalQuestions" th:field="*{totalQuestions}" min="1" max="200" placeholder="4" required>
+                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('totalQuestions')}" th:errors="*{totalQuestions}">Số câu hỏi không hợp lệ</div>
+                    </div>
 
+                    <div class="mb-4">
+                        <label for="description" class="apple-caption-strong" style="color: var(--apple-ink); margin-bottom: 6px; display: block;">
+                            Mô tả đề thi <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="apple-text-field" id="description" th:field="*{description}" rows="4" style="height: auto;" placeholder="Mô tả tóm tắt nội dung bài thi và mục tiêu rèn luyện..." required></textarea>
+                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Mô tả không hợp lệ</div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="/exams" class="btn-apple btn-apple-secondary-pill" style="font-size: 14px; padding: 10px 20px;">Hủy bỏ</a>
+                        <button type="submit" class="btn-apple btn-apple-primary btn-action" style="font-size: 14px; padding: 10px 20px;">
+                            <i class="fa-solid fa-save me-1"></i> Lưu Đề Thi
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
+
+        <!-- Footer -->
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
 </html>

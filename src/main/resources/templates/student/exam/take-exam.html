@@ -1,90 +1,99 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${exam.title}">Đang làm bài thi</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
+<head th:replace="~{fragments/layout :: head('Làm Bài Thi')}"></head>
+<body class="apple-theme">
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/layout :: sidebar(${user}, 'exams')}"></div>
 
-<div class="navbar navbar-dark bg-dark sticky-top shadow-sm px-4">
-    <span class="navbar-brand mb-0 h1" th:text="${exam.title}">Đề thi thử Tiếng Anh B1</span>
-    <div class="d-flex align-items-center">
-        <div class="bg-danger text-white px-3 py-2 rounded-3 fw-bold fs-5 me-3">
-            <i class="fa-regular fa-clock me-2"></i> Thời gian: <span id="countdown">20:00</span>
+    <!-- Page Content -->
+    <div id="page-content-wrapper" class="d-flex flex-column">
+        <!-- Navbar đặc biệt cho phòng thi (có đồng hồ) -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm px-4 justify-content-between">
+            <span class="navbar-brand mb-0 h1" th:text="${exam.title}">Đề thi thử Tiếng Anh B1</span>
+            <div class="d-flex align-items-center">
+                <div class="bg-danger text-white px-3 py-2 rounded-3 fw-bold fs-5 me-3">
+                    <i class="fa-regular fa-clock me-2"></i> <span id="countdown">20:00</span>
+                </div>
+                <button type="button" class="btn btn-success fw-bold px-4" onclick="confirmSubmit()">
+                    <i class="fa-solid fa-paper-plane me-2"></i> Nộp Bài
+                </button>
+            </div>
+        </nav>
+
+        <div class="container-fluid my-4 flex-grow-1 px-4">
+            <form id="examForm" th:action="@{/student/exams/{id}/submit(id=${exam.id})}" th:object="${submitForm}" method="post">
+                <input type="hidden" name="userId" th:value="${user.id}" />
+                <input type="hidden" id="timeSpentInput" name="timeSpent" value="0" />
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div th:each="question, iterStat : ${questions}" class="apple-store-utility-card mb-4" style="padding: 24px;">
+                            <div class="d-flex justify-content-between align-items-center mb-3" style="border-bottom: 1px solid var(--apple-hairline); padding-bottom: 12px;">
+                                <h5 class="apple-tagline mb-0" style="font-size: 17px;">
+                                    Câu hỏi <span th:text="${iterStat.count}">1</span>
+                                    <span class="badge bg-light text-dark border ms-2" style="font-size: 12px; font-weight: normal;" th:text="${question.skill}">READING</span>
+                                </h5>
+                            </div>
+
+                            <div class="card-body p-0">
+                                <h5 class="card-title mb-3" style="font-size: 19px; font-weight: 600;" th:text="${question.questionText}">Chọn đáp án đúng</h5>
+
+                                <!-- Listening -->
+                                <div th:if="${question.skill.name() == 'LISTENING'}" class="bg-light p-3 rounded mb-3">
+                                    <label class="fw-bold mb-2 text-secondary" style="font-size: 14px;"><i class="fa-solid fa-headphones me-2"></i> Hãy nghe đoạn băng sau:</label>
+                                    <audio controls class="w-100">
+                                        <source th:src="${question.audioUrl != null ? question.audioUrl : ''}" type="audio/mpeg">
+                                        Trình duyệt của bạn không hỗ trợ phát âm thanh.
+                                    </audio>
+                                </div>
+
+                                <!-- Speaking -->
+                                <div th:if="${question.skill.name() == 'SPEAKING'}" class="bg-light p-3 rounded mb-3 text-center">
+                                    <label class="fw-bold mb-2 text-secondary d-block text-start" style="font-size: 14px;"><i class="fa-solid fa-microphone me-2"></i> Nhấn để ghi âm câu trả lời của bạn:</label>
+                                    <button type="button" class="btn btn-outline-danger btn-lg rounded-circle p-3" id="micBtn" onclick="toggleRecording(this)">
+                                        <i class="fa-solid fa-microphone fs-3"></i>
+                                    </button>
+                                    <p class="text-muted mt-2 small" id="micStatus" style="font-size: 13px;">Nhấp để bắt đầu nói</p>
+                                </div>
+
+                                <!-- Options -->
+                                <div th:if="${question.options != null && !question.options.isEmpty()}" class="mt-3">
+                                    <div th:each="entry : ${question.options}" class="form-check p-3 border rounded mb-2 bg-white d-flex align-items-center" style="border-color: var(--apple-hairline) !important; cursor: pointer; transition: all 0.2s;">
+                                        <input class="form-check-input ms-0 me-3" type="radio"
+                                               th:name="'userAnswers[' + ${question.id} + ']'"
+                                               th:value="${entry.key}"
+                                               th:id="'q_' + ${question.id} + '_' + ${entry.key}"
+                                               style="cursor: pointer;">
+                                        <label class="form-check-label w-100 ps-1"
+                                               th:for="'q_' + ${question.id} + '_' + ${entry.key}"
+                                               style="cursor: pointer; font-size: 15px;">
+                                            <strong th:text="${entry.key} + ': '">A: </strong>
+                                            <span th:text="${entry.value}">Nội dung đáp án</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Writing / Tự luận -->
+                                <div th:if="${question.skill.name() == 'WRITING' || (question.options == null || question.options.isEmpty())}" class="mt-3">
+                                    <label class="fw-bold mb-2 text-secondary" style="font-size: 14px;"><i class="fa-solid fa-pen-to-square me-2"></i> Nhập câu trả lời của bạn vào đây:</label>
+                                    <textarea class="apple-text-field" rows="3" style="height: auto;"
+                                              th:name="'userAnswers[' + ${question.id} + ']'"
+                                              placeholder="Nhập đoạn văn hoặc từ còn thiếu tại đây..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
-        <button type="button" class="btn btn-success fw-bold px-4" onclick="confirmSubmit()">
-            <i class="fa-solid fa-paper-plane me-2"></i> Nộp Bài
-        </button>
+
+        <!-- Footer -->
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
     </div>
 </div>
 
-<div class="container my-4">
-    <form id="examForm" th:action="@{/student/exams/{id}/submit(id=${exam.id})}" th:object="${submitForm}" method="post">
-        <input type="hidden" name="userId" value="1" />
-        <input type="hidden" id="timeSpentInput" name="timeSpent" value="0" />
-
-        <div class="row">
-            <div class="col-md-12">
-
-                <div th:each="question, iterStat : ${questions}" class="card shadow-sm mb-4">
-                    <div class="card-header bg-white fw-bold text-primary d-flex justify-content-between align-items-center">
-                            <span>Câu hỏi <span th:text="${iterStat.count}">1</span>
-                                  (<span th:text="${question.skill}">READING</span>)</span>
-                    </div>
-                    <div class="card-body">
-
-                        <h5 class="card-title mb-3" th:text="${question.questionText}">Chọn đáp án đúng hoặc điền từ vào chỗ trống</h5>
-
-                        <div th:if="${question.skill.name() == 'LISTENING'}" class="bg-light p-3 rounded mb-3">
-                            <label class="fw-bold mb-2 text-secondary"><i class="fa-solid fa-headphones me-2"></i> Hãy nghe đoạn băng sau:</label>
-                            <audio controls class="w-100">
-                                <source th:src="${question.audioUrl != null ? question.audioUrl : ''}" type="audio/mpeg">
-                                Trình duyệt của bạn không hỗ trợ phát âm thanh.
-                            </audio>
-                        </div>
-
-                        <div th:if="${question.skill.name() == 'SPEAKING'}" class="bg-light p-3 rounded mb-3 text-center">
-                            <label class="fw-bold mb-2 text-secondary d-block text-start"><i class="fa-solid fa-microphone me-2"></i> Nhấn để ghi âm câu trả lời của bạn:</label>
-                            <button type="button" class="btn btn-outline-danger btn-lg rounded-circle p-3" id="micBtn" onclick="toggleRecording(this)">
-                                <i class="fa-solid fa-microphone fs-3"></i>
-                            </button>
-                            <p class="text-muted mt-2 small" id="micStatus">Nhấp để bắt đầu nói</p>
-                        </div>
-
-                        <div th:if="${question.options != null && !question.options.isEmpty()}" class="mt-3">
-                            <div th:each="entry : ${question.options}" class="form-check p-2 border rounded mb-2 bg-white d-flex align-items-center">
-
-                                <input class="form-check-input ms-2 me-3" type="radio"
-                                       th:name="'userAnswers[' + ${question.id} + ']'"
-                                       th:value="${entry.key}"
-                                       th:id="'q_' + ${question.id} + '_' + ${entry.key}">
-
-                                <label class="form-check-label w-100 ps-1"
-                                       th:for="'q_' + ${question.id} + '_' + ${entry.key}">
-                                    <strong th:text="${entry.key} + ': '">A: </strong>
-                                    <span th:text="${entry.value}">Nội dung đáp án</span>
-                                </label>
-
-                            </div>
-                        </div>
-                        <div th:if="${question.skill.name() == 'WRITING' || (question.options == null || question.options.isEmpty())}" class="mt-3">
-                            <label class="fw-bold mb-2 text-secondary"><i class="fa-solid fa-pen-to-square me-2"></i> Nhập câu trả lời của bạn vào đây:</label>
-                            <textarea class="form-control" rows="3"
-                                      th:name="'userAnswers[' + ${question.id} + ']'"
-                                      placeholder="Nhập đoạn văn hoặc từ còn thiếu tại đây..."></textarea>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </form>
-</div>
-
+<div th:replace="~{fragments/layout :: scripts}"></div>
 <script th:inline="javascript">
     // 1. Cấu hình bộ đếm ngược (Ví dụ: 20 phút)
     let totalMinutes = 20;
@@ -95,7 +104,6 @@
         let minutes = Math.floor(timeInSeconds / 60);
         let seconds = timeInSeconds % 60;
 
-        // Định dạng hiển thị kiểu 09:05
         minutes = minutes < 10 ? '0' + minutes : minutes;
         seconds = seconds < 10 ? '0' + seconds : seconds;
 
@@ -105,12 +113,11 @@
             clearInterval(timer);
             alert("Hết giờ làm bài! Hệ thống tự động nộp bài.");
             document.getElementById('timeSpentInput').value = totalMinutes * 60;
-            document.getElementById('examForm').submit(); // Ép tự động nộp form
+            document.getElementById('examForm').submit();
         }
         timeInSeconds--;
     }, 1000);
 
-    // Nút nộp bài thủ công
     function confirmSubmit() {
         if (confirm("Bạn có chắc chắn muốn nộp bài thi ngay bây giờ?")) {
             let timeSpent = (totalMinutes * 60) - timeInSeconds;
@@ -119,7 +126,6 @@
         }
     }
 
-    // 2. Xử lý ghi âm mô phỏng (Dành cho kỹ năng Nói)
     let isRecording = false;
     function toggleRecording(button) {
         const statusText = document.getElementById('micStatus');

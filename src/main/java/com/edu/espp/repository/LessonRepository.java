@@ -1,9 +1,9 @@
 package com.edu.espp.repository;
 
-import com.edu.espp.common.enums.LevelLesson;
-import com.edu.espp.common.enums.TypeLesson;
 import com.edu.espp.entity.Lesson;
 import org.springframework.data.jpa.repository.JpaRepository;
+import com.edu.espp.common.enums.LevelLesson;
+import com.edu.espp.common.enums.TypeLesson;
 
 import java.util.List;
 import java.util.Optional;
