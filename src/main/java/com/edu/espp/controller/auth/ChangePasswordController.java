@@ -1,4 +1,4 @@
-package com.edu.espp.controller;
+package com.edu.espp.controller.auth;
 
 import com.edu.espp.dto.ResetPasswordForm;
 import com.edu.espp.service.ChangePasswordService;

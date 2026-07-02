@@ -1,4 +1,4 @@
-package com.edu.espp.controller;
+package com.edu.espp.controller.auth;
 
 import com.edu.espp.service.VerifyEmailService;
 import lombok.RequiredArgsConstructor;
