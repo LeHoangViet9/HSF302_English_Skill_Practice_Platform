@@ -37,7 +37,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
                 or lower(coalesce(l.description, '')) like lower(concat('%', :keyword, '%')))
             and (:type is null or l.type = :type)
             and (:level is null or l.level = :level)
-            order by l.level asc, l.type asc, l.title asc
+            order by l.id asc
             """)
     List<Lesson> searchLessons(
             @Param("keyword") String keyword,
@@ -53,7 +53,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
                 or lower(coalesce(l.description, '')) like lower(concat('%', :keyword, '%')))
             and (:type is null or l.type = :type)
             and (:level is null or l.level = :level)
-            order by l.level asc, l.type asc, l.title asc
+            order by l.id asc
             """)
     List<Lesson> searchPublishedLessons(
             @Param("keyword") String keyword,
