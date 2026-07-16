@@ -3,6 +3,7 @@ package com.edu.espp.controller;
 import com.edu.espp.common.enums.LevelLesson;
 import com.edu.espp.common.enums.TypeLesson;
 import com.edu.espp.entity.Lesson;
+import com.edu.espp.entity.LessonContent;
 import com.edu.espp.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -56,6 +57,8 @@ public class StaffLessonController {
         Lesson lesson = lessonService.getLessonById(id);
 
         model.addAttribute("lesson", lesson);
+        model.addAttribute("contents", lessonService.getContentsByLesson(id));
+        model.addAttribute("lessonContent", new LessonContent());
         model.addAttribute("types", TypeLesson.values());
         model.addAttribute("levels", LevelLesson.values());
 
@@ -67,5 +70,41 @@ public class StaffLessonController {
         lessonService.deleteLesson(id);
 
         return "redirect:/staff/lessons";
+    }
+
+    @PostMapping("/{lessonId}/contents/save")
+    public String saveLessonContent(
+            @PathVariable Long lessonId,
+            @ModelAttribute LessonContent lessonContent
+    ) {
+        lessonService.saveLessonContent(lessonId, lessonContent);
+        return "redirect:/staff/lessons/edit/" + lessonId;
+    }
+
+    @GetMapping("/{lessonId}/contents/edit/{contentId}")
+    public String editLessonContent(
+            @PathVariable Long lessonId,
+            @PathVariable Long contentId,
+            Model model
+    ) {
+        Lesson lesson = lessonService.getLessonById(lessonId);
+        LessonContent content = lessonService.getContentById(contentId);
+
+        model.addAttribute("lesson", lesson);
+        model.addAttribute("contents", lessonService.getContentsByLesson(lessonId));
+        model.addAttribute("lessonContent", content);
+        model.addAttribute("types", TypeLesson.values());
+        model.addAttribute("levels", LevelLesson.values());
+
+        return "staff/lesson-form";
+    }
+
+    @GetMapping("/{lessonId}/contents/delete/{contentId}")
+    public String deleteLessonContent(
+            @PathVariable Long lessonId,
+            @PathVariable Long contentId
+    ) {
+        lessonService.deleteLessonContent(contentId);
+        return "redirect:/staff/lessons/edit/" + lessonId;
     }
 }
