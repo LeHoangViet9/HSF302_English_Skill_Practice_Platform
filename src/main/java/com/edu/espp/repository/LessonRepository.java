@@ -16,6 +16,9 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
     Optional<Lesson> findFirstByOrderByIdAsc();
 
+    @Query("select l from Lesson l where l.title = :title")
+    Optional<Lesson> findByExactTitle(@Param("title") String title);
+
     Optional<Lesson> findFirstByIdGreaterThanOrderByIdAsc(Long id);
 
     List<Lesson> findByTitleContainingIgnoreCaseAndTypeAndLevel(String keyword, TypeLesson type, LevelLesson level);

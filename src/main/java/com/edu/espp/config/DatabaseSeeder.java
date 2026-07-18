@@ -45,7 +45,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         User student3 = seedStudentUser("student3@espp.com", passwordHash, "Lê Minh Học Sinh 3");
 
         // 3. Seed Lessons
-        if (lessonRepository.count() == 0) {
+        if (false && lessonRepository.count() == 0) {
             log.info("Seeding lessons...");
             lessonRepository.saveAll(Arrays.asList(
                     Lesson.builder().title("Thì hiện tại đơn (Present Simple)").level(LevelLesson.A1).type(TypeLesson.GRAMMAR).createdBy(admin).description("Học về cách sử dụng thì hiện tại đơn trong tiếng Anh hàng ngày.").build(),

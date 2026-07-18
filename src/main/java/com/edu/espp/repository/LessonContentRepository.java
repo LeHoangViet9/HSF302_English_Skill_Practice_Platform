@@ -14,6 +14,17 @@ public interface LessonContentRepository extends JpaRepository<LessonContent, Lo
     List<LessonContent> findByLesson_IdOrderByContentOrderAscIdAsc(Long lessonId);
 
     @Query("""
+            select case when count(c) > 0 then true else false end
+            from LessonContent c
+            where c.lesson.id = :lessonId
+            and c.wordOrStructure = :wordOrStructure
+            """)
+    boolean existsContentInLesson(
+            @Param("lessonId") Long lessonId,
+            @Param("wordOrStructure") String wordOrStructure
+    );
+
+    @Query("""
             select c from LessonContent c
             join fetch c.lesson l
             where (:keyword is null or :keyword = ''
