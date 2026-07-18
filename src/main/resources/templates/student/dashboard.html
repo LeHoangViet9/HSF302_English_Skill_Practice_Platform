@@ -68,6 +68,35 @@
                 </div>
             </div>
 
+            <!-- Thống kê luyện thi -->
+            <h3 class="apple-tagline mb-3">Thống kê luyện thi</h3>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 mb-4">
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <h3 style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80); margin-bottom: 8px;">Bài thi đã làm</h3>
+                        <div class="apple-display-md text-info" th:text="${dashboard.totalExamsTaken}">0</div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <h3 style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80); margin-bottom: 8px;">Điểm trung bình</h3>
+                        <div class="apple-display-md text-primary" th:text="${#numbers.formatDecimal(dashboard.averageExamScore, 1, 1)}">0.0</div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <h3 style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80); margin-bottom: 8px;">Bài thi gần nhất</h3>
+                        <div th:if="${dashboard.recentExam != null}">
+                            <div class="text-dark fw-bold text-truncate" style="font-size: 15px;" th:text="${dashboard.recentExam.exam.title}">Exam Title</div>
+                            <div class="text-success fw-bold mt-1" style="font-size: 14px;" th:text="${dashboard.recentExam.score + ' điểm'}">10.0 điểm</div>
+                        </div>
+                        <div th:if="${dashboard.recentExam == null}" class="text-muted" style="font-size: 14px;">Chưa làm bài thi nào</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Bài học gợi ý & Bài học gần đây -->
             <div class="row g-4 mb-4">
                 <div class="col-md-6">
