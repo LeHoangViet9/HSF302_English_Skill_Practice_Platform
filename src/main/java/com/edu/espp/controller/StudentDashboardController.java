@@ -15,8 +15,9 @@ public class StudentDashboardController {
     private final DashboardService dashboardService;
 
     @GetMapping("/dashboard")
-    public ModelAndView dashboard() {
-        Long userId = 1L;
+    public ModelAndView dashboard(jakarta.servlet.http.HttpSession session) {
+        com.edu.espp.entity.User user = (com.edu.espp.entity.User) session.getAttribute("currentUser");
+        Long userId = user != null ? user.getId() : 1L;
 
         StudentDashboardData dashboard = dashboardService.getStudentDashboard(userId);
 

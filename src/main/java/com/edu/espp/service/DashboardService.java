@@ -23,6 +23,7 @@ public class DashboardService {
     private final LessonRepository lessonRepository;
     private final LearningProgressRepository learningProgressRepository;
     private final UserRepository userRepository;
+    private final com.edu.espp.repository.ExamHistoryRepository examHistoryRepository;
 
     @Transactional(readOnly = true)
     public StudentDashboardData getStudentDashboard(Long userId) {
@@ -56,6 +57,11 @@ public class DashboardService {
                 .map(user -> user.getFullName())
                 .orElse("Học viên");
 
+        List<com.edu.espp.entity.ExamHistory> examHistories = examHistoryRepository.findByUserIdOrderByTestedAtDesc(userId);
+        long totalExamsTaken = examHistories.size();
+        double averageExamScore = totalExamsTaken == 0 ? 0 : examHistories.stream().mapToDouble(h -> h.getScore() != null ? h.getScore() : 0.0).average().orElse(0.0);
+        com.edu.espp.entity.ExamHistory recentExam = totalExamsTaken > 0 ? examHistories.get(0) : null;
+
         return new StudentDashboardData(
                 studentName,
                 totalFlashcards,
@@ -65,6 +71,9 @@ public class DashboardService {
                 completionPercent,
                 recentLesson,
                 suggestedLesson,
+                totalExamsTaken,
+                averageExamScore,
+                recentExam,
                 upcomingReviews
         );
     }
