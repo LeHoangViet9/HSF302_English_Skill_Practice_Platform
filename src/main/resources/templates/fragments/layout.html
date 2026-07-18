@@ -323,6 +323,15 @@
             <a class="list-group-item" th:classappend="${activeMenu == 'exams' ? 'active' : ''}" href="/exams">
                 <i class="fa-solid fa-book-open"></i> Kho Đề Thi
             </a>
+            <a class="list-group-item" th:classappend="${activeMenu == 'learning' ? 'active' : ''}" href="/student/lessons">
+                <i class="fa-solid fa-book-open-reader"></i> Kho Bài Học
+            </a>
+            <a class="list-group-item" th:classappend="${activeMenu == 'dictionary' ? 'active' : ''}" href="/student/dictionary">
+                <i class="fa-solid fa-book-bookmark"></i> Từ Điển
+            </a>
+            <a class="list-group-item" th:classappend="${activeMenu == 'bookmarks' ? 'active' : ''}" href="/student/bookmarks">
+                <i class="fa-solid fa-bookmark"></i> Từ Đã Lưu
+            </a>
             <a class="list-group-item" th:classappend="${activeMenu == 'flashcards' ? 'active' : ''}" href="/student/flashcards/review">
                 <i class="fa-solid fa-layer-group"></i> Ôn tập Flashcard
             </a>

@@ -32,9 +32,9 @@ public class DashboardService {
         long dueFlashcardsToday = srsReviewRepository
                 .countByUser_IdAndNextReviewDateLessThanEqual(userId, LocalDateTime.now());
 
-        long learnedLessons = learningProgressRepository.countByUserId(userId);
+        long learnedLessons = learningProgressRepository.countByUser_Id(userId);
 
-        long completedLessons = learningProgressRepository.countByUserIdAndIsCompletedTrue(userId);
+        long completedLessons = learningProgressRepository.countByUser_IdAndIsCompletedTrue(userId);
 
         long totalLessons = lessonRepository.count();
 
@@ -44,7 +44,7 @@ public class DashboardService {
                 : (completedLessons * 100.0) / totalLessons;
 
         Lesson recentLesson = learningProgressRepository
-                .findTopByUserIdOrderByUpdatedAtDesc(userId)
+                .findTopByUser_IdOrderByUpdatedAtDesc(userId)
                 .map(LearningProgress::getLesson)
                 .orElse(null);
 
@@ -81,7 +81,7 @@ public class DashboardService {
     // Tách riêng logic xử lý gợi ý bài học mượt mà
     private Lesson findSuggestedLesson(Long userId, Lesson recentLesson) {
         return learningProgressRepository
-                .findTopByUserIdAndIsCompletedFalseOrderByUpdatedAtDesc(userId)
+                .findTopByUser_IdAndIsCompletedFalseOrderByUpdatedAtDesc(userId)
                 .map(LearningProgress::getLesson)
                 .orElseGet(() -> {
                     if (recentLesson != null) {
