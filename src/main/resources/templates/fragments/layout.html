@@ -16,11 +16,18 @@
     <link rel="stylesheet" th:href="@{/css/apple-design.css}">
     
     <style>
-        html, body {
+        html {
+            overflow-x: hidden;
+            width: 100%;
+        }
+        
+        body {
             font-family: var(--apple-font-text);
             background-color: var(--apple-canvas-parchment);
             color: var(--apple-ink);
             width: 100%;
+            margin: 0;
+            padding: 0;
         }
         
         /* Layout & Sidebar CSS */
@@ -42,7 +49,16 @@
             border-right: 1px solid var(--apple-surface-tile-3);
             z-index: 1000;
             flex-shrink: 0;
+            /* Hide scrollbar for IE, Edge and Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        #sidebar-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
 
         #sidebar-wrapper .sidebar-brand {
             padding: 1.5rem 1.25rem;
@@ -137,12 +153,12 @@
             background-color: rgba(255, 255, 255, 0.8) !important;
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
-            border-bottom: 1px solid var(--apple-hairline);
+            border-bottom: none;
         }
         
         .navbar-admin {
             background-color: var(--apple-surface-black) !important;
-            border-bottom: 1px solid var(--apple-surface-tile-3);
+            border-bottom: none;
         }
         
         /* Content Styling */
@@ -212,8 +228,9 @@
 <body>
 
 <!-- Fragment cho NAVBAR chung -->
-<nav th:fragment="navbar(user)" class="navbar navbar-expand-lg navbar-light shadow-none mb-4" 
-     th:classappend="${user.role.name() == 'ADMIN' ? 'navbar-admin navbar-dark' : 'navbar-custom'}">
+<nav th:fragment="navbar(user)" class="navbar navbar-expand-lg navbar-light shadow-none mb-0" 
+     th:classappend="${user.role.name() == 'ADMIN' ? 'navbar-admin navbar-dark' : 'navbar-custom'}"
+     style="border-bottom: none !important; box-shadow: none !important;">
     <div class="container-fluid px-4">
         <!-- Menu Toggle Button -->
         <button class="btn btn-apple btn-apple-pearl-capsule me-3" id="menu-toggle" 
@@ -221,9 +238,8 @@
             <i class="fa-solid fa-bars"></i>
         </button>
         
-        <a class="navbar-brand fw-bold d-flex align-items-center" href="/exams"
-           th:classappend="${user.role.name() == 'ADMIN' ? 'text-white' : 'text-dark'}"
-           style="font-family: var(--apple-font-display); letter-spacing: -0.01em;">
+        <a class="navbar-brand fw-bold d-flex align-items-center"
+              th:href="${user.role.name() == 'STUDENT'} ? @{/dashboard} : @{/exams}">
             <i class="fa-solid fa-graduation-cap me-2 fs-4" th:classappend="${user.role.name() == 'ADMIN' ? 'text-warning' : 'text-primary'}"></i>
             <span th:text="${user.role.name() == 'ADMIN' ? 'ES Admin Portal' : 'ESPP Platform'}">ESPP Platform</span>
         </a>
@@ -262,6 +278,9 @@
     <div class="list-group list-group-flush">
         <!-- Sidebar Menu ADMIN -->
         <th:block th:if="${user.role.name() == 'ADMIN'}">
+            <a class="list-group-item" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}" href="/dashboard">
+                <i class="fa-solid fa-chart-line"></i> Bảng điều khiển
+            </a>
             <a class="list-group-item" th:classappend="${activeMenu == 'exams' ? 'active' : ''}" href="/exams">
                 <i class="fa-solid fa-screwdriver-wrench"></i> Quản lý Đề thi
             </a>
@@ -279,6 +298,9 @@
 
         <!-- Sidebar Menu STAFF -->
         <th:block th:if="${user.role.name() == 'STAFF'}">
+            <a class="list-group-item" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}" href="/dashboard">
+                <i class="fa-solid fa-chart-line"></i> Bảng điều khiển
+            </a>
             <a class="list-group-item" th:classappend="${activeMenu == 'lessons' ? 'active' : ''}" href="/staff/lessons">
                 <i class="fa-solid fa-book"></i> Quản lý Bài học
             </a>
@@ -295,9 +317,13 @@
             <a class="list-group-item" th:classappend="${activeMenu == 'flashcards' ? 'active' : ''}" href="/student/flashcards/review">
                 <i class="fa-solid fa-layer-group"></i> Ôn tập Flashcard
             </a>
-
             <a class="list-group-item" th:classappend="${activeMenu == 'histories' ? 'active' : ''}" th:href="@{/histories/user/{id}(id=${user.id})}">
                 <i class="fa-solid fa-clock-rotate-left"></i> Lịch sử Học tập
+            </a>
+            <a class="list-group-item"
+               th:classappend="${activeMenu == 'profile' ? 'active' : ''}"
+               th:href="@{/student/profile}">
+                <i class="fa-solid fa-user-graduate"></i> Hồ sơ & Tiến độ
             </a>
         </th:block>
     </div>
