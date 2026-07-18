@@ -57,29 +57,31 @@ public class DatabaseSeeder implements CommandLineRunner {
         }
 
         // 4. Seed Exams & Questions
-        if (examRepository.count() == 0) {
-            log.info("Seeding exams and questions...");
-            
+        log.info("Checking exams and questions...");
+        
+        if (!examRepository.existsByTitle("Đề kiểm tra Ngữ pháp Cơ bản")) {
             Exam exam1 = Exam.builder().title("Đề kiểm tra Ngữ pháp Cơ bản").type(TypeQuiz.QUIZ).duration(15).totalQuestions(3).description("Bài kiểm tra 15 phút về thì hiện tại đơn.").build();
             exam1 = examRepository.save(exam1);
 
             questionRepository.saveAll(Arrays.asList(
-                    Question.builder().exam(exam1).skill(QuestionSkill.READING).questionText("He ___ to school every day.").options("[\"go\", \"goes\", \"going\", \"gone\"]").correctAnswer("goes").explanation("Ngôi thứ 3 số ít dùng goes.").build(),
-                    Question.builder().exam(exam1).skill(QuestionSkill.READING).questionText("I ___ a student.").options("[\"am\", \"is\", \"are\", \"be\"]").correctAnswer("am").explanation("I đi với am.").build(),
-                    Question.builder().exam(exam1).skill(QuestionSkill.READING).questionText("They ___ play football on Sundays.").options("[\"don't\", \"doesn't\", \"not\", \"isn't\"]").correctAnswer("don't").explanation("They dùng trợ động từ do + not = don't.").build()
+                    Question.builder().exam(exam1).skill(QuestionSkill.READING).questionText("He ___ to school every day.").options("{\"A\": \"go\", \"B\": \"goes\", \"C\": \"going\", \"D\": \"gone\"}").correctAnswer("B").explanation("Ngôi thứ 3 số ít dùng goes.").build(),
+                    Question.builder().exam(exam1).skill(QuestionSkill.READING).questionText("I ___ a student.").options("{\"A\": \"am\", \"B\": \"is\", \"C\": \"are\", \"D\": \"be\"}").correctAnswer("A").explanation("I đi với am.").build(),
+                    Question.builder().exam(exam1).skill(QuestionSkill.READING).questionText("They ___ play football on Sundays.").options("{\"A\": \"don't\", \"B\": \"doesn't\", \"C\": \"not\", \"D\": \"isn't\"}").correctAnswer("A").explanation("They dùng trợ động từ do + not = don't.").build()
             ));
+        }
 
+        if (!examRepository.existsByTitle("Đề thi thử TOEIC Reading (Mini)")) {
             Exam exam2 = Exam.builder().title("Đề thi thử TOEIC Reading (Mini)").type(TypeQuiz.MOCK_TEST).duration(30).totalQuestions(2).description("Đề thi thử TOEIC rút gọn phần Đọc hiểu.").build();
             exam2 = examRepository.save(exam2);
 
             questionRepository.saveAll(Arrays.asList(
-                    Question.builder().exam(exam2).skill(QuestionSkill.READING).questionText("The manager asked the team to finish the report ___ Friday.").options("[\"in\", \"on\", \"by\", \"at\"]").correctAnswer("by").explanation("By + mốc thời gian: trước thời điểm đó.").build(),
-                    Question.builder().exam(exam2).skill(QuestionSkill.READING).questionText("Due to the bad weather, the flight was ___.").options("[\"delayed\", \"booked\", \"arrived\", \"departed\"]").correctAnswer("delayed").explanation("Chuyến bay bị hoãn (delayed) do thời tiết xấu.").build()
+                    Question.builder().exam(exam2).skill(QuestionSkill.READING).questionText("The manager asked the team to finish the report ___ Friday.").options("{\"A\": \"in\", \"B\": \"on\", \"C\": \"by\", \"D\": \"at\"}").correctAnswer("C").explanation("By + mốc thời gian: trước thời điểm đó.").build(),
+                    Question.builder().exam(exam2).skill(QuestionSkill.READING).questionText("Due to the bad weather, the flight was ___.").options("{\"A\": \"delayed\", \"B\": \"booked\", \"C\": \"arrived\", \"D\": \"departed\"}").correctAnswer("A").explanation("Chuyến bay bị hoãn (delayed) do thời tiết xấu.").build()
             ));
         }
 
-        // 6. Seed Exam Histories
-        if (examHistoryRepository.count() == 0 && examRepository.count() > 0) {
+        // 5. Seed Exam Histories (only if we have less than 4 to avoid infinite growth)
+        if (examHistoryRepository.count() < 4) {
             log.info("Seeding exam histories...");
             List<Exam> exams = examRepository.findAll();
             if (exams.size() >= 2) {
