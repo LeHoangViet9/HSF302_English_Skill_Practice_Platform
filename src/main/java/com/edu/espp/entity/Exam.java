@@ -30,6 +30,7 @@ public class Exam {
     private Integer duration;
     private Integer totalQuestions;
 
+    @Column(columnDefinition = "NVARCHAR(MAX)")
     private String description;
 
     @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)

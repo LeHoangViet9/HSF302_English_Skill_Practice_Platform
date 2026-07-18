@@ -17,8 +17,7 @@ public class AdminHistoryController {
     // Admin xem danh sách lịch sử thi của TẤT CẢ các học viên trong hệ thống
     @GetMapping
     public String getAllHistories(Model model) {
-        // Bạn có thể bổ sung hàm getAllExamHistories() trong Service nếu muốn
-        // model.addAttribute("histories", examHistoryService.getAllExamHistories());
+        model.addAttribute("histories", examHistoryService.getAllExamHistories());
         return "admin/history/list";
     }
 

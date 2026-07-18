@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{fragments/layout :: head('Chi Tiết Lịch Sử Thi - Admin')}"></head>
+<body class="bg-light">
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/layout :: sidebar(${user}, 'history')}"></div>
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper" class="d-flex flex-column">
+        <!-- Navbar -->
+        <nav th:replace="~{fragments/layout :: navbar(${user})}"></nav>
+
+        <div class="container-fluid my-4 flex-grow-1 px-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h3 class="fw-bold text-dark"><i class="fa-solid fa-user-clock text-primary me-2"></i> Lịch Sử Thi Của Học Viên</h3>
+                    <p class="text-muted">Xem toàn bộ lịch sử làm bài thi của học viên này</p>
+                </div>
+                <a href="/admin/histories" class="btn btn-outline-secondary">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Quay lại
+                </a>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-secondary text-dark">
+                            <tr>
+                                <th scope="col" class="ps-4 py-3" style="width: 5%;">ID</th>
+                                <th scope="col" class="py-3" style="width: 30%;">Đề thi</th>
+                                <th scope="col" class="py-3 text-center" style="width: 20%;">Kết quả</th>
+                                <th scope="col" class="py-3 text-center" style="width: 25%;">Thời gian thi</th>
+                                <th scope="col" class="pe-4 py-3 text-center" style="width: 20%;">Hành động</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${histories == null || histories.isEmpty()}">
+                                <td colspan="5" class="text-center py-5 text-muted">Học viên này chưa có lịch sử làm bài nào.</td>
+                            </tr>
+                            <tr th:each="history : ${histories}">
+                                <td class="ps-4 fw-bold" th:text="${history.id}">1</td>
+                                <td>
+                                    <div class="fw-bold text-dark" th:text="${history.examTitle}">Bài thi thử Toeic</div>
+                                    <small class="text-muted" th:text="'Exam #' + ${history.examId}">Exam #1</small>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-success" th:text="${history.score} + ' Điểm'">8.5 Điểm</span>
+                                    <br>
+                                    <small class="text-muted" th:text="${history.correctAnswersCount} + ' câu đúng'">40 câu đúng</small>
+                                </td>
+                                <td class="text-center text-secondary small" th:text="${#temporals.format(history.testedAt, 'dd/MM/yyyy HH:mm')}">25/06/2026 14:30</td>
+                                <td class="pe-4 text-center">
+                                    <button class="btn btn-sm btn-secondary" disabled>Tính năng xem bài giải đang cập nhật</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

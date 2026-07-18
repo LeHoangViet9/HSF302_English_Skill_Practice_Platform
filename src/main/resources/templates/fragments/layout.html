@@ -271,9 +271,7 @@
             <a class="list-group-item" th:classappend="${activeMenu == 'lessons' ? 'active' : ''}" href="/staff/lessons">
                 <i class="fa-solid fa-book"></i> Quản lý Bài học
             </a>
-            <a class="list-group-item" th:classappend="${activeMenu == 'support' ? 'active' : ''}" href="/admin/support-tickets">
-                <i class="fa-solid fa-envelope"></i> Hộp thư Hỗ trợ
-            </a>
+
             <a class="list-group-item" th:classappend="${activeMenu == 'histories' ? 'active' : ''}" href="/admin/histories">
                 <i class="fa-solid fa-clock-rotate-left"></i> Lịch sử Thi
             </a>
@@ -297,9 +295,7 @@
             <a class="list-group-item" th:classappend="${activeMenu == 'flashcards' ? 'active' : ''}" href="/student/flashcards/review">
                 <i class="fa-solid fa-layer-group"></i> Ôn tập Flashcard
             </a>
-            <a class="list-group-item" th:classappend="${activeMenu == 'support' ? 'active' : ''}" th:href="@{/student/support-tickets/user/{id}(id=${user.id})}">
-                <i class="fa-solid fa-circle-info"></i> Gửi Hỗ Trợ
-            </a>
+
             <a class="list-group-item" th:classappend="${activeMenu == 'histories' ? 'active' : ''}" th:href="@{/histories/user/{id}(id=${user.id})}">
                 <i class="fa-solid fa-clock-rotate-left"></i> Lịch sử Học tập
             </a>
