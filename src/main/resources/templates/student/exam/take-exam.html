@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{fragments/layout :: head('Làm Bài Thi')}"></head>
+<body class="apple-theme">
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/layout :: sidebar(${user}, 'exams')}"></div>
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper" class="d-flex flex-column">
+        <!-- Navbar đặc biệt cho phòng thi (có đồng hồ) -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm px-4 justify-content-between">
+            <span class="navbar-brand mb-0 h1" th:text="${exam.title}">Đề thi thử Tiếng Anh B1</span>
+            <div class="d-flex align-items-center">
+                <div class="bg-danger text-white px-3 py-2 rounded-3 fw-bold fs-5 me-3">
+                    <i class="fa-regular fa-clock me-2"></i> <span id="countdown">20:00</span>
+                </div>
+                <button type="button" class="btn btn-success fw-bold px-4" onclick="confirmSubmit()">
+                    <i class="fa-solid fa-paper-plane me-2"></i> Nộp Bài
+                </button>
+            </div>
+        </nav>
+
+        <div class="container-fluid my-4 flex-grow-1 px-4">
+            <form id="examForm" th:action="@{/student/exams/{id}/submit(id=${exam.id})}" th:object="${submitForm}" method="post">
+                <input type="hidden" name="userId" th:value="${user.id}" />
+                <input type="hidden" id="timeSpentInput" name="timeSpent" value="0" />
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- Fallback khi chưa có câu hỏi -->
+                        <div th:if="${questions == null || questions.isEmpty()}" class="apple-store-utility-card mb-4 text-center p-5">
+                            <i class="fa-solid fa-folder-open text-muted mb-3" style="font-size: 48px;"></i>
+                            <h4 class="fw-bold text-dark">Đề thi chưa có câu hỏi</h4>
+                            <p class="text-muted">Đề thi này hiện tại chưa được cập nhật câu hỏi nào. Vui lòng quay lại sau.</p>
+                            <a href="/exams" class="btn btn-outline-primary mt-3">Quay lại danh sách</a>
+                        </div>
+                        
+                        <!-- Danh sách câu hỏi -->
+                        <div th:if="${questions != null && !questions.isEmpty()}" th:each="question, iterStat : ${questions}" class="apple-store-utility-card mb-4" style="padding: 24px; height: auto !important;">
+                            <div class="d-flex justify-content-between align-items-center mb-3" style="border-bottom: 1px solid var(--apple-hairline); padding-bottom: 12px;">
+                                <h5 class="apple-tagline mb-0" style="font-size: 17px;">
+                                    Câu hỏi <span th:text="${iterStat.count}">1</span>
+                                    <span class="badge bg-light text-dark border ms-2" style="font-size: 12px; font-weight: normal;" th:text="${question.skill}">READING</span>
+                                </h5>
+                            </div>
+
+                            <div class="card-body p-0">
+                                <h5 class="card-title mb-3" style="font-size: 19px; font-weight: 600;" th:text="${question.questionText}">Chọn đáp án đúng</h5>
+
+                                <!-- Listening -->
+                                <div th:if="${question.skill.name() == 'LISTENING'}" class="bg-light p-3 rounded mb-3">
+                                    <label class="fw-bold mb-2 text-secondary" style="font-size: 14px;"><i class="fa-solid fa-headphones me-2"></i> Hãy nghe đoạn băng sau:</label>
+                                    <audio controls class="w-100">
+                                        <source th:src="${question.audioUrl != null ? question.audioUrl : ''}" type="audio/mpeg">
+                                        Trình duyệt của bạn không hỗ trợ phát âm thanh.
+                                    </audio>
+                                </div>
+
+                                <!-- Speaking -->
+                                <div th:if="${question.skill.name() == 'SPEAKING'}" class="bg-light p-3 rounded mb-3 text-center">
+                                    <label class="fw-bold mb-2 text-secondary d-block text-start" style="font-size: 14px;"><i class="fa-solid fa-microphone me-2"></i> Nhấn để ghi âm câu trả lời của bạn:</label>
+                                    <button type="button" class="btn btn-outline-danger btn-lg rounded-circle p-3" id="micBtn" onclick="toggleRecording(this)">
+                                        <i class="fa-solid fa-microphone fs-3"></i>
+                                    </button>
+                                    <p class="text-muted mt-2 small" id="micStatus" style="font-size: 13px;">Nhấp để bắt đầu nói</p>
+                                </div>
+
+                                <!-- Options -->
+                                <div th:if="${question.options != null && !question.options.isEmpty()}" class="mt-3">
+                                    <div th:each="entry : ${question.options}" class="form-check p-3 border rounded mb-2 bg-white d-flex align-items-center" style="border-color: var(--apple-hairline) !important; cursor: pointer; transition: all 0.2s;">
+                                        <input class="form-check-input ms-0 me-3" type="radio"
+                                               th:name="'userAnswers[' + ${question.id} + ']'"
+                                               th:value="${entry.key}"
+                                               th:id="'q_' + ${question.id} + '_' + ${entry.key}"
+                                               style="cursor: pointer;">
+                                        <label class="form-check-label w-100 ps-1"
+                                               th:for="'q_' + ${question.id} + '_' + ${entry.key}"
+                                               style="cursor: pointer; font-size: 15px;">
+                                            <strong th:text="${entry.key} + ': '">A: </strong>
+                                            <span th:text="${entry.value}">Nội dung đáp án</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Writing / Tự luận -->
+                                <div th:if="${question.skill.name() == 'WRITING'}" class="mt-3">
+                                    <label class="fw-bold mb-2 text-secondary" style="font-size: 14px;"><i class="fa-solid fa-pen-to-square me-2"></i> Nhập câu trả lời của bạn vào đây:</label>
+                                    <textarea class="apple-text-field" rows="3" style="height: auto;"
+                                              th:name="'userAnswers[' + ${question.id} + ']'"
+                                              placeholder="Nhập đoạn văn hoặc từ còn thiếu tại đây..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+<script th:inline="javascript">
+    // 1. Cấu hình bộ đếm ngược (Ví dụ: 20 phút)
+    let totalMinutes = 20;
+    let timeInSeconds = totalMinutes * 60;
+    const countdownElement = document.getElementById('countdown');
+
+    const timer = setInterval(() => {
+        let minutes = Math.floor(timeInSeconds / 60);
+        let seconds = timeInSeconds % 60;
+
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+
+        countdownElement.textContent = `${minutes}:${seconds}`;
+
+        if (timeInSeconds <= 0) {
+            clearInterval(timer);
+            alert("Hết giờ làm bài! Hệ thống tự động nộp bài.");
+            document.getElementById('timeSpentInput').value = totalMinutes * 60;
+            document.getElementById('examForm').submit();
+        }
+        timeInSeconds--;
+    }, 1000);
+
+    function confirmSubmit() {
+        if (confirm("Bạn có chắc chắn muốn nộp bài thi ngay bây giờ?")) {
+            let timeSpent = (totalMinutes * 60) - timeInSeconds;
+            document.getElementById('timeSpentInput').value = timeSpent;
+            document.getElementById('examForm').submit();
+        }
+    }
+
+    let isRecording = false;
+    function toggleRecording(button) {
+        const statusText = document.getElementById('micStatus');
+        if (!isRecording) {
+            isRecording = true;
+            button.classList.replace('btn-outline-danger', 'btn-danger');
+            statusText.innerHTML = '<span class="text-danger fw-bold"><i class="fa-solid fa-circle animate-pulse me-1"></i> Đang ghi âm...</span>';
+        } else {
+            isRecording = false;
+            button.classList.replace('btn-danger', 'btn-outline-danger');
+            statusText.innerHTML = '<span class="text-success"><i class="fa-solid fa-check me-1"></i> Đã lưu đoạn ghi âm thành công</span>';
+        }
+    }
+</script>
+</body>
+</html>

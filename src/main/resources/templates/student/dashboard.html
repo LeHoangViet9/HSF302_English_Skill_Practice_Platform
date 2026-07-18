@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{fragments/layout :: head('Bảng điều khiển học viên')}"></head>
+<body class="apple-theme">
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/layout :: sidebar(${user}, 'dashboard')}"></div>
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper" class="d-flex flex-column">
+        <!-- Navbar -->
+        <nav th:replace="~{fragments/layout :: navbar(${user})}"></nav>
+
+        <div class="container-fluid my-4 flex-grow-1 px-4">
+            <!-- Header Bảng điều khiển -->
+            <div class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+                <div class="mb-3 mb-sm-0">
+                    <h2 class="apple-display-lg mb-1">
+                        <i class="fa-solid fa-chart-line me-2 text-primary"></i> Bảng điều khiển
+                    </h2>
+                    <p class="apple-lead" style="font-size: 17px; color: var(--apple-body-muted); margin-bottom: 0;"
+                       th:text="${'Xin chào, ' + dashboard.studentName}">
+                        Xin chào, Học viên
+                    </p>
+                </div>
+                <div>
+                    <a class="btn-apple btn-apple-primary btn-action" th:href="@{/student/flashcards/review}">
+                        <i class="fa-solid fa-layer-group me-1"></i> Bắt đầu ôn tập
+                    </a>
+                </div>
+            </div>
+
+            <!-- Grid Thống kê các Stats -->
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4 mb-4">
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <h3 style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80); margin-bottom: 8px;">Tổng số flashcard</h3>
+                        <div class="apple-display-md text-primary" th:text="${dashboard.totalFlashcards}">0</div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <h3 style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80); margin-bottom: 8px;">Cần ôn hôm nay</h3>
+                        <div class="apple-display-md text-danger" th:text="${dashboard.dueFlashcardsToday}">0</div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <h3 style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80); margin-bottom: 8px;">Bài đã học</h3>
+                        <div class="apple-display-md text-dark" th:text="${dashboard.learnedLessons}">0</div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <h3 style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80); margin-bottom: 8px;">Bài đã hoàn thành</h3>
+                        <div class="apple-display-md text-success" th:text="${dashboard.completedLessons}">0</div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <h3 style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80); margin-bottom: 8px;">Tỷ lệ hoàn thành</h3>
+                        <div class="apple-display-md text-warning" th:text="${#numbers.formatDecimal(dashboard.completionPercent, 1, 1) + '%'}">0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thống kê luyện thi -->
+            <h3 class="apple-tagline mb-3">Thống kê luyện thi</h3>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 mb-4">
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <h3 style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80); margin-bottom: 8px;">Bài thi đã làm</h3>
+                        <div class="apple-display-md text-info" th:text="${dashboard.totalExamsTaken}">0</div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <h3 style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80); margin-bottom: 8px;">Điểm trung bình</h3>
+                        <div class="apple-display-md text-primary" th:text="${#numbers.formatDecimal(dashboard.averageExamScore, 1, 1)}">0.0</div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <h3 style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80); margin-bottom: 8px;">Bài thi gần nhất</h3>
+                        <div th:if="${dashboard.recentExam != null}">
+                            <div class="text-dark fw-bold text-truncate" style="font-size: 15px;" th:text="${dashboard.recentExam.exam.title}">Exam Title</div>
+                            <div class="text-success fw-bold mt-1" style="font-size: 14px;" th:text="${dashboard.recentExam.score + ' điểm'}">10.0 điểm</div>
+                        </div>
+                        <div th:if="${dashboard.recentExam == null}" class="text-muted" style="font-size: 14px;">Chưa làm bài thi nào</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bài học gợi ý & Bài học gần đây -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <h3 class="apple-tagline mb-3">Bài học gợi ý</h3>
+                    <div class="apple-store-utility-card" th:if="${dashboard.suggestedLesson != null}" style="height: auto;">
+                        <h5 class="card-title text-primary" style="font-size: 19px;" th:text="${dashboard.suggestedLesson.title}">Basic English Vocabulary</h5>
+                        <div class="apple-caption mt-2" style="color: var(--apple-ink-muted-80);">
+                            Cấp độ: <strong class="text-dark" th:text="${dashboard.suggestedLesson.level}">A1</strong>
+                        </div>
+                        <div class="apple-caption" style="color: var(--apple-ink-muted-80);">
+                            Loại bài học: <strong class="text-dark" th:text="${dashboard.suggestedLesson.type}">VOCABULARY</strong>
+                        </div>
+                    </div>
+                    <div class="apple-store-utility-card justify-content-center align-items-center" th:if="${dashboard.suggestedLesson == null}">
+                        <p class="text-muted mb-0">Chưa có bài học gợi ý nào.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <h3 class="apple-tagline mb-3">Bài học gần đây</h3>
+                    <div class="apple-store-utility-card" th:if="${dashboard.recentLesson != null}" style="height: auto;">
+                        <h5 class="card-title text-success" style="font-size: 19px;" th:text="${dashboard.recentLesson.title}">Recent Lesson</h5>
+                        <div class="apple-caption mt-2" style="color: var(--apple-ink-muted-80);">
+                            Cấp độ: <strong class="text-dark" th:text="${dashboard.recentLesson.level}">A1</strong>
+                        </div>
+                        <div class="apple-caption" style="color: var(--apple-ink-muted-80);">
+                            Loại bài học: <strong class="text-dark" th:text="${dashboard.recentLesson.type}">VOCABULARY</strong>
+                        </div>
+                    </div>
+                    <div class="apple-store-utility-card justify-content-center align-items-center" th:if="${dashboard.recentLesson == null}">
+                        <p class="text-muted mb-0">Bạn chưa học bài nào gần đây.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lịch ôn tập sắp tới -->
+            <h3 class="apple-tagline mb-3">Lịch ôn tập sắp tới</h3>
+            <div class="apple-store-utility-card p-4 mb-4">
+                <div class="table-responsive">
+                    <table class="table table-borderless align-middle m-0" style="font-family: var(--apple-font-text);">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--apple-hairline); color: var(--apple-ink-muted-80);">
+                                <th class="pb-3" style="font-size: 14px; font-weight: 600;">Từ vựng / Cấu trúc</th>
+                                <th class="pb-3" style="font-size: 14px; font-weight: 600;">Nghĩa</th>
+                                <th class="pb-3" style="font-size: 14px; font-weight: 600;">Ngày ôn tiếp theo</th>
+                                <th class="pb-3 text-end" style="font-size: 14px; font-weight: 600;">Khoảng cách ôn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="review : ${dashboard.upcomingReviews}" style="border-bottom: 1px solid var(--apple-divider-soft);">
+                                <td class="py-3 fw-semibold text-dark" th:text="${review.content.wordOrStructure}">apple</td>
+                                <td class="py-3" th:text="${review.content.meaning}">quả táo</td>
+                                <td class="py-3" th:text="${#temporals.format(review.nextReviewDate, 'dd/MM/yyyy HH:mm')}">01/07/2026</td>
+                                <td class="py-3 text-end text-primary" th:text="${review.srsInterval + ' ngày'}">1 ngày</td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(dashboard.upcomingReviews)}">
+                                <td colspan="4" class="text-center py-4 text-muted">Không có lịch ôn tập nào sắp tới.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
