@@ -26,18 +26,19 @@ public class AuthSessionService {
 
     @Transactional
     public void handleLoginSuccess(String email, String sessionId, String ipAddress) {
-        StudentUser student = studentUserRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalStateException("Student not found for authenticated email: " + email));
+        studentUserRepository.findByEmail(email).ifPresentOrElse(student -> {
+            AuthToken sessionToken = AuthToken.builder()
+                    .studentUser(student)
+                    .tokenType(AuthTokenType.SESSION)
+                    .tokenValue(sessionId)
+                    .expiresAt(LocalDateTime.now(ZoneOffset.UTC).plusDays(SESSION_TOKEN_VALIDITY_DAYS))
+                    .ipAddress(ipAddress)
+                    .build();
 
-        AuthToken sessionToken = AuthToken.builder()
-                .studentUser(student)
-                .tokenType(AuthTokenType.SESSION)
-                .tokenValue(sessionId)
-                .expiresAt(LocalDateTime.now(ZoneOffset.UTC).plusDays(SESSION_TOKEN_VALIDITY_DAYS))
-                .ipAddress(ipAddress)
-                .build();
-
-        authTokenRepository.save(sessionToken);
+            authTokenRepository.save(sessionToken);
+        }, () -> {
+            log.info("[AuthSessionService] Non-student user logged in, skipping session token creation for email: {}", email);
+        });
     }
 
     @Transactional

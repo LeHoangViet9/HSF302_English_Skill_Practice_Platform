@@ -2,6 +2,9 @@ package com.edu.espp.service;
 
 import com.edu.espp.entity.StudentUser;
 import com.edu.espp.common.enums.StudentStatus;
+import com.edu.espp.common.enums.UserStatus;
+import com.edu.espp.common.enums.Role;
+import com.edu.espp.repository.UserRepository;
 import com.edu.espp.repository.StudentUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.DisabledException;
@@ -21,31 +24,43 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class StudentDetailsService implements UserDetailsService {
-
+    private final UserRepository userRepository;
     private final StudentUserRepository studentUserRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        StudentUser student = studentUserRepository.findByEmail(email)
+        // Find user in the central users table first
+        com.edu.espp.entity.User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
 
-        if (Boolean.TRUE.equals(student.getIsDeleted()) || student.getStatus() == StudentStatus.DELETED) {
-            throw new UsernameNotFoundException("Invalid credentials");
+        // If the user is banned globally
+        if (user.getStatus() == UserStatus.BANNED) {
+            throw new DisabledException("ACCOUNT_SUSPENDED");
         }
 
-        if (student.getStatus() == StudentStatus.PENDING) {
-            throw new DisabledException("EMAIL_NOT_VERIFIED");
-        }
+        // If it's a student, perform extra status checks
+        if (user.getRole() == Role.STUDENT) {
+            StudentUser student = studentUserRepository.findByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
 
-        if (student.getStatus() == StudentStatus.SUSPENDED) {
-            String reason = student.getSuspendReason() == null ? "" : student.getSuspendReason();
-            throw new DisabledException("ACCOUNT_SUSPENDED:" + reason);
+            if (Boolean.TRUE.equals(student.getIsDeleted()) || student.getStatus() == StudentStatus.DELETED) {
+                throw new UsernameNotFoundException("Invalid credentials");
+            }
+
+            if (student.getStatus() == StudentStatus.PENDING) {
+                throw new DisabledException("EMAIL_NOT_VERIFIED");
+            }
+
+            if (student.getStatus() == StudentStatus.SUSPENDED) {
+                String reason = student.getSuspendReason() == null ? "" : student.getSuspendReason();
+                throw new DisabledException("ACCOUNT_SUSPENDED:" + reason);
+            }
         }
 
         return User.builder()
-                .username(student.getEmail())
-                .password(student.getPasswordHash() == null ? "" : student.getPasswordHash())
-                .authorities(List.of(new SimpleGrantedAuthority("ROLE_STUDENT")))
+                .username(user.getEmail())
+                .password(user.getPasswordHash() == null ? "" : user.getPasswordHash())
+                .authorities(List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())))
                 .build();
     }
 }
