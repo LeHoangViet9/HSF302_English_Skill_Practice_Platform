@@ -3,24 +3,19 @@
 <head th:replace="~{fragments/layout :: head('Thông tin Bài học')}"></head>
 <body class="apple-theme">
 <div id="wrapper">
-    <!-- Sidebar -->
     <div th:replace="~{fragments/layout :: sidebar(${user}, 'lessons')}"></div>
 
-    <!-- Page Content -->
     <div id="page-content-wrapper" class="d-flex flex-column">
-        <!-- Navbar -->
         <nav th:replace="~{fragments/layout :: navbar(${user})}"></nav>
 
         <div class="container-fluid my-4 flex-grow-1 px-4">
             <div class="apple-store-utility-card p-4 mx-auto" style="max-width: 760px; width: 100%; height: fit-content;">
-                <!-- Form Header -->
                 <div style="border-bottom: 1px solid var(--apple-hairline); padding-bottom: 16px; margin-bottom: 24px;">
                     <h4 class="apple-tagline mb-0" style="font-size: 21px; display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-book-open text-primary"></i> Thông Tin Bài Học
+                        <i class="fa-solid fa-book-open text-primary"></i> Thông tin bài học
                     </h4>
                 </div>
 
-                <!-- Form -->
                 <form method="post" th:action="@{/staff/lessons/save}" th:object="${lesson}">
                     <input type="hidden" th:field="*{id}">
 
@@ -29,6 +24,7 @@
                             Tiêu đề bài học <span class="text-danger">*</span>
                         </label>
                         <input class="apple-text-field" type="text" th:field="*{title}" placeholder="Nhập tiêu đề bài học..." required>
+                        <div class="text-danger apple-caption mt-1" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
                     </div>
 
                     <div class="mb-3">
@@ -39,6 +35,7 @@
                             <option value="">Chọn loại bài học...</option>
                             <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
                         </select>
+                        <div class="text-danger apple-caption mt-1" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></div>
                     </div>
 
                     <div class="mb-3">
@@ -49,6 +46,7 @@
                             <option value="">Chọn cấp độ...</option>
                             <option th:each="l : ${levels}" th:value="${l}" th:text="${l}"></option>
                         </select>
+                        <div class="text-danger apple-caption mt-1" th:if="${#fields.hasErrors('level')}" th:errors="*{level}"></div>
                     </div>
 
                     <div class="mb-4">
@@ -56,6 +54,7 @@
                             Mô tả ngắn
                         </label>
                         <textarea class="apple-text-field" rows="4" style="height: auto;" th:field="*{description}" placeholder="Nhập mô tả tóm tắt nội dung bài học..."></textarea>
+                        <div class="text-danger apple-caption mt-1" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
                     </div>
 
                     <div class="d-flex justify-content-end gap-2">
@@ -93,31 +92,37 @@
                     <div class="col-md-6">
                         <label class="apple-caption-strong mb-1 d-block">Từ vựng / Cấu trúc <span class="text-danger">*</span></label>
                         <input class="apple-text-field" type="text" th:field="*{wordOrStructure}" placeholder="VD: present perfect / environment" required>
+                        <div class="text-danger apple-caption mt-1" th:if="${#fields.hasErrors('wordOrStructure')}" th:errors="*{wordOrStructure}"></div>
                     </div>
 
                     <div class="col-md-3">
                         <label class="apple-caption-strong mb-1 d-block">IPA</label>
-                        <input class="apple-text-field" type="text" th:field="*{ipa}" placeholder="/in'vai?r?nment/">
+                        <input class="apple-text-field" type="text" th:field="*{ipa}" placeholder="/in-vai-ron-ment/">
+                        <div class="text-danger apple-caption mt-1" th:if="${#fields.hasErrors('ipa')}" th:errors="*{ipa}"></div>
                     </div>
 
                     <div class="col-md-3">
                         <label class="apple-caption-strong mb-1 d-block">Thứ tự</label>
                         <input class="apple-text-field" type="number" th:field="*{contentOrder}" min="1" placeholder="1">
+                        <div class="text-danger apple-caption mt-1" th:if="${#fields.hasErrors('contentOrder')}" th:errors="*{contentOrder}"></div>
                     </div>
 
                     <div class="col-md-6">
                         <label class="apple-caption-strong mb-1 d-block">Nghĩa / Ghi chú ngắn</label>
                         <input class="apple-text-field" type="text" th:field="*{meaning}" placeholder="Nghĩa tiếng Việt hoặc mô tả ngắn">
+                        <div class="text-danger apple-caption mt-1" th:if="${#fields.hasErrors('meaning')}" th:errors="*{meaning}"></div>
                     </div>
 
                     <div class="col-md-6">
                         <label class="apple-caption-strong mb-1 d-block">Ví dụ</label>
                         <input class="apple-text-field" type="text" th:field="*{example}" placeholder="Đặt câu mẫu cho học viên">
+                        <div class="text-danger apple-caption mt-1" th:if="${#fields.hasErrors('example')}" th:errors="*{example}"></div>
                     </div>
 
                     <div class="col-12">
                         <label class="apple-caption-strong mb-1 d-block">Giải thích chi tiết</label>
                         <textarea class="apple-text-field" rows="3" style="height: auto;" th:field="*{explanation}" placeholder="Giải thích cách dùng, dấu hiệu nhận biết, lưu ý..."></textarea>
+                        <div class="text-danger apple-caption mt-1" th:if="${#fields.hasErrors('explanation')}" th:errors="*{explanation}"></div>
                     </div>
 
                     <div class="col-12 d-flex justify-content-end">
@@ -145,7 +150,7 @@
                         <tr th:each="content : ${contents}" style="border-bottom: 1px solid var(--apple-divider-soft);">
                             <td class="py-3" th:text="${content.contentOrder}">1</td>
                             <td class="py-3 fw-semibold text-dark" th:text="${content.wordOrStructure}">word</td>
-                            <td class="py-3 text-muted" th:text="${content.ipa}">/w3:d/</td>
+                            <td class="py-3 text-muted" th:text="${content.ipa}">/word/</td>
                             <td class="py-3 text-truncate" style="max-width: 260px;" th:text="${content.meaning}">meaning</td>
                             <td class="py-3 text-center">
                                 <div class="d-flex justify-content-center gap-2">
@@ -169,7 +174,6 @@
             </div>
         </div>
 
-        <!-- Footer -->
         <footer th:replace="~{fragments/layout :: footer}"></footer>
     </div>
 </div>

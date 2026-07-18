@@ -1,6 +1,8 @@
 package com.edu.espp.repository;
 
 import com.edu.espp.entity.LessonContent;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,5 +27,33 @@ public interface LessonContentRepository extends JpaRepository<LessonContent, Lo
     List<LessonContent> searchDictionary(
             @Param("keyword") String keyword,
             @Param("lessonId") Long lessonId
+    );
+
+    @Query(
+            value = """
+                    select c from LessonContent c
+                    join c.lesson l
+                    where (:keyword is null or :keyword = ''
+                        or lower(c.wordOrStructure) like lower(concat('%', :keyword, '%'))
+                        or lower(coalesce(c.meaning, '')) like lower(concat('%', :keyword, '%'))
+                        or lower(coalesce(c.explanation, '')) like lower(concat('%', :keyword, '%')))
+                    and (:lessonId is null or l.id = :lessonId)
+                    and l.isPublished = true
+                    """,
+            countQuery = """
+                    select count(c) from LessonContent c
+                    join c.lesson l
+                    where (:keyword is null or :keyword = ''
+                        or lower(c.wordOrStructure) like lower(concat('%', :keyword, '%'))
+                        or lower(coalesce(c.meaning, '')) like lower(concat('%', :keyword, '%'))
+                        or lower(coalesce(c.explanation, '')) like lower(concat('%', :keyword, '%')))
+                    and (:lessonId is null or l.id = :lessonId)
+                    and l.isPublished = true
+                    """
+    )
+    Page<LessonContent> searchDictionary(
+            @Param("keyword") String keyword,
+            @Param("lessonId") Long lessonId,
+            Pageable pageable
     );
 }

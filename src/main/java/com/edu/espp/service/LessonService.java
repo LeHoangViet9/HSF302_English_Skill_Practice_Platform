@@ -7,6 +7,8 @@ import com.edu.espp.entity.LessonContent;
 import com.edu.espp.repository.LessonContentRepository;
 import com.edu.espp.repository.LessonRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +24,16 @@ public class LessonService {
         return lessonRepository.searchLessons(normalizeKeyword(keyword), type, level);
     }
 
+    public Page<Lesson> searchLessons(String keyword, TypeLesson type, LevelLesson level, Pageable pageable) {
+        return lessonRepository.searchLessons(normalizeKeyword(keyword), type, level, pageable);
+    }
+
     public List<Lesson> searchPublishedLessons(String keyword, TypeLesson type, LevelLesson level) {
         return lessonRepository.searchPublishedLessons(normalizeKeyword(keyword), type, level);
+    }
+
+    public Page<Lesson> searchPublishedLessons(String keyword, TypeLesson type, LevelLesson level, Pageable pageable) {
+        return lessonRepository.searchPublishedLessons(normalizeKeyword(keyword), type, level, pageable);
     }
 
     public List<Lesson> getAllLessons() {
