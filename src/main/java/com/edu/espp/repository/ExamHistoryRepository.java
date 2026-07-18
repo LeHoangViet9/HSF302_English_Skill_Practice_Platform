@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface ExamHistoryRepository extends JpaRepository<ExamHistory, Long> {
     List<ExamHistory> findByUserIdOrderByTestedAtDesc(Long userId);
+    List<ExamHistory> findAllByOrderByTestedAtDesc();
 }

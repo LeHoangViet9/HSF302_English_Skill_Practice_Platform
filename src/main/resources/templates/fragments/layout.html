@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${title}">ESPP Platform</title>
+    <!-- Prevent favicon.ico 404 requests -->
+    <link rel="icon" href="data:,">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
@@ -18,7 +20,6 @@
             font-family: var(--apple-font-text);
             background-color: var(--apple-canvas-parchment);
             color: var(--apple-ink);
-            overflow-x: hidden;
             width: 100%;
         }
         
@@ -27,7 +28,6 @@
             display: flex;
             width: 100%;
             align-items: stretch;
-            overflow-x: hidden;
         }
 
         #sidebar-wrapper {
@@ -271,9 +271,7 @@
             <a class="list-group-item" th:classappend="${activeMenu == 'lessons' ? 'active' : ''}" href="/staff/lessons">
                 <i class="fa-solid fa-book"></i> Quản lý Bài học
             </a>
-            <a class="list-group-item" th:classappend="${activeMenu == 'support' ? 'active' : ''}" href="/admin/support-tickets">
-                <i class="fa-solid fa-envelope"></i> Hộp thư Hỗ trợ
-            </a>
+
             <a class="list-group-item" th:classappend="${activeMenu == 'histories' ? 'active' : ''}" href="/admin/histories">
                 <i class="fa-solid fa-clock-rotate-left"></i> Lịch sử Thi
             </a>
@@ -306,9 +304,7 @@
             <a class="list-group-item" th:classappend="${activeMenu == 'flashcards' ? 'active' : ''}" href="/student/flashcards/review">
                 <i class="fa-solid fa-layer-group"></i> Ôn tập Flashcard
             </a>
-            <a class="list-group-item" th:classappend="${activeMenu == 'support' ? 'active' : ''}" th:href="@{/student/support-tickets/user/{id}(id=${user.id})}">
-                <i class="fa-solid fa-circle-info"></i> Gửi Hỗ Trợ
-            </a>
+
             <a class="list-group-item" th:classappend="${activeMenu == 'histories' ? 'active' : ''}" th:href="@{/histories/user/{id}(id=${user.id})}">
                 <i class="fa-solid fa-clock-rotate-left"></i> Lịch sử Học tập
             </a>

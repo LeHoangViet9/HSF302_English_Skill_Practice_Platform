@@ -26,7 +26,7 @@ public class User {
     @Column(nullable = false)
     private String passwordHash;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "NVARCHAR(150)")
     private String fullName;
 
     @Column(nullable = false)
