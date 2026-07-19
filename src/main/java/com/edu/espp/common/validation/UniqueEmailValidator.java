@@ -1,22 +1,33 @@
 package com.edu.espp.common.validation;
 
-import com.edu.espp.repository.StudentUserRepository;
+import com.edu.espp.repository.UserRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Locale;
+
 @Component
 @RequiredArgsConstructor
-public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
+public class UniqueEmailValidator
+        implements ConstraintValidator<UniqueEmail, String> {
 
-    private final StudentUserRepository studentUserRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext context) {
+    public boolean isValid(
+            String value,
+            ConstraintValidatorContext context) {
+
         if (value == null || value.isBlank()) {
             return true;
         }
-        return !studentUserRepository.existsByEmail(value.trim().toLowerCase());
+
+        String email = value
+                .trim()
+                .toLowerCase(Locale.ROOT);
+
+        return !userRepository.existsByEmail(email);
     }
 }

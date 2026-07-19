@@ -33,8 +33,8 @@ public class RegisterController {
             return "register";
         }
 
-        String email = registerService.register(form);
-        redirectAttributes.addFlashAttribute("email", email);
-        return "redirect:/verify-email-sent";
+        registerService.register(form);
+        redirectAttributes.addAttribute("success", "Đăng ký thành công. Bạn có thể đăng nhập ngay.");
+        return "redirect:/login";
     }
 }

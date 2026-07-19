@@ -5,9 +5,9 @@ import com.edu.espp.common.exception.InvalidTokenException;
 import com.edu.espp.common.exception.SamePasswordException;
 import com.edu.espp.dto.ResetPasswordForm;
 import com.edu.espp.entity.AuthToken;
-import com.edu.espp.entity.StudentUser;
+import com.edu.espp.entity.User;
+import com.edu.espp.repository.UserRepository;
 import com.edu.espp.repository.AuthTokenRepository;
-import com.edu.espp.repository.StudentUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,109 +17,203 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChangePasswordService {
 
-    private static final String RESET_TOKEN_INVALID_MESSAGE =
-            "Link dat lai mat khau khong hop le hoac da het han. Vui long yeu cau lien ket moi.";
+    private static final String RESET_TOKEN_INVALID_MESSAGE = "Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. "
+            + "Vui lòng yêu cầu liên kết mới.";
 
-    private final StudentUserRepository studentUserRepository;
+    private final UserRepository userRepository;
     private final AuthTokenRepository authTokenRepository;
     private final PasswordEncoder passwordEncoder;
 
     public boolean isValidResetToken(String tokenValue) {
+
         if (tokenValue == null || tokenValue.isBlank()) {
             return false;
         }
-        return authTokenRepository.findByTokenValueAndTokenType(tokenValue, AuthTokenType.PASSWORD_RESET)
-                .filter(this::isTokenActive)
-                .isPresent();
+
+        Optional<AuthToken> optionalToken = authTokenRepository
+                .findByTokenValueAndTokenType(
+                        tokenValue,
+                        AuthTokenType.PASSWORD_RESET);
+
+        if (optionalToken.isEmpty()) {
+            return false;
+        }
+
+        return isTokenActive(optionalToken.get());
     }
 
     @Transactional
-    public ResetPasswordResult resetPassword(ResetPasswordForm form) {
+    public ResetPasswordResult resetPassword(
+            ResetPasswordForm form) {
+
         try {
-            resetPassword(form.getToken(), form.getNewPassword());
+            changePassword(
+                    form.getToken(),
+                    form.getNewPassword());
+
             return ResetPasswordResult.ok();
-        } catch (InvalidTokenException ex) {
-            return ResetPasswordResult.invalidToken(ex.getMessage());
-        } catch (SamePasswordException ex) {
-            return ResetPasswordResult.error(ex.getMessage());
+
+        } catch (InvalidTokenException exception) {
+
+            return ResetPasswordResult.invalidToken(
+                    exception.getMessage());
+
+        } catch (SamePasswordException exception) {
+
+            return ResetPasswordResult.error(
+                    exception.getMessage());
         }
     }
 
-    private void resetPassword(String tokenValue, String newPassword) {
-        AuthToken token = findActiveResetToken(tokenValue);
-        StudentUser student = token.getStudentUser();
+    private void changePassword(
+            String tokenValue,
+            String newPassword) {
+
+        AuthToken token = findValidToken(tokenValue);
+        User user = token.getUser();
+
+        if (user == null) {
+            throw new InvalidTokenException(
+                    RESET_TOKEN_INVALID_MESSAGE);
+        }
+
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
-        ensurePasswordIsNew(student, newPassword);
-        updatePassword(student, newPassword, now);
-        markTokenUsed(token, now);
+        String currentPasswordHash = user.getPasswordHash();
 
-        revokeAllActiveTokens(student.getStudentId(), AuthTokenType.SESSION, now);
-        revokeAllActiveTokens(student.getStudentId(), AuthTokenType.PASSWORD_RESET, now);
+        if (currentPasswordHash != null
+                && !currentPasswordHash.isBlank()) {
 
-        log.info("[ChangePasswordService] PASSWORD_RESET_SUCCESS {student_id={}}", student.getStudentId());
+            boolean samePassword = passwordEncoder.matches(
+                    newPassword,
+                    currentPasswordHash);
+
+            if (samePassword) {
+                throw new SamePasswordException();
+            }
+        }
+
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        user.setPasswordHash(encodedPassword);
+        user.setPasswordChangedAt(now);
+
+        userRepository.save(user);
+
+        token.setUsedAt(now);
+        authTokenRepository.save(token);
+
+        revokeActiveTokens(
+                user.getId(),
+                AuthTokenType.SESSION,
+                now);
+
+        revokeActiveTokens(
+                user.getId(),
+                AuthTokenType.PASSWORD_RESET,
+                now);
+
+        log.info(
+                "[ChangePasswordService] "
+                        + "PASSWORD_RESET_SUCCESS {user_id={}}",
+                user.getId());
     }
 
-    private AuthToken findActiveResetToken(String tokenValue) {
-        AuthToken token = authTokenRepository
-                .findByTokenValueAndTokenType(tokenValue, AuthTokenType.PASSWORD_RESET)
-                .orElseThrow(() -> new InvalidTokenException(RESET_TOKEN_INVALID_MESSAGE));
+    private AuthToken findValidToken(String tokenValue) {
+
+        if (tokenValue == null || tokenValue.isBlank()) {
+            throw new InvalidTokenException(
+                    RESET_TOKEN_INVALID_MESSAGE);
+        }
+
+        Optional<AuthToken> optionalToken = authTokenRepository
+                .findByTokenValueAndTokenType(
+                        tokenValue,
+                        AuthTokenType.PASSWORD_RESET);
+
+        if (optionalToken.isEmpty()) {
+            throw new InvalidTokenException(
+                    RESET_TOKEN_INVALID_MESSAGE);
+        }
+
+        AuthToken token = optionalToken.get();
 
         if (!isTokenActive(token)) {
-            throw new InvalidTokenException(RESET_TOKEN_INVALID_MESSAGE);
+            throw new InvalidTokenException(
+                    RESET_TOKEN_INVALID_MESSAGE);
         }
+
         return token;
     }
 
-    private void ensurePasswordIsNew(StudentUser student, String newPassword) {
-        if (student.getPasswordHash() != null && passwordEncoder.matches(newPassword, student.getPasswordHash())) {
-            throw new SamePasswordException();
-        }
-    }
-
-    private void updatePassword(StudentUser student, String newPassword, LocalDateTime now) {
-        student.setPasswordHash(passwordEncoder.encode(newPassword));
-        student.setPasswordChangedAt(now);
-        studentUserRepository.save(student);
-    }
-
-    private void markTokenUsed(AuthToken token, LocalDateTime now) {
-        token.setUsedAt(now);
-        authTokenRepository.save(token);
-    }
-
     private boolean isTokenActive(AuthToken token) {
+
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-        return token.getRevokedAt() == null
-                && token.getUsedAt() == null
+
+        if (token.getRevokedAt() != null) {
+            return false;
+        }
+
+        if (token.getUsedAt() != null) {
+            return false;
+        }
+
+        return token.getExpiresAt() != null
                 && token.getExpiresAt().isAfter(now);
     }
 
-    private void revokeAllActiveTokens(Long studentId, AuthTokenType tokenType, LocalDateTime now) {
-        List<AuthToken> tokens = authTokenRepository
-                .findByStudentUser_StudentIdAndTokenTypeAndRevokedAtIsNull(studentId, tokenType);
-        tokens.forEach(activeToken -> activeToken.setRevokedAt(now));
-        authTokenRepository.saveAll(tokens);
+    private void revokeActiveTokens(
+            Long userId,
+            AuthTokenType tokenType,
+            LocalDateTime now) {
+
+        List<AuthToken> activeTokens = authTokenRepository
+                .findByUser_IdAndTokenTypeAndRevokedAtIsNull(
+                        userId,
+                        tokenType);
+
+        activeTokens.forEach(
+                token -> token.setRevokedAt(now));
+
+        authTokenRepository.saveAll(activeTokens);
     }
 
-    public record ResetPasswordResult(boolean success, boolean invalidToken, String errorMessage) {
+    public record ResetPasswordResult(
+            boolean success,
+            boolean invalidToken,
+            String errorMessage) {
 
         static ResetPasswordResult ok() {
-            return new ResetPasswordResult(true, false, null);
+
+            return new ResetPasswordResult(
+                    true,
+                    false,
+                    null);
         }
 
-        static ResetPasswordResult invalidToken(String errorMessage) {
-            return new ResetPasswordResult(false, true, errorMessage);
+        static ResetPasswordResult invalidToken(
+                String errorMessage) {
+
+            return new ResetPasswordResult(
+                    false,
+                    true,
+                    errorMessage);
         }
 
-        static ResetPasswordResult error(String errorMessage) {
-            return new ResetPasswordResult(false, false, errorMessage);
+        static ResetPasswordResult error(
+                String errorMessage) {
+
+            return new ResetPasswordResult(
+                    false,
+                    false,
+                    errorMessage);
         }
     }
 }
