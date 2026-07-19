@@ -12,7 +12,7 @@ import com.edu.espp.entity.*;
 import com.edu.espp.repository.*;
 import com.edu.espp.service.exam.ExamService;
 import com.fasterxml.jackson.core.type.TypeReference; // 🌟 Thêm import này
-import com.fasterxml.jackson.databind.ObjectMapper;       // 🌟 Thêm import này
+import com.fasterxml.jackson.databind.ObjectMapper; // 🌟 Thêm import này
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -133,7 +133,7 @@ public class ExamServiceImpl implements ExamService {
     @Override
     @Transactional
     public ExamResponse createExam(ExamRequest request) {
-        if(examRepository.existsByTitle(request.getTitle())){
+        if (examRepository.existsByTitle(request.getTitle())) {
             throw new ConflictException("Bài thi với tiêu đề " + request.getTitle() + " đã tồn tại");
         }
         Exam exam = Exam.builder()
@@ -160,7 +160,8 @@ public class ExamServiceImpl implements ExamService {
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new ResourceNotFoundException(EXAM_NOT_FOUND_MSG + " để cập nhật"));
         if (examRepository.existsByTitleAndIdNot(request.getTitle(), examId)) {
-            throw new IllegalArgumentException("Tên bài thi '" + request.getTitle() + "' đã tồn tại ở một đề thi khác!");
+            throw new IllegalArgumentException(
+                    "Tên bài thi '" + request.getTitle() + "' đã tồn tại ở một đề thi khác!");
         }
         exam.setTitle(request.getTitle());
         exam.setType(request.getType());
@@ -180,7 +181,8 @@ public class ExamServiceImpl implements ExamService {
     }
 
     private ExamResponse convertToResponse(Exam exam) {
-        if (exam == null) return null;
+        if (exam == null)
+            return null;
         return ExamResponse.builder()
                 .id(exam.getId())
                 .title(exam.getTitle())
@@ -192,7 +194,8 @@ public class ExamServiceImpl implements ExamService {
     }
 
     private QuestionResponse convertQuestionToResponse(Question question) {
-        if (question == null) return null;
+        if (question == null)
+            return null;
 
         Map<String, String> parsedOptions = new HashMap<>();
         try {
@@ -200,8 +203,8 @@ public class ExamServiceImpl implements ExamService {
                 // Parse chuỗi JSON String từ database sang cấu trúc Map thực thụ
                 parsedOptions = objectMapper.readValue(
                         question.getOptions(),
-                        new TypeReference<Map<String, String>>() {}
-                );
+                        new TypeReference<Map<String, String>>() {
+                        });
             }
         } catch (Exception e) {
             System.err.println("Lỗi parse JSON options tại Question ID " + question.getId() + ": " + e.getMessage());

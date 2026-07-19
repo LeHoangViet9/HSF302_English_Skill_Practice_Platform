@@ -79,10 +79,7 @@ public class AuthSessionService {
 
                 if (optionalToken.isEmpty()) {
 
-                        log.warn(
-                                        "[AuthSessionService] "
-                                                        + "No auth token found for session {}",
-                                        sessionId);
+                        log.warn("[AuthSessionService] " + "No auth token found for session {}", sessionId);
 
                         return;
                 }
