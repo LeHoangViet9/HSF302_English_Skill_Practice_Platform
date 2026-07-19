@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
 @Repository
 public interface SRSReviewRepository extends JpaRepository<SRSReview, Long> {
     List<SRSReview> findByUser_IdAndNextReviewDateLessThanEqual(Long userId, LocalDateTime now);
@@ -15,12 +16,8 @@ public interface SRSReviewRepository extends JpaRepository<SRSReview, Long> {
 
     long countByUser_Id(Long userId);
 
-    long countByUser_IdAndNextReviewDateLessThanEqual(
-            Long userId,
-            LocalDateTime now
-    );
+    long countByUser_IdAndNextReviewDateLessThanEqual(Long userId, LocalDateTime now);
 
     List<SRSReview> findTop5ByUser_IdOrderByNextReviewDateAsc(Long userId);
-
 
 }

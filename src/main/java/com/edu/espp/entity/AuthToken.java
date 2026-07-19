@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,10 +26,6 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-/**
- * Maps to {@code auth_tokens} (see .sdd/Spect/Backend/feat-auth/001-data-model-and-migration.md §5.3).
- * {@code tokenValue} is deliberately excluded from {@link #toString()} (AG-15: No Secret Exposure).
- */
 @Entity
 @Table(name = "auth_tokens", uniqueConstraints = {
         @UniqueConstraint(name = "UQ_auth_tokens_token_value", columnNames = "token_value")
@@ -39,7 +36,11 @@ import java.time.ZoneOffset;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(of = "tokenId")
-@ToString(of = {"tokenId", "tokenType", "expiresAt"})
+@ToString(of = {
+        "tokenId",
+        "tokenType",
+        "expiresAt"
+})
 public class AuthToken {
 
     @Id
@@ -48,8 +49,8 @@ public class AuthToken {
     private Long tokenId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_id", nullable = false, foreignKey = @jakarta.persistence.ForeignKey(name = "FK_auth_tokens_student"))
-    private StudentUser studentUser;
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "FK_auth_tokens_user"))
+    private User user;
 
     @Convert(converter = AuthTokenTypeConverter.class)
     @Column(name = "token_type", nullable = false, length = 30)

@@ -44,7 +44,7 @@ public class DashboardService {
                 : (completedLessons * 100.0) / totalLessons;
 
         Lesson recentLesson = learningProgressRepository
-                .findTopByUser_IdOrderByUpdatedAtDesc(userId)
+                .findTopByUserIdOrderByUpdatedAtDesc(userId)
                 .map(LearningProgress::getLesson)
                 .orElse(null);
 
