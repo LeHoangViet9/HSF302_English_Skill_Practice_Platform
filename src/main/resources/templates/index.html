@@ -13,7 +13,7 @@
 
     <!-- Apple Design CSS -->
     <link rel="stylesheet" th:href="@{/css/apple-design.css}">
-    
+
     <style>
         /* Custom local adjustments for landing grid layout */
         .how-grid {
@@ -36,7 +36,7 @@
             flex-direction: column;
             transition: transform 0.2s ease;
         }
-        
+
         .how-card:hover {
             transform: translateY(-4px);
         }
@@ -77,18 +77,20 @@
     <nav class="apple-global-nav">
         <div class="nav-container">
             <!-- Logo -->
-            <a th:href="@{/}" style="font-size: 18px; font-weight: 600; opacity: 1; display: flex; align-items: center; gap: 8px;">
+            <a th:href="@{/}"
+                style="font-size: 18px; font-weight: 600; opacity: 1; display: flex; align-items: center; gap: 8px;">
                 <svg width="20" height="20" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="20" cy="20" r="18" stroke="white" stroke-width="3" />
                     <path d="M20 10L27 26H13L20 10Z" fill="white" />
                 </svg>
-                Apolo
+                ESSP
             </a>
 
             <!-- Actions -->
             <div style="display: flex; align-items: center; gap: 24px;">
                 <a th:href="@{/login}">Đăng nhập</a>
-                <a class="btn-apple btn-apple-primary" th:href="@{/register}" style="font-size: 12px; padding: 6px 12px; opacity: 1;">
+                <a class="btn-apple btn-apple-primary" th:href="@{/register}"
+                    style="font-size: 12px; padding: 6px 12px; opacity: 1;">
                     Bắt đầu ngay
                 </a>
             </div>
@@ -99,7 +101,8 @@
     <!-- ===================== HERO SECTION ===================== -->
     <section class="apple-tile apple-product-tile-light reveal-fade-up">
         <div class="apple-tile-content">
-            <h1 class="apple-hero-display" style="color: var(--apple-ink); margin-bottom: 8px;">Học tiếng Anh. Theo cách của bạn.</h1>
+            <h1 class="apple-hero-display" style="color: var(--apple-ink); margin-bottom: 8px;">Học tiếng Anh. Theo cách
+                của bạn.</h1>
             <p class="apple-lead" style="color: var(--apple-ink-muted-80); margin-bottom: 24px; max-width: 680px;">
                 Lộ trình học cá nhân hóa từ A2 đến B1. Tối ưu hóa thời điểm ôn tập để ghi nhớ lâu dài.
             </p>
@@ -126,7 +129,8 @@
                     <div class="how-step-num">01</div>
                     <div class="how-card-title">Chọn cấp độ English</div>
                     <p class="how-card-desc">
-                        Từ Beginner đến Advanced. Apolo sẽ đánh giá và cá nhân hóa lộ trình học phù hợp nhất với trình độ hiện tại của bạn.
+                        Từ Beginner đến Advanced. Apolo sẽ đánh giá và cá nhân hóa lộ trình học phù hợp nhất với trình
+                        độ hiện tại của bạn.
                     </p>
                 </div>
 
@@ -135,7 +139,8 @@
                     <div class="how-step-num">02</div>
                     <div class="how-card-title">Thời điểm ôn tập vàng</div>
                     <p class="how-card-desc">
-                        Apolo chủ động nhắc nhở ôn tập vào đúng chu kỳ ghi nhớ tốt nhất của não bộ. Chỉ cần 15–20 phút mỗi ngày để cải thiện rõ rệt.
+                        Apolo chủ động nhắc nhở ôn tập vào đúng chu kỳ ghi nhớ tốt nhất của não bộ. Chỉ cần 15–20 phút
+                        mỗi ngày để cải thiện rõ rệt.
                     </p>
                 </div>
 
@@ -144,7 +149,8 @@
                     <div class="how-step-num">03</div>
                     <div class="how-card-title">Thi thử và cải thiện</div>
                     <p class="how-card-desc">
-                        Hệ thống đề thi thử (mock exam) sát thực tế, chỉ rõ chính xác các điểm yếu giúp bạn cải thiện nhanh chóng không lãng phí thời gian.
+                        Hệ thống đề thi thử (mock exam) sát thực tế, chỉ rõ chính xác các điểm yếu giúp bạn cải thiện
+                        nhanh chóng không lãng phí thời gian.
                     </p>
                 </div>
             </div>
@@ -155,12 +161,14 @@
     <!-- ===================== CTA SECTION ===================== -->
     <section class="apple-tile apple-product-tile-parchment reveal-fade-up">
         <div class="apple-tile-content">
-            <h2 class="apple-display-lg" style="color: var(--apple-ink); margin-bottom: 12px;">Sẵn sàng bắt đầu chưa?</h2>
+            <h2 class="apple-display-lg" style="color: var(--apple-ink); margin-bottom: 12px;">Sẵn sàng bắt đầu chưa?
+            </h2>
             <p class="apple-lead" style="color: var(--apple-ink-muted-80); margin-bottom: 32px; max-width: 600px;">
                 Tạo tài khoản học thử hoàn toàn miễn phí ngay hôm nay — không yêu cầu thẻ tín dụng.
             </p>
             <div class="apple-tile-ctas" style="margin-bottom: 0;">
-                <a class="btn-apple btn-apple-primary" th:href="@{/register}" style="padding: 14px 28px; font-size: 18px;">
+                <a class="btn-apple btn-apple-primary" th:href="@{/register}"
+                    style="padding: 14px 28px; font-size: 18px;">
                     Đăng ký miễn phí ngay <i class="bi bi-arrow-right" style="margin-left: 8px;"></i>
                 </a>
             </div>
@@ -174,7 +182,8 @@
             <div class="apple-footer-grid">
                 <!-- Brand column -->
                 <div class="apple-footer-col">
-                    <h4 style="font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 6px; margin-bottom: 16px;">
+                    <h4
+                        style="font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 6px; margin-bottom: 16px;">
                         Apolo
                     </h4>
                     <p style="line-height: 1.5; color: var(--apple-ink-muted-80); margin-bottom: 16px;">

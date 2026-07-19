@@ -1,10 +1,10 @@
 
 package com.edu.espp.repository;
 
+import aj.org.objectweb.asm.commons.Remapper;
 import com.edu.espp.entity.LearningProgress;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface LearningProgressRepository extends JpaRepository<LearningProgress, Long> {
@@ -16,10 +16,12 @@ public interface LearningProgressRepository extends JpaRepository<LearningProgre
     Optional<LearningProgress> findTopByUser_IdOrderByUpdatedAtDesc(Long userId);
 
     Optional<LearningProgress> findTopByUser_IdAndIsCompletedFalseOrderByUpdatedAtDesc(Long userId);
+    long countByUserId(Long userId);
 
-    Optional<LearningProgress> findByUser_IdAndLesson_Id(Long userId, Long lessonId);
+    Optional<LearningProgress> findTopByUserIdOrderByUpdatedAtDesc(Long userId);
 
-    boolean existsByUser_IdAndLesson_IdAndIsCompletedTrue(Long userId, Long lessonId);
+    long countByUserIdAndIsCompletedTrue(Long userId);
 
-    List<LearningProgress> findByUser_IdAndIsCompletedTrue(Long userId);
+    Optional<LearningProgress> findTopByUserIdAndIsCompletedFalseOrderByUpdatedAtDesc(Long userId);
+
 }

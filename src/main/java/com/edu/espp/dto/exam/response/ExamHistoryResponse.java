@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 @Data@AllArgsConstructor@NoArgsConstructor@Builder
 public class ExamHistoryResponse {
     private Long id;
-    private Long userId;
-    private String fullName;
     private Long examId;
     private String examTitle;
     private Double score;

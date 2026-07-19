@@ -1,7 +1,7 @@
 package com.edu.espp.controller.auth;
 
 import com.edu.espp.dto.ForgotPasswordForm;
-import com.edu.espp.service.ForgotPasswordService;
+import com.edu.espp.service.auth.ForgotPasswordService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface ExamHistoryService {
     List<ExamHistoryResponse> getUserExamHistory(Long userId);
-    List<ExamHistoryResponse> getAllExamHistories();
     List<ExamAttemptDetailResponse> getExamAttemptDetails(Long examHistoryId);
 }

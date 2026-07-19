@@ -25,9 +25,5 @@ public class StudentDashboardData {
     private Lesson recentLesson;
     private Lesson suggestedLesson;
 
-    private long totalExamsTaken;
-    private double averageExamScore;
-    private com.edu.espp.entity.ExamHistory recentExam;
-
     private List<SRSReview> upcomingReviews;
 }

@@ -21,20 +21,9 @@ public class ExamHistoryServiceImpl implements ExamHistoryService {
     @Override
     public List<ExamHistoryResponse> getUserExamHistory(Long userId) {
         List<ExamHistory> histories = examHistoryRepository.findByUserIdOrderByTestedAtDesc(userId);
-        return mapToResponse(histories);
-    }
 
-    @Override
-    public List<ExamHistoryResponse> getAllExamHistories() {
-        List<ExamHistory> histories = examHistoryRepository.findAllByOrderByTestedAtDesc();
-        return mapToResponse(histories);
-    }
-
-    private List<ExamHistoryResponse> mapToResponse(List<ExamHistory> histories) {
         return histories.stream().map(history -> ExamHistoryResponse.builder()
                 .id(history.getId())
-                .userId(history.getUser().getId())
-                .fullName(history.getUser().getFullName())
                 .examId(history.getExam().getId())
                 .examTitle(history.getExam().getTitle())
                 .score(history.getScore())

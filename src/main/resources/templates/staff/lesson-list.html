@@ -107,35 +107,6 @@
                         </tbody>
                     </table>
                 </div>
-                <nav class="mt-4" th:if="${lessonPage != null && lessonPage.totalPages > 1}">
-                    <ul class="pagination justify-content-center mb-0">
-                        <li class="page-item" th:classappend="${lessonPage.first} ? 'disabled'">
-                            <a class="page-link"
-                               th:href="@{/staff/lessons(page=${lessonPage.number - 1}, size=${size}, keyword=${keyword}, type=${selectedType}, level=${selectedLevel})}">
-                                Trước
-                            </a>
-                        </li>
-                        <li class="page-item"
-                            th:each="i : ${#numbers.sequence(0, lessonPage.totalPages - 1)}"
-                            th:classappend="${i == lessonPage.number} ? 'active'">
-                            <a class="page-link"
-                               th:text="${i + 1}"
-                               th:href="@{/staff/lessons(page=${i}, size=${size}, keyword=${keyword}, type=${selectedType}, level=${selectedLevel})}">
-                                1
-                            </a>
-                        </li>
-                        <li class="page-item" th:classappend="${lessonPage.last} ? 'disabled'">
-                            <a class="page-link"
-                               th:href="@{/staff/lessons(page=${lessonPage.number + 1}, size=${size}, keyword=${keyword}, type=${selectedType}, level=${selectedLevel})}">
-                                Sau
-                            </a>
-                        </li>
-                    </ul>
-                    <p class="text-center text-muted mt-2 mb-0 apple-caption"
-                       th:text="${'Hiển thị ' + lessonPage.numberOfElements + ' / ' + lessonPage.totalElements + ' bài học'}">
-                        Hiển thị bài học
-                    </p>
-                </nav>
             </div>
         </div>
 

@@ -6,7 +6,6 @@ package com.edu.espp.common.enums;
  * {@link com.edu.espp.common.converter.StudentStatusConverter}.
  */
 public enum StudentStatus {
-    PENDING,
     ACTIVE,
     SUSPENDED,
     DELETED

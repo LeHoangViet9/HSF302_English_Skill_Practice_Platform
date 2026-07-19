@@ -23,7 +23,6 @@ public class DashboardService {
     private final LessonRepository lessonRepository;
     private final LearningProgressRepository learningProgressRepository;
     private final UserRepository userRepository;
-    private final com.edu.espp.repository.ExamHistoryRepository examHistoryRepository;
 
     @Transactional(readOnly = true)
     public StudentDashboardData getStudentDashboard(Long userId) {
@@ -32,9 +31,9 @@ public class DashboardService {
         long dueFlashcardsToday = srsReviewRepository
                 .countByUser_IdAndNextReviewDateLessThanEqual(userId, LocalDateTime.now());
 
-        long learnedLessons = learningProgressRepository.countByUser_Id(userId);
+        long learnedLessons = learningProgressRepository.countByUserId(userId);
 
-        long completedLessons = learningProgressRepository.countByUser_IdAndIsCompletedTrue(userId);
+        long completedLessons = learningProgressRepository.countByUserIdAndIsCompletedTrue(userId);
 
         long totalLessons = lessonRepository.count();
 
@@ -44,7 +43,7 @@ public class DashboardService {
                 : (completedLessons * 100.0) / totalLessons;
 
         Lesson recentLesson = learningProgressRepository
-                .findTopByUser_IdOrderByUpdatedAtDesc(userId)
+                .findTopByUserIdOrderByUpdatedAtDesc(userId)
                 .map(LearningProgress::getLesson)
                 .orElse(null);
 
@@ -57,11 +56,6 @@ public class DashboardService {
                 .map(user -> user.getFullName())
                 .orElse("Học viên");
 
-        List<com.edu.espp.entity.ExamHistory> examHistories = examHistoryRepository.findByUserIdOrderByTestedAtDesc(userId);
-        long totalExamsTaken = examHistories.size();
-        double averageExamScore = totalExamsTaken == 0 ? 0 : examHistories.stream().mapToDouble(h -> h.getScore() != null ? h.getScore() : 0.0).average().orElse(0.0);
-        com.edu.espp.entity.ExamHistory recentExam = totalExamsTaken > 0 ? examHistories.get(0) : null;
-
         return new StudentDashboardData(
                 studentName,
                 totalFlashcards,
@@ -71,9 +65,6 @@ public class DashboardService {
                 completionPercent,
                 recentLesson,
                 suggestedLesson,
-                totalExamsTaken,
-                averageExamScore,
-                recentExam,
                 upcomingReviews
         );
     }
@@ -81,7 +72,7 @@ public class DashboardService {
     // Tách riêng logic xử lý gợi ý bài học mượt mà
     private Lesson findSuggestedLesson(Long userId, Lesson recentLesson) {
         return learningProgressRepository
-                .findTopByUser_IdAndIsCompletedFalseOrderByUpdatedAtDesc(userId)
+                .findTopByUserIdAndIsCompletedFalseOrderByUpdatedAtDesc(userId)
                 .map(LearningProgress::getLesson)
                 .orElseGet(() -> {
                     if (recentLesson != null) {
