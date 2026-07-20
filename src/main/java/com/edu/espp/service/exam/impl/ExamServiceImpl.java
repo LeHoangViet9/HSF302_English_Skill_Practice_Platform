@@ -1,6 +1,7 @@
 package com.edu.espp.service.exam.impl;
 
 import com.edu.espp.common.enums.QuestionSkill;
+import com.edu.espp.common.enums.TypeQuiz;
 import com.edu.espp.common.exception.ConflictException;
 import com.edu.espp.common.exception.ResourceNotFoundException;
 import com.edu.espp.dto.exam.request.ExamRequest;
@@ -40,6 +41,24 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public List<ExamResponse> getAllExams() {
         List<Exam> exams = examRepository.findAll();
+        return exams.stream().map(this::convertToResponse).toList();
+    }
+
+    @Override
+    public List<ExamResponse> searchExams(String keyword, TypeQuiz type) {
+        List<Exam> exams;
+        boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
+        boolean hasType = type != null;
+
+        if (hasKeyword && hasType) {
+            exams = examRepository.findByTitleContainingIgnoreCaseAndType(keyword.trim(), type);
+        } else if (hasKeyword) {
+            exams = examRepository.findByTitleContainingIgnoreCase(keyword.trim());
+        } else if (hasType) {
+            exams = examRepository.findByType(type);
+        } else {
+            exams = examRepository.findAll();
+        }
         return exams.stream().map(this::convertToResponse).toList();
     }
 

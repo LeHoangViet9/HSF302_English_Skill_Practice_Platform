@@ -1,4 +1,4 @@
-package com.edu.espp.controller;
+package com.edu.espp.controller.student;
 
 import com.edu.espp.dto.StudentDashboardData;
 import com.edu.espp.entity.User;

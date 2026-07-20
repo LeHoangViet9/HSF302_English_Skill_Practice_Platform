@@ -46,6 +46,29 @@
                 </div>
             </div>
 
+            <!-- Form Tìm kiếm -->
+            <div class="card shadow-sm border-0 mb-4" style="background-color: var(--apple-surface-pearl); border-radius: var(--apple-rounded-md);">
+                <div class="card-body p-3">
+                    <form th:action="@{/exams}" method="get" class="row g-2 align-items-center">
+                        <div class="col-md-5">
+                            <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Tên bài thi..." style="border-radius: var(--apple-rounded-sm);">
+                        </div>
+                        <div class="col-md-4">
+                            <select name="type" class="form-select" style="border-radius: var(--apple-rounded-sm);">
+                                <option value="">-- Tất cả loại đề --</option>
+                                <option value="QUIZ" th:selected="${type != null && type.name() == 'QUIZ'}">Luyện tập (QUIZ)</option>
+                                <option value="MOCK_TEST" th:selected="${type != null && type.name() == 'MOCK_TEST'}">Thi thử (MOCK_TEST)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn-apple btn-apple-primary w-100 m-0" style="padding: 10px 0; border-radius: var(--apple-rounded-sm);">
+                                <i class="fa-solid fa-filter me-1"></i> Lọc
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <!-- Grid chứa Danh sách thẻ Card Đề Thi -->
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                 <!-- Khi không có đề thi nào -->

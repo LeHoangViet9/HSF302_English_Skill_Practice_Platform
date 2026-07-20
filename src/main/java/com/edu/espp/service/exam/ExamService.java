@@ -9,8 +9,11 @@ import com.edu.espp.dto.question.response.QuestionResponse;
 
 import java.util.List;
 
+import com.edu.espp.common.enums.TypeQuiz;
+
 public interface ExamService {
     List<ExamResponse> getAllExams();
+    List<ExamResponse> searchExams(String keyword, TypeQuiz type);
     List<QuestionResponse> getQuestionsByExam(Long examId);
     ExamResultResponse submitExam(Long examId, Long userId, ExamSubmitRequest request);
     List<QuestionResponse> getQuestionsByExamAndSkill(Long examId, QuestionSkill skill);
