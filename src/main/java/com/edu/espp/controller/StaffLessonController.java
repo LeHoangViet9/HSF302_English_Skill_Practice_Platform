@@ -59,10 +59,7 @@ public class StaffLessonController {
         model.addAttribute("lesson", lesson);
         model.addAttribute("types", TypeLesson.values());
         model.addAttribute("levels", LevelLesson.values());
-
-        if (lesson.getType() == TypeLesson.VOCABULARY) {
-            model.addAttribute("contents", lessonService.getContentsByLesson(id));
-        }
+        model.addAttribute("contents", lessonService.getContentsByLesson(id));
 
         return "staff/lesson-form";
     }
@@ -82,9 +79,6 @@ public class StaffLessonController {
     @GetMapping("/{lessonId}/contents/create")
     public String showCreateContentForm(@PathVariable Long lessonId, Model model) {
         Lesson lesson = lessonService.getLessonById(lessonId);
-        if (lesson.getType() != TypeLesson.VOCABULARY) {
-            return "redirect:/staff/lessons";
-        }
         int nextOrder = lessonService.getContentsByLesson(lessonId).size() + 1;
 
         LessonContent content = LessonContent.builder()
@@ -103,9 +97,6 @@ public class StaffLessonController {
             @ModelAttribute LessonContent content
     ) {
         Lesson lesson = lessonService.getLessonById(lessonId);
-        if (lesson.getType() != TypeLesson.VOCABULARY) {
-            return "redirect:/staff/lessons";
-        }
         lessonService.saveLessonContent(lessonId, content);
         return "redirect:/staff/lessons/edit/" + lessonId;
     }
@@ -117,9 +108,6 @@ public class StaffLessonController {
             Model model
     ) {
         Lesson lesson = lessonService.getLessonById(lessonId);
-        if (lesson.getType() != TypeLesson.VOCABULARY) {
-            return "redirect:/staff/lessons";
-        }
         LessonContent content = lessonService.getContentById(contentId);
 
         model.addAttribute("lesson", lesson);
@@ -133,9 +121,6 @@ public class StaffLessonController {
             @PathVariable Long contentId
     ) {
         Lesson lesson = lessonService.getLessonById(lessonId);
-        if (lesson.getType() != TypeLesson.VOCABULARY) {
-            return "redirect:/staff/lessons";
-        }
         lessonService.deleteLessonContent(contentId);
         return "redirect:/staff/lessons/edit/" + lessonId;
     }

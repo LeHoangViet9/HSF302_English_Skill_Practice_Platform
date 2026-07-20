@@ -14,7 +14,7 @@
         <div class="container-fluid my-4 flex-grow-1 px-4">
             <div class="row g-4 justify-content-center">
                 <!-- Left Column: Lesson Form -->
-                <div th:class="${lesson.id != null && lesson.type.name() == 'VOCABULARY'} ? 'col-lg-5 col-12' : 'col-md-8 col-lg-6 col-12'" style="max-width: 600px;">
+                <div th:class="${lesson.id != null} ? 'col-lg-5 col-12' : 'col-md-8 col-lg-6 col-12'" style="max-width: 600px;">
                     <div class="apple-store-utility-card p-4" style="height: fit-content;">
                         <!-- Form Header -->
                         <div style="border-bottom: 1px solid var(--apple-hairline); padding-bottom: 16px; margin-bottom: 24px;">
@@ -72,15 +72,15 @@
                 </div>
 
                 <!-- Right Column: Flashcard List -->
-                <div th:if="${lesson.id != null && lesson.type.name() == 'VOCABULARY'}" class="col-lg-7 col-12">
+                <div th:if="${lesson.id != null}" class="col-lg-7 col-12">
                     <div class="apple-store-utility-card p-4" style="height: fit-content;">
                         <!-- Header -->
                         <div class="d-flex justify-content-between align-items-center mb-3 pb-3" style="border-bottom: 1px solid var(--apple-hairline);">
                             <h4 class="apple-tagline mb-0" style="font-size: 21px; display: flex; align-items: center; gap: 8px;">
-                                <i class="fa-solid fa-layer-group text-primary"></i> Danh sách Flashcard
+                                <i class="fa-solid fa-layer-group text-primary"></i> Nội dung chi tiết
                             </h4>
                             <a th:href="@{/staff/lessons/{id}/contents/create(id=${lesson.id})}" class="btn-apple btn-apple-primary btn-action" style="font-size: 13px; padding: 6px 12px; text-decoration: none; display: inline-flex; align-items: center;">
-                                <i class="fa-solid fa-plus me-1"></i> Thêm mới
+                                <i class="fa-solid fa-plus me-1"></i> Thêm nội dung mới
                             </a>
                         </div>
 
@@ -90,14 +90,14 @@
                                 <thead>
                                     <tr style="border-bottom: 1px solid var(--apple-hairline); color: var(--apple-ink-muted-80);">
                                         <th class="pb-2" style="font-weight: 600; width: 50px;">Stt</th>
-                                        <th class="pb-2" style="font-weight: 600;">Từ vựng / Cấu trúc</th>
+                                        <th class="pb-2" style="font-weight: 600;">Nội dung / Cấu trúc</th>
                                         <th class="pb-2" style="font-weight: 600;">Nghĩa</th>
                                         <th class="pb-2 text-center" style="font-weight: 600; width: 120px;">Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr th:if="${contents == null || contents.isEmpty()}">
-                                        <td colspan="4" class="text-center py-4 text-muted">Chưa có flashcard nào. Hãy nhấn nút thêm mới.</td>
+                                        <td colspan="4" class="text-center py-4 text-muted">Chưa có nội dung chi tiết nào. Hãy nhấn nút thêm nội dung mới.</td>
                                     </tr>
                                     <tr th:each="c : ${contents}" style="border-bottom: 1px solid var(--apple-divider-soft);">
                                         <td class="py-2 fw-bold" th:text="${c.contentOrder}"></td>
