@@ -1,6 +1,6 @@
 package com.edu.espp.service.profile;
 
-
+import com.edu.espp.dto.profile.ProfileProgressResponse;
 
 /**
  * Service xử lý dữ liệu trang Profile & Progress.
@@ -13,5 +13,5 @@ public interface ProfileService {
      * @param userId ID của học viên
      * @return dữ liệu profile và lịch sử thi
      */
-    com.edu.espp.dto.ProfileProgressResponse getProfileProgress(Long userId);
+    ProfileProgressResponse getProfileProgress(Long userId);
 }

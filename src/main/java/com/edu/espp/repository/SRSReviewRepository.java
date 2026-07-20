@@ -18,6 +18,10 @@ public interface SRSReviewRepository extends JpaRepository<SRSReview, Long> {
 
     long countByUser_IdAndNextReviewDateLessThanEqual(Long userId, LocalDateTime now);
 
+    List<SRSReview> findByUser_Id(Long userId);
+
     List<SRSReview> findTop5ByUser_IdOrderByNextReviewDateAsc(Long userId);
+
+    List<SRSReview> findByUser_IdOrderByNextReviewDateAsc(Long userId);
 
 }

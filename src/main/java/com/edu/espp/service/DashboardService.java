@@ -50,7 +50,7 @@ public class DashboardService {
         Lesson suggestedLesson = findSuggestedLesson(userId, recentLesson);
 
         List<SRSReview> upcomingReviews = srsReviewRepository
-                .findTop5ByUser_IdOrderByNextReviewDateAsc(userId);
+                .findByUser_IdOrderByNextReviewDateAsc(userId);
 
         String studentName = userRepository.findById(userId)
                 .map(user -> user.getFullName())

@@ -1,7 +1,6 @@
 package com.edu.espp.controller.student;
 
-
-import com.edu.espp.dto.ProfileProgressResponse;
+import com.edu.espp.dto.profile.ProfileProgressResponse;
 import com.edu.espp.entity.User;
 import com.edu.espp.service.profile.ProfileService;
 import jakarta.servlet.http.HttpSession;

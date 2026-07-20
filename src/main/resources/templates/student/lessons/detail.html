@@ -55,12 +55,44 @@
                                         /ipa/
                                     </div>
                                 </div>
-                                <form method="post" th:action="@{/student/dictionary/bookmark/{id}(id=${content.id})}">
-                                    <input type="hidden" name="returnUrl" th:value="@{/student/lessons/{id}(id=${lesson.id})}">
-                                    <button class="btn-apple btn-apple-pearl-capsule btn-action" style="font-size: 13px; padding: 7px 12px;" type="submit">
-                                        <i class="fa-regular fa-bookmark me-1"></i> Lưu từ
-                                    </button>
-                                </form>
+                                <div class="d-flex align-items-center gap-2">
+                                    <!-- Bookmark Form -->
+                                    <form method="post" th:action="@{/student/dictionary/bookmark/{id}(id=${content.id})}">
+                                        <input type="hidden" name="returnUrl" th:value="@{/student/lessons/{id}(id=${lesson.id})}">
+                                        <button class="btn-apple btn-apple-pearl-capsule btn-action" style="font-size: 13px; padding: 7px 12px;" type="submit">
+                                            <i class="fa-regular fa-bookmark me-1"></i> Lưu từ
+                                        </button>
+                                    </form>
+
+                                    <!-- Flashcard Toggle Form -->
+                                    <form th:if="${lesson.type.name() == 'VOCABULARY'}" method="post" th:action="@{/student/flashcards/manage/toggle/{contentId}(contentId=${content.id})}" class="d-inline">
+                                        <input type="hidden" name="returnUrl" th:value="@{/student/lessons/{id}(id=${lesson.id})}">
+                                        
+                                        <!-- Checked State (In deck) -->
+                                        <button th:if="${deckContentIds.contains(content.id)}" 
+                                                class="btn-apple btn-apple-primary btn-action fw-semibold" 
+                                                style="font-size: 13px; padding: 7px 12px; background-color: var(--apple-primary) !important; color: white !important;" 
+                                                type="submit">
+                                            <i class="fa-solid fa-circle-check me-1"></i> Đang học
+                                        </button>
+
+                                        <!-- Unchecked State (Not in deck) -->
+                                        <button th:if="${!deckContentIds.contains(content.id)}" 
+                                                class="btn-apple btn-apple-pearl-capsule btn-action" 
+                                                style="font-size: 13px; padding: 7px 12px;" 
+                                                type="submit">
+                                            <i class="fa-solid fa-plus me-1"></i> Học Flashcard
+                                        </button>
+                                    </form>
+
+                                    <!-- Ôn ngay (Chỉ hiển thị nếu đang học) -->
+                                    <a th:if="${lesson.type.name() == 'VOCABULARY' && deckContentIds.contains(content.id)}"
+                                       th:href="@{/student/flashcards/review(contentId=${content.id}, returnUrl='/student/lessons/' + ${lesson.id})}"
+                                       class="btn-apple btn-apple-secondary-pill btn-action fw-semibold text-decoration-none"
+                                       style="font-size: 13px; padding: 7px 12px; border: 1px solid var(--apple-primary) !important; color: var(--apple-primary) !important;">
+                                        <i class="fa-solid fa-play me-1"></i> Ôn ngay
+                                    </a>
+                                </div>
                             </div>
                             <p class="mb-2" th:if="${content.meaning != null && !content.meaning.isBlank()}">
                                 <strong>Nghĩa:</strong> <span th:text="${content.meaning}">meaning</span>

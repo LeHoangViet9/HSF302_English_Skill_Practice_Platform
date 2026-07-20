@@ -1,4 +1,4 @@
-package com.edu.espp.dto;
+package com.edu.espp.dto.profile;
 
 import com.edu.espp.dto.exam.response.ExamHistoryResponse;
 import lombok.AllArgsConstructor;

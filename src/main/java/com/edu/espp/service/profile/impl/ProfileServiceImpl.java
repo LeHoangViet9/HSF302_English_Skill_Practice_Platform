@@ -1,8 +1,7 @@
 package com.edu.espp.service.profile.impl;
 
-import com.edu.espp.dto.ProfileProgressResponse;
 import com.edu.espp.dto.exam.response.ExamHistoryResponse;
-
+import com.edu.espp.dto.profile.ProfileProgressResponse;
 import com.edu.espp.entity.User;
 import com.edu.espp.repository.UserRepository;
 import com.edu.espp.service.history.ExamHistoryService;

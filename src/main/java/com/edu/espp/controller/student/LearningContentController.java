@@ -6,7 +6,9 @@ import com.edu.espp.entity.Lesson;
 import com.edu.espp.entity.User;
 import com.edu.espp.service.LearningContentService;
 import com.edu.espp.service.LessonService;
+import com.edu.espp.service.SRSReviewService;
 import lombok.RequiredArgsConstructor;
+import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -30,6 +32,7 @@ public class LearningContentController {
 
     private final LessonService lessonService;
     private final LearningContentService learningContentService;
+    private final SRSReviewService srsReviewService;
 
     @GetMapping
     public String listLessons(
@@ -71,6 +74,7 @@ public class LearningContentController {
         model.addAttribute("lesson", lessonService.getLessonById(id));
         model.addAttribute("contents", lessonService.getContentsByLesson(id));
         model.addAttribute("completed", learningContentService.isCompleted(user.getId(), id));
+        model.addAttribute("deckContentIds", srsReviewService.getDeckContentIds(user.getId()));
         return "student/lessons/detail";
     }
 
