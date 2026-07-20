@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -23,13 +22,13 @@ public class ExamController {
 
     @GetMapping
     public String getAllExams(HttpSession session, Model model) {
-        // 1. Lấy thông tin người dùng từ Session (sẽ được thay thế bằng Principal của Spring Security sau này)
+        // 1. Lấy thông tin người dùng từ Session
         User user = (User) session.getAttribute("currentUser");
 
         // 2. Dự phòng khi chưa có Security: Tự động khởi tạo user mặc định nếu trống
         if (user == null) {
             user = User.builder()
-                    .id(1L)
+                    .id(2L) // Set default to 2L (Student) instead of 1L (Admin) so they can test exam features smoothly, but this is a fallback.
                     .email("student@espp.com")
                     .fullName("Học viên (Default)")
                     .role(Role.STUDENT)

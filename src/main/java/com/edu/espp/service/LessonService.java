@@ -16,37 +16,7 @@ public class LessonService {
     private final LessonRepository lessonRepository;
 
     public List<Lesson> searchLessons(String keyword, TypeLesson type, LevelLesson level) {
-        boolean hasKeyword = keyword != null && !keyword.isBlank();
-
-        if (hasKeyword && type != null && level != null) {
-            return lessonRepository.findByTitleContainingIgnoreCaseAndTypeAndLevel(keyword, type, level);
-        }
-
-        if (hasKeyword && type != null) {
-            return lessonRepository.findByTitleContainingIgnoreCaseAndType(keyword, type);
-        }
-
-        if (hasKeyword && level != null) {
-            return lessonRepository.findByTitleContainingIgnoreCaseAndLevel(keyword, level);
-        }
-
-        if (type != null && level != null) {
-            return lessonRepository.findByTypeAndLevel(type, level);
-        }
-
-        if (hasKeyword) {
-            return lessonRepository.findByTitleContainingIgnoreCase(keyword);
-        }
-
-        if (type != null) {
-            return lessonRepository.findByType(type);
-        }
-
-        if (level != null) {
-            return lessonRepository.findByLevel(level);
-        }
-
-        return lessonRepository.findAll();
+        return lessonRepository.searchLessons(normalizeKeyword(keyword), type, level);
     }
 
     public List<Lesson> getAllLessons() {

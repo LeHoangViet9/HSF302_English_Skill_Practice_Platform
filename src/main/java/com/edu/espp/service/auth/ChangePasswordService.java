@@ -103,7 +103,6 @@ public class ChangePasswordService {
         String encodedPassword = passwordEncoder.encode(newPassword);
 
         user.setPasswordHash(encodedPassword);
-        user.setPasswordChangedAt(now);
 
         userRepository.save(user);
 

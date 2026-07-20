@@ -7,5 +7,6 @@ package com.edu.espp.common.enums;
  */
 public enum AuthTokenType {
     SESSION,
+    EMAIL_VERIFICATION,
     PASSWORD_RESET
 }

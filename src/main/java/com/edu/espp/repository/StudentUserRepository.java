@@ -2,15 +2,20 @@ package com.edu.espp.repository;
 
 import com.edu.espp.entity.StudentUser;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-public interface StudentUserRepository
-        extends JpaRepository<StudentUser, Long> {
+/**
+ * Repository plan: .sdd/Spect/Backend/feat-auth/001-data-model-and-migration.md §11.1
+ */
 
-    Optional<StudentUser> findByUser_Id(Long userId);
+@Repository
+public interface StudentUserRepository extends JpaRepository<StudentUser, Long> {
 
-    Optional<StudentUser> findByUser_Email(String email);
+    Optional<StudentUser> findByEmail(String email);
 
-    boolean existsByUser_Id(Long userId);
+    boolean existsByEmail(String email);
+
+    Optional<StudentUser> findByEmailAndIsDeletedFalse(String email);
 }
