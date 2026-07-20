@@ -287,9 +287,6 @@
     <div class="list-group list-group-flush">
         <!-- Sidebar Menu ADMIN -->
         <th:block th:if="${user.role.name() == 'ADMIN'}">
-            <a class="list-group-item" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}" href="/dashboard">
-                <i class="fa-solid fa-chart-line"></i> Bảng điều khiển
-            </a>
             <a class="list-group-item" th:classappend="${activeMenu == 'exams' ? 'active' : ''}" href="/exams">
                 <i class="fa-solid fa-screwdriver-wrench"></i> Quản lý Đề thi
             </a>

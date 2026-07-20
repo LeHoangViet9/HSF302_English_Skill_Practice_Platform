@@ -38,9 +38,9 @@ public class SecurityConfig {
                                                                 "/histories/**")
                                                 .hasRole("STUDENT")
 
-                                                // Dashboard dùng chung cho tất cả role
+                                                // Dashboard dùng chung cho STAFF và STUDENT
                                                 .requestMatchers("/dashboard")
-                                                .hasAnyRole("STUDENT", "ADMIN", "STAFF")
+                                                .hasAnyRole("STUDENT", "STAFF")
 
                                                 // Trang dùng chung cho ADMIN và STUDENT
                                                 .requestMatchers("/exams/**")
