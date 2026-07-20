@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
-<head th:replace="~{fragments/layout :: head('Quản lý Câu hỏi - Admin')}"></head>
+<head th:replace="~{fragments/layout :: head('Quản lý Câu hỏi - Admin')}"><title>Quản lý Câu hỏi</title></head>
 <body class="bg-light">
 <div id="wrapper">
     <!-- Sidebar -->
@@ -37,10 +37,10 @@
                 <div class="card-body p-3">
                     <form th:action="@{/admin/questions}" method="get" class="row g-2 align-items-center">
                         <div class="col-md-3">
-                            <input type="number" name="examId" class="form-control" placeholder="Mã đề thi (Exam ID)..." th:value="${param.examId}">
+                            <input type="number" name="examId" class="form-control" placeholder="Mã đề thi (Exam ID)..." aria-label="Mã đề thi" th:value="${param.examId}">
                         </div>
                         <div class="col-md-3">
-                            <select name="skill" class="form-select">
+                            <select name="skill" class="form-select" aria-label="Kỹ năng">
                                 <option value="">-- Tất cả kỹ năng --</option>
                                 <option value="LISTENING" th:selected="${param.skill != null && param.skill[0] == 'LISTENING'}">Nghe (LISTENING)</option>
                                 <option value="READING" th:selected="${param.skill != null && param.skill[0] == 'READING'}">Đọc (READING)</option>
@@ -76,9 +76,7 @@
                                 <td class="ps-4 fw-bold" th:text="${q.id}">1</td>
                                 <td>
                                     <span class="badge px-3 py-2 fw-semibold rounded-pill"
-                                          th:classappend="${q.skill.name() == 'LISTENING' ? 'bg-primary' :
-                                                           q.skill.name() == 'READING' ? 'bg-success' :
-                                                           q.skill.name() == 'SPEAKING' ? 'bg-danger' : 'bg-warning text-dark'}"
+                                          th:classappend="${q.skill.name() == 'LISTENING' ? 'bg-primary' : (q.skill.name() == 'READING' ? 'bg-success' : (q.skill.name() == 'SPEAKING' ? 'bg-danger' : 'bg-warning text-dark'))}"
                                           th:text="${q.skill}">READING</span>
                                 </td>
                                 <td>
@@ -99,7 +97,7 @@
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </a>
                                         <form th:action="@{/admin/questions/{id}/delete(id=${q.id})}" method="post" class="d-inline"
-                                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa câu hỏi này không?')">
+                                              onsubmit="confirmAction(event, this, 'Bạn có chắc chắn muốn xóa câu hỏi này không?', 'Xóa');">
                                             <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>

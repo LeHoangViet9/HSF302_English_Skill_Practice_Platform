@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
-<head th:replace="~{fragments/layout :: head('Quản lý nội dung chi tiết - ' + ${lesson.title})}"></head>
+<head th:replace="~{fragments/layout :: head('Quản lý nội dung chi tiết - ' + ${lesson.title})}"><title>Quản lý nội dung</title></head>
 <body class="apple-theme">
 <div id="wrapper">
     <div th:replace="~{fragments/layout :: sidebar(${user}, 'lessons')}"></div>
@@ -30,7 +30,7 @@
 
             <div class="apple-store-utility-card p-4">
                 <div class="table-responsive">
-                    <table class="table table-borderless align-middle m-0" style="font-family: var(--apple-font-text);">
+                    <table class="table table-borderless align-middle m-0" style="font-family: var(--apple-font-text), sans-serif;">
                         <thead>
                             <tr style="border-bottom: 1px solid var(--apple-hairline); color: var(--apple-ink-muted-80);">
                                 <th class="pb-3" style="font-size: 14px; font-weight: 600; width: 80px;">Thứ tự</th>
@@ -64,7 +64,7 @@
                                         </a>
                                         <a class="btn-apple btn-apple-dark-utility btn-action" style="padding: 6px 12px; font-size: 13px; text-decoration: none;"
                                            th:href="@{/staff/lessons/{lessonId}/contents/delete/{contentId}(lessonId=${lesson.id}, contentId=${c.id})}"
-                                           onclick="return confirm('Bạn có chắc chắn muốn xóa nội dung này?')">
+                                           onclick="confirmAction(event, this, 'Bạn có chắc chắn muốn xóa nội dung này?', 'Xóa');">
                                             Xóa
                                         </a>
                                     </div>
