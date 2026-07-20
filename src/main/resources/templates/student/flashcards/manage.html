@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{fragments/layout :: head('Quản lý Flashcard')}"></head>
+<body class="apple-theme">
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/layout :: sidebar(${user}, 'flashcards')}"></div>
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper" class="d-flex flex-column">
+        <!-- Navbar -->
+        <nav th:replace="~{fragments/layout :: navbar(${user})}"></nav>
+
+        <div class="container-fluid my-4 flex-grow-1 px-4">
+            <!-- Header Quản lý Flashcard -->
+            <div class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+                <div class="mb-3 mb-sm-0">
+                    <h2 class="apple-display-lg mb-1">
+                        <i class="fa-solid fa-gear me-2 text-primary"></i> Quản lý thẻ Flashcard
+                    </h2>
+                    <p class="apple-lead" style="font-size: 17px; color: var(--apple-body-muted); margin-bottom: 0;">
+                        Chọn các từ vựng hoặc cấu trúc bạn muốn học bằng Flashcard SRS
+                    </p>
+                </div>
+                <a href="/student/flashcards/review" class="btn-apple btn-apple-primary btn-action" style="font-size: 14px; padding: 10px 20px;">
+                    <i class="fa-solid fa-chevron-left me-1"></i> Quay lại Ôn tập
+                </a>
+            </div>
+
+            <!-- Main Layout: Sidebar Bài học & Danh sách từ vựng -->
+            <div class="row g-4">
+                <!-- Mobile/Tablet Lesson Selector (Visible only on < lg) -->
+                <div class="col-12 d-lg-none">
+                    <h3 class="apple-tagline mb-2">Chọn Bài học</h3>
+                    <select class="form-select mb-3 p-3 shadow-none text-dark fw-semibold" style="border-radius: var(--apple-rounded-md); border: 1px solid var(--apple-hairline); font-family: var(--apple-font-text); background-color: white;" onchange="location = this.value;">
+                        <option th:each="lesson : ${lessons}"
+                                th:value="@{/student/flashcards/manage(lessonId=${lesson.id})}"
+                                th:text="${'[' + lesson.level + '] ' + lesson.title}"
+                                th:selected="${lesson.id == selectedLessonId}">
+                            Lesson Title
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Cột trái: Danh sách bài học (Desktop - Visible only on >= lg) -->
+                <div class="col-lg-4 d-none d-lg-block">
+                    <h3 class="apple-tagline mb-3">Danh sách Bài học</h3>
+                    <div class="apple-store-utility-card p-0" style="max-height: 600px; overflow-y: auto; height: auto;">
+                        <div class="list-group list-group-flush w-100">
+                            <a th:each="lesson : ${lessons}"
+                               th:href="@{/student/flashcards/manage(lessonId=${lesson.id})}"
+                               class="list-group-item list-group-item-action py-3 px-4 border-0"
+                               th:classappend="${lesson.id == selectedLessonId} ? 'bg-primary-subtle border-start border-primary border-4 text-primary fw-bold' : ''"
+                               style="transition: background-color 0.2s; border-bottom: 1px solid var(--apple-divider-soft) !important;">
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                    <span class="badge bg-light text-dark border px-2 py-1 me-1 text-uppercase" style="font-size: 10px;" th:text="${lesson.level}">A1</span>
+                                    <span class="badge bg-primary text-white px-2 py-1 text-uppercase" style="font-size: 10px;" th:text="${lesson.type}">VOCABULARY</span>
+                                </div>
+                                <div style="font-size: 15px;" th:text="${lesson.title}">Lesson Title</div>
+                            </a>
+                            <div th:if="${lessons == null || lessons.isEmpty()}" class="p-4 text-center text-muted">
+                                Không có bài học nào khả dụng.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cột phải: Danh sách từ vựng chi tiết của bài học -->
+                <div class="col-lg-8 col-12">
+                    <h3 class="apple-tagline mb-3">Từ vựng & Cấu trúc trong bài</h3>
+                    
+                    <div class="apple-store-utility-card p-4" style="height: auto;">
+                        <div th:if="${contents == null || contents.isEmpty()}" class="text-center py-5 text-muted">
+                            <i class="fa-regular fa-folder-open fs-2 mb-2 d-block"></i>
+                            Bài học này chưa có từ vựng nào hoặc bạn chưa chọn bài học.
+                        </div>
+
+                        <div class="d-flex flex-column gap-3" th:if="${contents != null && !contents.isEmpty()}">
+                            <div class="p-3 border rounded-3 bg-white" th:each="content : ${contents}" style="border: 1px solid var(--apple-hairline) !important;">
+                                <div class="d-flex justify-content-between align-items-start gap-3">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            <h4 class="apple-body-strong mb-0" style="font-size: 18px;" th:text="${content.wordOrStructure}">word</h4>
+                                            <span class="text-primary small" th:if="${content.ipa != null && !content.ipa.isBlank()}" th:text="${content.ipa}">/ipa/</span>
+                                        </div>
+                                        <p class="mb-2" style="font-size: 14px;" th:if="${content.meaning != null && !content.meaning.isBlank()}">
+                                            <strong>Nghĩa:</strong> <span th:text="${content.meaning}">meaning</span>
+                                        </p>
+                                        <p class="mb-2 text-muted" style="font-size: 13.5px;" th:if="${content.explanation != null && !content.explanation.isBlank()}" th:text="${content.explanation}">
+                                            explanation
+                                        </p>
+                                        <p class="mb-0 apple-caption text-secondary" style="font-style: italic;" th:if="${content.example != null && !content.example.isBlank()}">
+                                            <strong>Ví dụ:</strong> <span th:text="${content.example}">example</span>
+                                        </p>
+                                    </div>
+
+                                    <!-- Nút toggle học Flashcard -->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <form method="post" th:action="@{/student/flashcards/manage/toggle/{contentId}(contentId=${content.id})}">
+                                            <input type="hidden" name="returnUrl" th:value="'/student/flashcards/manage?lessonId=' + ${selectedLessonId}">
+                                            
+                                            <!-- Trạng thái Đang học (Đã thêm vào deck) -->
+                                            <button th:if="${deckContentIds.contains(content.id)}" 
+                                                    class="btn-apple btn-apple-primary btn-action btn-sm px-3 py-2 fw-semibold" 
+                                                    type="submit" 
+                                                    style="background-color: var(--apple-primary) !important; color: white !important;">
+                                                <i class="fa-solid fa-circle-check me-1"></i> Đang học
+                                            </button>
+
+                                            <!-- Trạng thái Chưa học -->
+                                            <button th:if="${!deckContentIds.contains(content.id)}" 
+                                                    class="btn-apple btn-apple-pearl-capsule btn-action btn-sm px-3 py-2" 
+                                                    type="submit">
+                                                <i class="fa-solid fa-plus me-1"></i> Học thẻ
+                                            </button>
+                                        </form>
+
+                                        <!-- Ôn ngay (Chỉ hiển thị nếu đang học) -->
+                                        <a th:if="${deckContentIds.contains(content.id)}"
+                                           th:href="@{/student/flashcards/review(contentId=${content.id}, returnUrl='/student/flashcards/manage?lessonId=' + ${selectedLessonId})}"
+                                           class="btn-apple btn-apple-secondary-pill btn-action btn-sm px-3 py-2 fw-semibold text-decoration-none"
+                                           style="border: 1px solid var(--apple-primary) !important; color: var(--apple-primary) !important; font-size: 13.5px;">
+                                            <i class="fa-solid fa-play me-1"></i> Ôn ngay
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

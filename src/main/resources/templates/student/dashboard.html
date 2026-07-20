@@ -107,7 +107,7 @@
             <h3 class="apple-tagline mb-3">Lịch ôn tập sắp tới</h3>
             <div class="apple-store-utility-card p-4 mb-4">
                 <div class="table-responsive">
-                    <table class="table table-borderless align-middle m-0" style="font-family: var(--apple-font-text);">
+                    <table id="upcoming-reviews-table" class="table table-borderless align-middle m-0" style="font-family: var(--apple-font-text);">
                         <thead>
                             <tr style="border-bottom: 1px solid var(--apple-hairline); color: var(--apple-ink-muted-80);">
                                 <th class="pb-3" style="font-size: 14px; font-weight: 600;">Từ vựng / Cấu trúc</th>
@@ -123,13 +123,83 @@
                                 <td class="py-3" th:text="${#temporals.format(review.nextReviewDate, 'dd/MM/yyyy HH:mm')}">01/07/2026</td>
                                 <td class="py-3 text-end text-primary" th:text="${review.srsInterval + ' ngày'}">1 ngày</td>
                             </tr>
-                            <tr th:if="${#lists.isEmpty(dashboard.upcomingReviews)}">
+                            <tr th:if="${#lists.isEmpty(dashboard.upcomingReviews)}" class="empty-row">
                                 <td colspan="4" class="text-center py-4 text-muted">Không có lịch ôn tập nào sắp tới.</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Pagination Controls -->
+                <div id="upcoming-reviews-pagination" class="d-flex justify-content-end align-items-center mt-3 pt-3" style="border-top: 1px solid var(--apple-divider-soft); font-family: var(--apple-font-text); font-size: 14px; gap: 15px;">
+                    <nav>
+                        <ul class="pagination mb-0 gap-2 align-items-center">
+                            <li class="page-item" id="prev-btn">
+                                <button class="btn-apple btn-apple-secondary-pill py-1 px-3 fw-semibold" style="font-size: 13px;" onclick="changeUpcomingPage(-1)">
+                                    <i class="fa-solid fa-chevron-left me-1"></i> Trước
+                                </button>
+                            </li>
+                            <li class="page-item" id="next-btn">
+                                <button class="btn-apple btn-apple-secondary-pill py-1 px-3 fw-semibold" style="font-size: 13px;" onclick="changeUpcomingPage(1)">
+                                    Sau <i class="fa-solid fa-chevron-right ms-1"></i>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const rowsPerPage = 5;
+                    let currentPage = 1;
+                    
+                    const tableBody = document.querySelector("#upcoming-reviews-table tbody");
+                    if (!tableBody) return;
+                    
+                    const rows = Array.from(tableBody.querySelectorAll("tr:not(.empty-row)"));
+                    const totalRows = rows.length;
+                    const totalPages = Math.ceil(totalRows / rowsPerPage);
+                    
+                    const paginationContainer = document.getElementById("upcoming-reviews-pagination");
+                    const prevBtnButton = document.querySelector("#prev-btn button");
+                    const nextBtnButton = document.querySelector("#next-btn button");
+                    
+                    function updateTable() {
+                        if (totalRows === 0) {
+                            if (paginationContainer) paginationContainer.style.setProperty("display", "none", "important");
+                            return;
+                        }
+                        
+                        const startIndex = (currentPage - 1) * rowsPerPage;
+                        const endIndex = startIndex + rowsPerPage;
+                        
+                        rows.forEach((row, index) => {
+                            if (index >= startIndex && index < endIndex) {
+                                row.style.display = "";
+                            } else {
+                                row.style.display = "none";
+                            }
+                        });
+                        
+                        if (prevBtnButton) prevBtnButton.disabled = currentPage === 1;
+                        if (nextBtnButton) nextBtnButton.disabled = currentPage === totalPages;
+                    }
+                    
+                    window.changeUpcomingPage = function(direction) {
+                        currentPage += direction;
+                        if (currentPage < 1) currentPage = 1;
+                        if (currentPage > totalPages) currentPage = totalPages;
+                        updateTable();
+                    };
+                    
+                    if (totalPages <= 1) {
+                        if (paginationContainer) paginationContainer.style.setProperty("display", "none", "important");
+                    } else {
+                        updateTable();
+                    }
+                });
+            </script>
         </div>
 
         <!-- Footer -->

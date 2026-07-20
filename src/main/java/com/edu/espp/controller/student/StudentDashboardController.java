@@ -1,8 +1,8 @@
-package com.edu.espp.controller.student;
+package com.edu.espp.controller;
 
 import com.edu.espp.dto.StudentDashboardData;
-import com.edu.espp.service.DashboardService;
 import com.edu.espp.entity.User;
+import com.edu.espp.service.DashboardService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,8 +18,8 @@ public class StudentDashboardController {
 
     @GetMapping("/dashboard")
     public ModelAndView dashboard(HttpSession session) {
-        User user = (User) session.getAttribute("currentUser");
-        Long userId = (user != null) ? user.getId() : 1L;
+        User currentUser = (User) session.getAttribute("currentUser");
+        Long userId = (currentUser != null) ? currentUser.getId() : 1L;
 
         StudentDashboardData dashboard = dashboardService.getStudentDashboard(userId);
 

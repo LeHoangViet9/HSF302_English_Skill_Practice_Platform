@@ -4,6 +4,7 @@ import com.edu.espp.common.enums.LevelLesson;
 import com.edu.espp.common.enums.TypeLesson;
 import com.edu.espp.entity.Lesson;
 import com.edu.espp.service.LessonService;
+import com.edu.espp.entity.LessonContent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,6 +60,10 @@ public class StaffLessonController {
         model.addAttribute("types", TypeLesson.values());
         model.addAttribute("levels", LevelLesson.values());
 
+        if (lesson.getType() == TypeLesson.VOCABULARY) {
+            model.addAttribute("contents", lessonService.getContentsByLesson(id));
+        }
+
         return "staff/lesson-form";
     }
 
@@ -67,5 +72,71 @@ public class StaffLessonController {
         lessonService.deleteLesson(id);
 
         return "redirect:/staff/lessons";
+    }
+
+    @GetMapping("/{lessonId}/contents")
+    public String listContents(@PathVariable Long lessonId) {
+        return "redirect:/staff/lessons/edit/" + lessonId;
+    }
+
+    @GetMapping("/{lessonId}/contents/create")
+    public String showCreateContentForm(@PathVariable Long lessonId, Model model) {
+        Lesson lesson = lessonService.getLessonById(lessonId);
+        if (lesson.getType() != TypeLesson.VOCABULARY) {
+            return "redirect:/staff/lessons";
+        }
+        int nextOrder = lessonService.getContentsByLesson(lessonId).size() + 1;
+
+        LessonContent content = LessonContent.builder()
+                .lesson(lesson)
+                .contentOrder(nextOrder)
+                .build();
+
+        model.addAttribute("lesson", lesson);
+        model.addAttribute("content", content);
+        return "staff/contents-form";
+    }
+
+    @PostMapping("/{lessonId}/contents/save")
+    public String saveContent(
+            @PathVariable Long lessonId,
+            @ModelAttribute LessonContent content
+    ) {
+        Lesson lesson = lessonService.getLessonById(lessonId);
+        if (lesson.getType() != TypeLesson.VOCABULARY) {
+            return "redirect:/staff/lessons";
+        }
+        lessonService.saveLessonContent(lessonId, content);
+        return "redirect:/staff/lessons/edit/" + lessonId;
+    }
+
+    @GetMapping("/{lessonId}/contents/edit/{contentId}")
+    public String showEditContentForm(
+            @PathVariable Long lessonId,
+            @PathVariable Long contentId,
+            Model model
+    ) {
+        Lesson lesson = lessonService.getLessonById(lessonId);
+        if (lesson.getType() != TypeLesson.VOCABULARY) {
+            return "redirect:/staff/lessons";
+        }
+        LessonContent content = lessonService.getContentById(contentId);
+
+        model.addAttribute("lesson", lesson);
+        model.addAttribute("content", content);
+        return "staff/contents-form";
+    }
+
+    @GetMapping("/{lessonId}/contents/delete/{contentId}")
+    public String deleteContent(
+            @PathVariable Long lessonId,
+            @PathVariable Long contentId
+    ) {
+        Lesson lesson = lessonService.getLessonById(lessonId);
+        if (lesson.getType() != TypeLesson.VOCABULARY) {
+            return "redirect:/staff/lessons";
+        }
+        lessonService.deleteLessonContent(contentId);
+        return "redirect:/staff/lessons/edit/" + lessonId;
     }
 }
