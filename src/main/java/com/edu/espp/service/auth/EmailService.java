@@ -59,6 +59,26 @@ public class EmailService {
         send(email, subject, htmlBody);
     }
 
+    @Async
+    public void sendVerificationEmail(
+            String email,
+            String verifyLink) {
+
+        String subject = "Xác minh tài khoản Apolo";
+
+        Context context = new Context();
+        context.setVariable("verifyLink", verifyLink);
+
+        String htmlBody;
+        try {
+            htmlBody = templateEngine.process("verify-email", context);
+        } catch (Exception e) {
+            htmlBody = "<p>Xin chào,</p><p>Nhấp vào liên kết sau để kích hoạt tài khoản (hết hạn sau 24 giờ):</p><p><a href=\"" + verifyLink + "\">" + verifyLink + "</a></p><p>Nếu bạn không yêu cầu đăng ký, hãy bỏ qua email này.</p>";
+        }
+
+        send(email, subject, htmlBody);
+    }
+
     private void send(
             String to,
             String subject,

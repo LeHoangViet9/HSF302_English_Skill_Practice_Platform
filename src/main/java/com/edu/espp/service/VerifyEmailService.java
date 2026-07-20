@@ -5,7 +5,7 @@ import com.edu.espp.common.enums.StudentStatus;
 import com.edu.espp.common.exception.InvalidTokenException;
 import com.edu.espp.entity.AuthToken;
 import com.edu.espp.entity.StudentUser;
-import com.edu.espp.repository.AuthTokenRepository;
+import com.edu.espp.repository.auth.AuthTokenRepository;
 import com.edu.espp.repository.StudentUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,8 @@ public class VerifyEmailService {
 
     private final StudentUserRepository studentUserRepository;
     private final AuthTokenRepository authTokenRepository;
-    private final EmailService emailService;
+    private final com.edu.espp.service.auth.EmailService emailService;
+    private final com.edu.espp.repository.UserRepository userRepository;
 
     @Value("${app.base-url}")
     private String baseUrl;
@@ -59,10 +60,12 @@ public class VerifyEmailService {
                     "Link khong hop le hoac da het han. Vui long yeu cau gui lai email xac minh.");
         }
 
-        activateStudent(token.getStudentUser(), now);
+        StudentUser student = studentUserRepository.findByEmail(token.getUser().getEmail())
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+        activateStudent(student, now);
         markTokenUsed(token, now);
 
-        log.info("[VerifyEmailService] EMAIL_VERIFIED {student_id={}}", token.getStudentUser().getStudentId());
+        log.info("[VerifyEmailService] EMAIL_VERIFIED {student_id={}}", student.getStudentId());
     }
 
     @Transactional
@@ -91,8 +94,11 @@ public class VerifyEmailService {
         String tokenValue = generateSecureToken();
         LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
+        com.edu.espp.entity.User user = userRepository.findByEmail(student.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         AuthToken token = AuthToken.builder()
-                .studentUser(student)
+                .user(user)
                 .tokenType(AuthTokenType.EMAIL_VERIFICATION)
                 .tokenValue(tokenValue)
                 .expiresAt(now.plusHours(EMAIL_VERIFICATION_VALIDITY_HOURS))
@@ -130,9 +136,10 @@ public class VerifyEmailService {
 
     private ResendResult checkResendRateLimit(StudentUser student, LocalDateTime now) {
         LocalDateTime windowStart = now.minusMinutes(RESEND_RATE_LIMIT_WINDOW_MINUTES);
+        com.edu.espp.entity.User user = userRepository.findByEmail(student.getEmail()).orElseThrow();
         List<AuthToken> recentTokens = authTokenRepository
-                .findByStudentUser_StudentIdAndTokenTypeAndCreatedAtAfterOrderByCreatedAtAsc(
-                        student.getStudentId(), AuthTokenType.EMAIL_VERIFICATION, windowStart);
+                .findByUser_IdAndTokenTypeAndCreatedAtAfterOrderByCreatedAtAsc(
+                        user.getId(), AuthTokenType.EMAIL_VERIFICATION, windowStart);
 
         if (recentTokens.size() < RESEND_RATE_LIMIT_MAX) {
             return ResendResult.ok();
@@ -148,9 +155,10 @@ public class VerifyEmailService {
     }
 
     private void revokeActiveVerificationTokens(StudentUser student, LocalDateTime now) {
+        com.edu.espp.entity.User user = userRepository.findByEmail(student.getEmail()).orElseThrow();
         List<AuthToken> activeTokens = authTokenRepository
-                .findByStudentUser_StudentIdAndTokenTypeAndRevokedAtIsNull(
-                        student.getStudentId(), AuthTokenType.EMAIL_VERIFICATION);
+                .findByUser_IdAndTokenTypeAndRevokedAtIsNull(
+                        user.getId(), AuthTokenType.EMAIL_VERIFICATION);
         activeTokens.forEach(activeToken -> activeToken.setRevokedAt(now));
         authTokenRepository.saveAll(activeTokens);
     }

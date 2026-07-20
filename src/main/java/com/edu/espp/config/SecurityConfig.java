@@ -35,9 +35,12 @@ public class SecurityConfig {
                                                 // Chỉ STUDENT được truy cập
                                                 .requestMatchers(
                                                                 "/student/**",
-                                                                "/dashboard",
                                                                 "/histories/**")
                                                 .hasRole("STUDENT")
+
+                                                // Dashboard dùng chung cho tất cả role
+                                                .requestMatchers("/dashboard")
+                                                .hasAnyRole("STUDENT", "ADMIN", "STAFF")
 
                                                 // Trang dùng chung cho ADMIN và STUDENT
                                                 .requestMatchers("/exams/**")

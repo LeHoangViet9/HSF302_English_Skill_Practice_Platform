@@ -1,6 +1,6 @@
 package com.edu.espp.common.security;
 
-import com.edu.espp.service.AuthSessionService;
+import com.edu.espp.service.auth.AuthSessionService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
