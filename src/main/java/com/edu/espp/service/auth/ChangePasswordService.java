@@ -24,195 +24,193 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ChangePasswordService {
 
-    private static final String RESET_TOKEN_INVALID_MESSAGE = "Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. "
-            + "Vui lòng yêu cầu liên kết mới.";
+        private static final String RESET_TOKEN_INVALID_MESSAGE = "Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. "
+                        + "Vui lòng yêu cầu liên kết mới.";
 
-    private final UserRepository userRepository;
-    private final AuthTokenRepository authTokenRepository;
-    private final PasswordEncoder passwordEncoder;
+        private final UserRepository userRepository;
+        private final AuthTokenRepository authTokenRepository;
+        private final PasswordEncoder passwordEncoder;
 
-    public boolean isValidResetToken(String tokenValue) {
+        public boolean isValidResetToken(String tokenValue) {
 
-        if (tokenValue == null || tokenValue.isBlank()) {
-            return false;
+                if (tokenValue == null || tokenValue.isBlank()) {
+                        return false;
+                }
+
+                Optional<AuthToken> optionalToken = authTokenRepository
+                                .findByTokenValueAndTokenType(
+                                                tokenValue,
+                                                AuthTokenType.PASSWORD_RESET);
+
+                if (optionalToken.isEmpty()) {
+                        return false;
+                }
+
+                return isTokenActive(optionalToken.get());
         }
 
-        Optional<AuthToken> optionalToken = authTokenRepository
-                .findByTokenValueAndTokenType(
-                        tokenValue,
-                        AuthTokenType.PASSWORD_RESET);
+        @Transactional
+        public ResetPasswordResult resetPassword(
+                        ResetPasswordForm form) {
 
-        if (optionalToken.isEmpty()) {
-            return false;
+                try {
+                        changePassword(
+                                        form.getToken(),
+                                        form.getNewPassword());
+
+                        return ResetPasswordResult.ok();
+
+                } catch (InvalidTokenException exception) {
+
+                        return ResetPasswordResult.invalidToken(
+                                        exception.getMessage());
+
+                } catch (SamePasswordException exception) {
+
+                        return ResetPasswordResult.error(
+                                        exception.getMessage());
+                }
         }
 
-        return isTokenActive(optionalToken.get());
-    }
+        private void changePassword(
+                        String tokenValue,
+                        String newPassword) {
 
-    @Transactional
-    public ResetPasswordResult resetPassword(
-            ResetPasswordForm form) {
+                AuthToken token = findValidToken(tokenValue);
+                User user = token.getUser();
 
-        try {
-            changePassword(
-                    form.getToken(),
-                    form.getNewPassword());
+                if (user == null) {
+                        throw new InvalidTokenException(
+                                        RESET_TOKEN_INVALID_MESSAGE);
+                }
 
-            return ResetPasswordResult.ok();
+                LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
-        } catch (InvalidTokenException exception) {
+                String currentPasswordHash = user.getPasswordHash();
 
-            return ResetPasswordResult.invalidToken(
-                    exception.getMessage());
+                if (currentPasswordHash != null
+                                && !currentPasswordHash.isBlank()) {
 
-        } catch (SamePasswordException exception) {
+                        boolean samePassword = passwordEncoder.matches(
+                                        newPassword,
+                                        currentPasswordHash);
 
-            return ResetPasswordResult.error(
-                    exception.getMessage());
-        }
-    }
+                        if (samePassword) {
+                                throw new SamePasswordException();
+                        }
+                }
 
-    private void changePassword(
-            String tokenValue,
-            String newPassword) {
+                String encodedPassword = passwordEncoder.encode(newPassword);
 
-        AuthToken token = findValidToken(tokenValue);
-        User user = token.getUser();
+                user.setPasswordHash(encodedPassword);
+                user.setPasswordChangedAt(now);
 
-        if (user == null) {
-            throw new InvalidTokenException(
-                    RESET_TOKEN_INVALID_MESSAGE);
-        }
+                userRepository.save(user);
 
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+                token.setUsedAt(now);
+                authTokenRepository.save(token);
 
-        String currentPasswordHash = user.getPasswordHash();
+                revokeActiveTokens(
+                                user.getId(),
+                                AuthTokenType.SESSION,
+                                now);
 
-        if (currentPasswordHash != null
-                && !currentPasswordHash.isBlank()) {
+                revokeActiveTokens(user.getId(), AuthTokenType.PASSWORD_RESET, now);
 
-            boolean samePassword = passwordEncoder.matches(
-                    newPassword,
-                    currentPasswordHash);
-
-            if (samePassword) {
-                throw new SamePasswordException();
-            }
+                log.info(
+                                "[ChangePasswordService] "
+                                                + "PASSWORD_RESET_SUCCESS {user_id={}}",
+                                user.getId());
         }
 
-        String encodedPassword = passwordEncoder.encode(newPassword);
+        private AuthToken findValidToken(String tokenValue) {
 
-        user.setPasswordHash(encodedPassword);
+                if (tokenValue == null || tokenValue.isBlank()) {
+                        throw new InvalidTokenException(
+                                        RESET_TOKEN_INVALID_MESSAGE);
+                }
 
-        userRepository.save(user);
+                Optional<AuthToken> optionalToken = authTokenRepository
+                                .findByTokenValueAndTokenType(
+                                                tokenValue,
+                                                AuthTokenType.PASSWORD_RESET);
 
-        token.setUsedAt(now);
-        authTokenRepository.save(token);
+                if (optionalToken.isEmpty()) {
+                        throw new InvalidTokenException(
+                                        RESET_TOKEN_INVALID_MESSAGE);
+                }
 
-        revokeActiveTokens(
-                user.getId(),
-                AuthTokenType.SESSION,
-                now);
+                AuthToken token = optionalToken.get();
 
-        revokeActiveTokens(
-                user.getId(),
-                AuthTokenType.PASSWORD_RESET,
-                now);
+                if (!isTokenActive(token)) {
+                        throw new InvalidTokenException(
+                                        RESET_TOKEN_INVALID_MESSAGE);
+                }
 
-        log.info(
-                "[ChangePasswordService] "
-                        + "PASSWORD_RESET_SUCCESS {user_id={}}",
-                user.getId());
-    }
-
-    private AuthToken findValidToken(String tokenValue) {
-
-        if (tokenValue == null || tokenValue.isBlank()) {
-            throw new InvalidTokenException(
-                    RESET_TOKEN_INVALID_MESSAGE);
+                return token;
         }
 
-        Optional<AuthToken> optionalToken = authTokenRepository
-                .findByTokenValueAndTokenType(
-                        tokenValue,
-                        AuthTokenType.PASSWORD_RESET);
+        private boolean isTokenActive(AuthToken token) {
 
-        if (optionalToken.isEmpty()) {
-            throw new InvalidTokenException(
-                    RESET_TOKEN_INVALID_MESSAGE);
+                LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+
+                if (token.getRevokedAt() != null) {
+                        return false;
+                }
+
+                if (token.getUsedAt() != null) {
+                        return false;
+                }
+
+                return token.getExpiresAt() != null
+                                && token.getExpiresAt().isAfter(now);
         }
 
-        AuthToken token = optionalToken.get();
+        private void revokeActiveTokens(
+                        Long userId,
+                        AuthTokenType tokenType,
+                        LocalDateTime now) {
 
-        if (!isTokenActive(token)) {
-            throw new InvalidTokenException(
-                    RESET_TOKEN_INVALID_MESSAGE);
+                List<AuthToken> activeTokens = authTokenRepository
+                                .findByUser_IdAndTokenTypeAndRevokedAtIsNull(
+                                                userId,
+                                                tokenType);
+
+                activeTokens.forEach(
+                                token -> token.setRevokedAt(now));
+
+                authTokenRepository.saveAll(activeTokens);
         }
 
-        return token;
-    }
+        public record ResetPasswordResult(
+                        boolean success,
+                        boolean invalidToken,
+                        String errorMessage) {
 
-    private boolean isTokenActive(AuthToken token) {
+                static ResetPasswordResult ok() {
 
-        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+                        return new ResetPasswordResult(
+                                        true,
+                                        false,
+                                        null);
+                }
 
-        if (token.getRevokedAt() != null) {
-            return false;
+                static ResetPasswordResult invalidToken(
+                                String errorMessage) {
+
+                        return new ResetPasswordResult(
+                                        false,
+                                        true,
+                                        errorMessage);
+                }
+
+                static ResetPasswordResult error(
+                                String errorMessage) {
+
+                        return new ResetPasswordResult(
+                                        false,
+                                        false,
+                                        errorMessage);
+                }
         }
-
-        if (token.getUsedAt() != null) {
-            return false;
-        }
-
-        return token.getExpiresAt() != null
-                && token.getExpiresAt().isAfter(now);
-    }
-
-    private void revokeActiveTokens(
-            Long userId,
-            AuthTokenType tokenType,
-            LocalDateTime now) {
-
-        List<AuthToken> activeTokens = authTokenRepository
-                .findByUser_IdAndTokenTypeAndRevokedAtIsNull(
-                        userId,
-                        tokenType);
-
-        activeTokens.forEach(
-                token -> token.setRevokedAt(now));
-
-        authTokenRepository.saveAll(activeTokens);
-    }
-
-    public record ResetPasswordResult(
-            boolean success,
-            boolean invalidToken,
-            String errorMessage) {
-
-        static ResetPasswordResult ok() {
-
-            return new ResetPasswordResult(
-                    true,
-                    false,
-                    null);
-        }
-
-        static ResetPasswordResult invalidToken(
-                String errorMessage) {
-
-            return new ResetPasswordResult(
-                    false,
-                    true,
-                    errorMessage);
-        }
-
-        static ResetPasswordResult error(
-                String errorMessage) {
-
-            return new ResetPasswordResult(
-                    false,
-                    false,
-                    errorMessage);
-        }
-    }
 }

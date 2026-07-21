@@ -29,21 +29,18 @@ public class SecurityConfig {
                                                 .requestMatchers("/admin/**")
                                                 .hasRole("ADMIN")
 
-                                                // Quản lý chung (ADMIN & STAFF)
-                                                .requestMatchers("/staff/**", "/manage/**")
+                                                // Chỉ STAFF được truy cập
+                                                .requestMatchers("/staff/**")
                                                 .hasAnyRole("STAFF", "ADMIN")
 
                                                 // Chỉ STUDENT được truy cập
                                                 .requestMatchers(
                                                                 "/student/**",
+                                                                "/dashboard",
                                                                 "/histories/**")
                                                 .hasRole("STUDENT")
 
-                                                // Dashboard dùng chung cho tất cả các Role
-                                                .requestMatchers("/dashboard")
-                                                .hasAnyRole("STUDENT", "STAFF", "ADMIN")
-
-                                                // Trang dùng chung cho ADMIN, STAFF và STUDENT
+                                                // Trang dùng chung cho ADMIN và STUDENT
                                                 .requestMatchers("/exams/**")
                                                 .hasAnyRole("ADMIN", "STUDENT", "STAFF")
 
@@ -82,7 +79,7 @@ public class SecurityConfig {
                                                         } else if (isStaff) {
                                                                 response.sendRedirect("/staff/dashboard");
                                                         } else {
-                                                                response.sendRedirect("/student/dashboard");
+                                                                response.sendRedirect("/dashboard");
                                                         }
                                                 })
 

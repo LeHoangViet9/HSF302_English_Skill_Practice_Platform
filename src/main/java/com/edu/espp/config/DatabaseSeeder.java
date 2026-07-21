@@ -130,10 +130,15 @@ public class DatabaseSeeder implements CommandLineRunner {
     }
 
     private User seedStudentUser(String email, String passwordHash, String fullName) {
-        if (!studentUserRepository.existsByEmail(email)) {
-            StudentUser student = StudentUser.builder().email(email).passwordHash(passwordHash).fullName(fullName).status(StudentStatus.ACTIVE).isDeleted(false).loginAttempts(0).build();
+        User user = seedUser(email, passwordHash, fullName, Role.STUDENT);
+
+        if (!studentUserRepository.existsByUser_Id(user.getId())) {
+            StudentUser student = StudentUser.builder()
+                    .user(user)
+                    .build();
             studentUserRepository.save(student);
         }
-        return seedUser(email, passwordHash, fullName, Role.STUDENT);
+
+        return user;
     }
 }

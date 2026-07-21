@@ -21,132 +21,112 @@ import java.util.Properties;
 @Service
 public class EmailService {
 
-    private final TemplateEngine templateEngine;
+        private final TemplateEngine templateEngine;
 
-    public EmailService(TemplateEngine templateEngine) {
-        this.templateEngine = templateEngine;
-    }
-
-    @Value("${app.mail.host}")
-    private String host;
-
-    @Value("${app.mail.port}")
-    private int port;
-
-    @Value("${app.mail.username:}")
-    private String username;
-
-    @Value("${app.mail.password:}")
-    private String password;
-
-    @Value("${app.mail.from:}")
-    private String from;
-
-    @Async
-    public void sendResetPasswordEmail(
-            String email,
-            String resetLink) {
-
-        String subject = "Đặt lại mật khẩu Apolo";
-
-        Context context = new Context();
-        context.setVariable("resetLink", resetLink);
-
-        String htmlBody = templateEngine.process(
-                "reset-password",
-                context);
-
-        send(email, subject, htmlBody);
-    }
-
-    @Async
-    public void sendVerificationEmail(
-            String email,
-            String verifyLink) {
-
-        String subject = "Xác minh tài khoản Apolo";
-
-        Context context = new Context();
-        context.setVariable("verifyLink", verifyLink);
-
-        String htmlBody;
-        try {
-            htmlBody = templateEngine.process("verify-email", context);
-        } catch (Exception e) {
-            htmlBody = "<p>Xin chào,</p><p>Nhấp vào liên kết sau để kích hoạt tài khoản (hết hạn sau 24 giờ):</p><p><a href=\"" + verifyLink + "\">" + verifyLink + "</a></p><p>Nếu bạn không yêu cầu đăng ký, hãy bỏ qua email này.</p>";
+        public EmailService(TemplateEngine templateEngine) {
+                this.templateEngine = templateEngine;
         }
 
-        send(email, subject, htmlBody);
-    }
+        @Value("${app.mail.host}")
+        private String host;
 
-    private void send(
-            String to,
-            String subject,
-            String htmlBody) {
+        @Value("${app.mail.port}")
+        private int port;
 
-        if (username == null
-                || username.isBlank()
-                || password == null
-                || password.isBlank()) {
+        @Value("${app.mail.username:}")
+        private String username;
 
-            log.warn("Gmail chưa được cấu hình");
-            return;
+        @Value("${app.mail.password:}")
+        private String password;
+
+        @Value("${app.mail.from:}")
+        private String from;
+
+        @Async
+        public void sendResetPasswordEmail(
+                        String email,
+                        String resetLink) {
+
+                String subject = "Đặt lại mật khẩu ESSP";
+
+                Context context = new Context();
+                context.setVariable("resetLink", resetLink);
+
+                String htmlBody = templateEngine.process(
+                                "reset-password",
+                                context);
+
+                send(email, subject, htmlBody);
         }
 
-        Properties properties = new Properties();
+        private void send(
+                        String to,
+                        String subject,
+                        String htmlBody) {
 
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.port", String.valueOf(port));
+                if (username == null
+                                || username.isBlank()
+                                || password == null
+                                || password.isBlank()) {
 
-        Session session = Session.getInstance(
-                properties,
-                new Authenticator() {
+                        log.warn("Gmail chưa được cấu hình");
+                        return;
+                }
 
-                    @Override
-                    protected PasswordAuthentication getPasswordAuthentication() {
+                Properties properties = new Properties();
 
-                        return new PasswordAuthentication(
-                                username,
-                                password);
-                    }
-                });
+                properties.put("mail.smtp.auth", "true");
+                properties.put("mail.smtp.starttls.enable", "true");
+                properties.put("mail.smtp.host", host);
+                properties.put("mail.smtp.port", String.valueOf(port));
 
-        try {
-            String fromAddress = from == null || from.isBlank()
-                    ? username
-                    : from;
+                Session session = Session.getInstance(
+                                properties,
+                                new Authenticator() {
 
-            MimeMessage message = new MimeMessage(session);
+                                        @Override
+                                        protected PasswordAuthentication getPasswordAuthentication() {
 
-            message.setFrom(
-                    new InternetAddress(fromAddress));
+                                                return new PasswordAuthentication(
+                                                                username,
+                                                                password);
+                                        }
+                                });
 
-            message.setRecipients(
-                    Message.RecipientType.TO,
-                    InternetAddress.parse(to));
+                try {
+                        String fromAddress = from == null || from.isBlank()
+                                        ? username
+                                        : from;
 
-            message.setSubject(
-                    subject,
-                    "UTF-8");
+                        MimeMessage message = new MimeMessage(session);
 
-            message.setContent(
-                    htmlBody,
-                    "text/html; charset=UTF-8");
+                        message.setFrom(
+                                        new InternetAddress(fromAddress));
 
-            Transport.send(message);
+                        message.setRecipients(
+                                        Message.RecipientType.TO,
+                                        InternetAddress.parse(to));
 
-            log.info(
-                    "[EmailService] Sent email to {}",
-                    to);
+                        message.setSubject(
+                                        subject,
+                                        "UTF-8");
 
-        } catch (MessagingException exception) {
+                        message.setContent(
+                                        htmlBody,
+                                        "text/html; charset=UTF-8");
 
-            log.error(
-                    "[EmailService] Failed to send email to {}",
-                    to,
-                    exception);
+                        Transport.send(message);
+
+                        log.info(
+                                        "[EmailService] Sent email to {}",
+                                        to);
+
+                } catch (MessagingException exception) {
+
+                        log.error(
+                                        "[EmailService] Failed to send email to {}",
+                                        to,
+                                        exception);
+                }
         }
-    }
 }

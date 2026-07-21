@@ -1,0 +1,632 @@
+{
+  "data.sql": {
+    "mtime": 1784383820.0,
+    "ast_hash": "817c5cf2699389e516b8c8f2c05d620b",
+    "semantic_hash": "817c5cf2699389e516b8c8f2c05d620b"
+  },
+  "database/dashboard_seed.sql": {
+    "mtime": 1784441945.0129187,
+    "ast_hash": "4195413c22c8da1a1517c961438c07e1",
+    "semantic_hash": "4195413c22c8da1a1517c961438c07e1"
+  },
+  "database/fix_learning_unicode_columns.sql": {
+    "mtime": 1784442906.4100935,
+    "ast_hash": "288a9a13da23ec60cfefbd508f56cc1e",
+    "semantic_hash": "288a9a13da23ec60cfefbd508f56cc1e"
+  },
+  "database/fix_questions_skill_enum_column.sql": {
+    "mtime": 1784442906.4100935,
+    "ast_hash": "e1cfce3f780c3368d65f13a15d94d0ed",
+    "semantic_hash": "e1cfce3f780c3368d65f13a15d94d0ed"
+  },
+  "database/learning_content_seed.sql": {
+    "mtime": 1784442906.4100935,
+    "ast_hash": "eb9af5bb807752c1f6ad72a5c0b9382a",
+    "semantic_hash": "eb9af5bb807752c1f6ad72a5c0b9382a"
+  },
+  "database/learning_content_seed_ascii_safe.sql": {
+    "mtime": 1784442906.4125109,
+    "ast_hash": "79beddf0ef61a7fb24838c61dfb0124a",
+    "semantic_hash": "79beddf0ef61a7fb24838c61dfb0124a"
+  },
+  "database/reset_learning_module_data.sql": {
+    "mtime": 1784442906.4125109,
+    "ast_hash": "c0db739e3344be1baab4f9608c61ce31",
+    "semantic_hash": "c0db739e3344be1baab4f9608c61ce31"
+  },
+  "mvnw": {
+    "mtime": 1784383820.0,
+    "ast_hash": "ab50dd89da7da2346b28003352eeeeeb",
+    "semantic_hash": "ab50dd89da7da2346b28003352eeeeeb"
+  },
+  "pom.xml": {
+    "mtime": 1784383820.0,
+    "ast_hash": "f3fc3ddcaab4c92ba4f6550df05298ba",
+    "semantic_hash": "f3fc3ddcaab4c92ba4f6550df05298ba"
+  },
+  "src/main/java/com/edu/espp/EnglishSkillPracticePlatformApplication.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "a534c2b87445ff4d4991181f962f9335",
+    "semantic_hash": "a534c2b87445ff4d4991181f962f9335"
+  },
+  "src/main/java/com/edu/espp/advise/GlobalExceptionHandle.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "02fed1f95a81ada711f269abdf371bf4",
+    "semantic_hash": "02fed1f95a81ada711f269abdf371bf4"
+  },
+  "src/main/java/com/edu/espp/common/config/WebSocketConfig.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "5cbbddd8c29e344c13ace998e536dac9",
+    "semantic_hash": "5cbbddd8c29e344c13ace998e536dac9"
+  },
+  "src/main/java/com/edu/espp/common/converter/AuthTokenTypeConverter.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "ec68744f4b9a12f2506af18061a97cfb",
+    "semantic_hash": "ec68744f4b9a12f2506af18061a97cfb"
+  },
+  "src/main/java/com/edu/espp/common/enums/AuthTokenType.java": {
+    "mtime": 1784441281.2148664,
+    "ast_hash": "884ac827c76b6d3d6f6a1c8faf65aa76",
+    "semantic_hash": "884ac827c76b6d3d6f6a1c8faf65aa76"
+  },
+  "src/main/java/com/edu/espp/common/enums/LevelLesson.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "10d30ac8a19a9dcb50547df75b0d1d9d",
+    "semantic_hash": "10d30ac8a19a9dcb50547df75b0d1d9d"
+  },
+  "src/main/java/com/edu/espp/common/enums/QuestionSkill.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "37c57693992488ee7b36d89de2be8927",
+    "semantic_hash": "37c57693992488ee7b36d89de2be8927"
+  },
+  "src/main/java/com/edu/espp/common/enums/ReviewResult.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "90df38637c5e1e597c2ccb7f92009366",
+    "semantic_hash": "90df38637c5e1e597c2ccb7f92009366"
+  },
+  "src/main/java/com/edu/espp/common/enums/Role.java": {
+    "mtime": 1784395133.5197513,
+    "ast_hash": "50b7c4dbaa3b7af6e450be37bb891254",
+    "semantic_hash": "50b7c4dbaa3b7af6e450be37bb891254"
+  },
+  "src/main/java/com/edu/espp/common/enums/TicketStatus.java": {
+    "mtime": 1784441945.018153,
+    "ast_hash": "6632146384b05983867865bb36f71396",
+    "semantic_hash": "6632146384b05983867865bb36f71396"
+  },
+  "src/main/java/com/edu/espp/common/enums/TypeLesson.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "aa9580c546ea8a676e2cbaa7511bc728",
+    "semantic_hash": "aa9580c546ea8a676e2cbaa7511bc728"
+  },
+  "src/main/java/com/edu/espp/common/enums/TypeQuiz.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "c37b4732b8daf8ad8fd903c0230df830",
+    "semantic_hash": "c37b4732b8daf8ad8fd903c0230df830"
+  },
+  "src/main/java/com/edu/espp/common/enums/UserStatus.java": {
+    "mtime": 1784446302.9737103,
+    "ast_hash": "cf151cd4ceb3d079b25d46933a88d80d",
+    "semantic_hash": "cf151cd4ceb3d079b25d46933a88d80d"
+  },
+  "src/main/java/com/edu/espp/common/exception/AppException.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "15c96a4cf8f0b0fdc74024883b289b06",
+    "semantic_hash": "15c96a4cf8f0b0fdc74024883b289b06"
+  },
+  "src/main/java/com/edu/espp/common/exception/BadRequestException.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "8bebc07c8f10ffa95ea55a5da171f814",
+    "semantic_hash": "8bebc07c8f10ffa95ea55a5da171f814"
+  },
+  "src/main/java/com/edu/espp/common/exception/ConflictException.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "0d17773d7957425762a45911ef6f901f",
+    "semantic_hash": "0d17773d7957425762a45911ef6f901f"
+  },
+  "src/main/java/com/edu/espp/common/exception/EmailExistsException.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "f8463235f72315f19f178b442e01610f",
+    "semantic_hash": "f8463235f72315f19f178b442e01610f"
+  },
+  "src/main/java/com/edu/espp/common/exception/ForbiddenException.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "92f4a2b2c32265996207f1e8aaebb9b7",
+    "semantic_hash": "92f4a2b2c32265996207f1e8aaebb9b7"
+  },
+  "src/main/java/com/edu/espp/common/exception/InvalidTokenException.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "c064c4573627125cf760c4fee3f54ac2",
+    "semantic_hash": "c064c4573627125cf760c4fee3f54ac2"
+  },
+  "src/main/java/com/edu/espp/common/exception/ResourceNotFoundException.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "54b466302d744deac21b5a8579af943e",
+    "semantic_hash": "54b466302d744deac21b5a8579af943e"
+  },
+  "src/main/java/com/edu/espp/common/exception/SamePasswordException.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "2346efff305730fa41b271a22150eeb7",
+    "semantic_hash": "2346efff305730fa41b271a22150eeb7"
+  },
+  "src/main/java/com/edu/espp/common/exception/UnauthorizedException.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "90dff3b0dcedbb8353325f5b4b75a233",
+    "semantic_hash": "90dff3b0dcedbb8353325f5b4b75a233"
+  },
+  "src/main/java/com/edu/espp/common/validation/FieldMatch.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "870ddf69943225445ffc8bcdd3ab1d9b",
+    "semantic_hash": "870ddf69943225445ffc8bcdd3ab1d9b"
+  },
+  "src/main/java/com/edu/espp/common/validation/FieldMatchValidator.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "acf9d97b0f237ad77cd6161d63a1c01d",
+    "semantic_hash": "acf9d97b0f237ad77cd6161d63a1c01d"
+  },
+  "src/main/java/com/edu/espp/common/validation/PasswordStrength.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "c0182690cc64dd225c87b99b4da6197a",
+    "semantic_hash": "c0182690cc64dd225c87b99b4da6197a"
+  },
+  "src/main/java/com/edu/espp/common/validation/PasswordStrengthValidator.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "7c5f3dbf4e035ee930c5b91c630bb9a7",
+    "semantic_hash": "7c5f3dbf4e035ee930c5b91c630bb9a7"
+  },
+  "src/main/java/com/edu/espp/common/validation/UniqueEmail.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "1e68de647a4cd6d33f662cf2c63ea04f",
+    "semantic_hash": "1e68de647a4cd6d33f662cf2c63ea04f"
+  },
+  "src/main/java/com/edu/espp/common/validation/UniqueEmailValidator.java": {
+    "mtime": 1784441281.2158809,
+    "ast_hash": "a206663935d4c05048a6c03e445d96ab",
+    "semantic_hash": "a206663935d4c05048a6c03e445d96ab"
+  },
+  "src/main/java/com/edu/espp/config/AsyncConfig.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "c0764eceaf560b93869ee480e86004fc",
+    "semantic_hash": "c0764eceaf560b93869ee480e86004fc"
+  },
+  "src/main/java/com/edu/espp/config/DatabaseSeeder.java": {
+    "mtime": 1784443799.6775498,
+    "ast_hash": "e61d997b1c9172458413d60507e9fdec",
+    "semantic_hash": "e61d997b1c9172458413d60507e9fdec"
+  },
+  "src/main/java/com/edu/espp/config/LearningContentSeeder.java": {
+    "mtime": 1784442906.4158075,
+    "ast_hash": "bdf32825b3af7bd2edb2255ab626f843",
+    "semantic_hash": "bdf32825b3af7bd2edb2255ab626f843"
+  },
+  "src/main/java/com/edu/espp/config/PasswordEncoderConfig.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "87a06fb39805c8cf662a48d716171207",
+    "semantic_hash": "87a06fb39805c8cf662a48d716171207"
+  },
+  "src/main/java/com/edu/espp/config/SecurityConfig.java": {
+    "mtime": 1784533794.2679145,
+    "ast_hash": "914a0a9d81575c03611080469ddb8155",
+    "semantic_hash": "914a0a9d81575c03611080469ddb8155"
+  },
+  "src/main/java/com/edu/espp/controller/ExamController.java": {
+    "mtime": 1784441945.0231924,
+    "ast_hash": "e132aec62955477e141c0becdd08708f",
+    "semantic_hash": "e132aec62955477e141c0becdd08708f"
+  },
+  "src/main/java/com/edu/espp/controller/FlashcardSRSController.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "71fdbeeabf92e4f12e885c50b65ab89a",
+    "semantic_hash": "71fdbeeabf92e4f12e885c50b65ab89a"
+  },
+  "src/main/java/com/edu/espp/controller/GlobalControllerAdvice.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "18cd0ef7281d536f60a43c4f3b09397a",
+    "semantic_hash": "18cd0ef7281d536f60a43c4f3b09397a"
+  },
+  "src/main/java/com/edu/espp/controller/HomeController.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "4b9039b574d0bf728c981b837ea3c8cb",
+    "semantic_hash": "4b9039b574d0bf728c981b837ea3c8cb"
+  },
+  "src/main/java/com/edu/espp/controller/StaffLessonController.java": {
+    "mtime": 1784441945.024366,
+    "ast_hash": "006d429f2a9cecf85b25d15b09721e06",
+    "semantic_hash": "006d429f2a9cecf85b25d15b09721e06"
+  },
+  "src/main/java/com/edu/espp/controller/StudentDashboardController.java": {
+    "mtime": 1784441945.024366,
+    "ast_hash": "348e71581019fec631df5c8539166052",
+    "semantic_hash": "348e71581019fec631df5c8539166052"
+  },
+  "src/main/java/com/edu/espp/controller/admin/AdminExamController.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "b76a2c3d5f9e2b1cfbc980805ab0c5ab",
+    "semantic_hash": "b76a2c3d5f9e2b1cfbc980805ab0c5ab"
+  },
+  "src/main/java/com/edu/espp/controller/admin/AdminHistoryController.java": {
+    "mtime": 1784441945.0255537,
+    "ast_hash": "e84de267563d956d411201b6effec921",
+    "semantic_hash": "e84de267563d956d411201b6effec921"
+  },
+  "src/main/java/com/edu/espp/controller/admin/AdminSupportTicketController.java": {
+    "mtime": 1784441945.026758,
+    "ast_hash": "160dded0c5a9a48de5564968e914b82a",
+    "semantic_hash": "160dded0c5a9a48de5564968e914b82a"
+  },
+  "src/main/java/com/edu/espp/controller/admin/QuestionController.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "b3af09c40ca56dc43de9757e7188e1a2",
+    "semantic_hash": "b3af09c40ca56dc43de9757e7188e1a2"
+  },
+  "src/main/java/com/edu/espp/controller/auth/ChangePasswordController.java": {
+    "mtime": 1784441945.0272079,
+    "ast_hash": "882f048aadfc5f17394fe738287eb27d",
+    "semantic_hash": "882f048aadfc5f17394fe738287eb27d"
+  },
+  "src/main/java/com/edu/espp/controller/auth/ForgotPasswordController.java": {
+    "mtime": 1784441945.028218,
+    "ast_hash": "1b45fa88ee8127635dc0eebb338660db",
+    "semantic_hash": "1b45fa88ee8127635dc0eebb338660db"
+  },
+  "src/main/java/com/edu/espp/controller/auth/LoginController.java": {
+    "mtime": 1784441945.028218,
+    "ast_hash": "6df6ec43602287984f4e7f69f718dd96",
+    "semantic_hash": "6df6ec43602287984f4e7f69f718dd96"
+  },
+  "src/main/java/com/edu/espp/controller/auth/RegisterController.java": {
+    "mtime": 1784441945.028218,
+    "ast_hash": "7eae2f69bef897c29f400350cf520600",
+    "semantic_hash": "7eae2f69bef897c29f400350cf520600"
+  },
+  "src/main/java/com/edu/espp/controller/student/DictionaryController.java": {
+    "mtime": 1784442906.4158075,
+    "ast_hash": "e6dfbdf91fdb7e6c618fbf247cae91b5",
+    "semantic_hash": "e6dfbdf91fdb7e6c618fbf247cae91b5"
+  },
+  "src/main/java/com/edu/espp/controller/student/ExamController.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "bf46ad188aff2f6d13dac361afada97f",
+    "semantic_hash": "bf46ad188aff2f6d13dac361afada97f"
+  },
+  "src/main/java/com/edu/espp/controller/student/ExamHistoryController.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "a540a3aa7f880d9ae1768b0a8e924d14",
+    "semantic_hash": "a540a3aa7f880d9ae1768b0a8e924d14"
+  },
+  "src/main/java/com/edu/espp/controller/student/LearningContentController.java": {
+    "mtime": 1784442906.4175353,
+    "ast_hash": "8953576e5e642ab5b7a6b687678143a2",
+    "semantic_hash": "8953576e5e642ab5b7a6b687678143a2"
+  },
+  "src/main/java/com/edu/espp/controller/student/ProfileController.java": {
+    "mtime": 1784442591.1003978,
+    "ast_hash": "9c20069e191bdb2beac7546926a3f429",
+    "semantic_hash": "9c20069e191bdb2beac7546926a3f429"
+  },
+  "src/main/java/com/edu/espp/controller/student/SupportTicketController.java": {
+    "mtime": 1784441945.0318234,
+    "ast_hash": "0439f0805499c44402c84ac3533df7ba",
+    "semantic_hash": "0439f0805499c44402c84ac3533df7ba"
+  },
+  "src/main/java/com/edu/espp/dto/ForgotPasswordForm.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "5ad8ed47d74e9fc6044213573acce6cb",
+    "semantic_hash": "5ad8ed47d74e9fc6044213573acce6cb"
+  },
+  "src/main/java/com/edu/espp/dto/ProfileProgressResponse.java": {
+    "mtime": 1784442591.1003978,
+    "ast_hash": "5f1926f1a9d113b914fceadd480af7a0",
+    "semantic_hash": "5f1926f1a9d113b914fceadd480af7a0"
+  },
+  "src/main/java/com/edu/espp/dto/RegisterForm.java": {
+    "mtime": 1784388479.5079646,
+    "ast_hash": "7b43fe30635efc29128cc3a4944b8fb9",
+    "semantic_hash": "7b43fe30635efc29128cc3a4944b8fb9"
+  },
+  "src/main/java/com/edu/espp/dto/ResetPasswordForm.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "68acfc04771b69452a4e1b4935225178",
+    "semantic_hash": "68acfc04771b69452a4e1b4935225178"
+  },
+  "src/main/java/com/edu/espp/dto/StudentDashboardData.java": {
+    "mtime": 1784441945.0334594,
+    "ast_hash": "46bb40cfbdc95fffd6ce84b0cf98a8f1",
+    "semantic_hash": "46bb40cfbdc95fffd6ce84b0cf98a8f1"
+  },
+  "src/main/java/com/edu/espp/dto/exam/request/ExamRequest.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "0028e35bf6f1aa09c0f9b15a39b6d56f",
+    "semantic_hash": "0028e35bf6f1aa09c0f9b15a39b6d56f"
+  },
+  "src/main/java/com/edu/espp/dto/exam/request/ExamSubmitRequest.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "814d49bce1100ab695b65fe7f302ff82",
+    "semantic_hash": "814d49bce1100ab695b65fe7f302ff82"
+  },
+  "src/main/java/com/edu/espp/dto/exam/response/ExamAttemptDetailResponse.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "de4940232ae547bda8691811c692a364",
+    "semantic_hash": "de4940232ae547bda8691811c692a364"
+  },
+  "src/main/java/com/edu/espp/dto/exam/response/ExamHistoryResponse.java": {
+    "mtime": 1784441945.034542,
+    "ast_hash": "549c2767cbfd5aa2e1c0c682e9b559ff",
+    "semantic_hash": "549c2767cbfd5aa2e1c0c682e9b559ff"
+  },
+  "src/main/java/com/edu/espp/dto/exam/response/ExamResponse.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "c09a189da81fc026ade7c8d1c52e2e91",
+    "semantic_hash": "c09a189da81fc026ade7c8d1c52e2e91"
+  },
+  "src/main/java/com/edu/espp/dto/exam/response/ExamResultResponse.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "27b4401af5089979559590369834a064",
+    "semantic_hash": "27b4401af5089979559590369834a064"
+  },
+  "src/main/java/com/edu/espp/dto/question/request/QuestionRequest.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "3d20f0379f05d622786a9d03534fbb13",
+    "semantic_hash": "3d20f0379f05d622786a9d03534fbb13"
+  },
+  "src/main/java/com/edu/espp/dto/question/response/QuestionResponse.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "79ba16820990ca5e2b87b8f706a71925",
+    "semantic_hash": "79ba16820990ca5e2b87b8f706a71925"
+  },
+  "src/main/java/com/edu/espp/dto/supportTicket/request/SupportTicketRequest.java": {
+    "mtime": 1784441945.0358458,
+    "ast_hash": "bfe6a732d0efee226673f0a27da9e1b6",
+    "semantic_hash": "bfe6a732d0efee226673f0a27da9e1b6"
+  },
+  "src/main/java/com/edu/espp/dto/supportTicket/response/SupportTicketResponse.java": {
+    "mtime": 1784441945.0370352,
+    "ast_hash": "ac1f3d3c17bc7fc9cd5ea7194de20115",
+    "semantic_hash": "ac1f3d3c17bc7fc9cd5ea7194de20115"
+  },
+  "src/main/java/com/edu/espp/entity/AuthToken.java": {
+    "mtime": 1784441281.217546,
+    "ast_hash": "ed4600a3bab81dacda95b1cf6d6cafac",
+    "semantic_hash": "ed4600a3bab81dacda95b1cf6d6cafac"
+  },
+  "src/main/java/com/edu/espp/entity/BookMark.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "436d626c3ee148a554033b006dcea339",
+    "semantic_hash": "436d626c3ee148a554033b006dcea339"
+  },
+  "src/main/java/com/edu/espp/entity/Exam.java": {
+    "mtime": 1784441945.0381,
+    "ast_hash": "75696288f5aa98558e28b8b866b1ca96",
+    "semantic_hash": "75696288f5aa98558e28b8b866b1ca96"
+  },
+  "src/main/java/com/edu/espp/entity/ExamAttemptDetail.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "1164f5ee4f129e1e0e236832a460b1a4",
+    "semantic_hash": "1164f5ee4f129e1e0e236832a460b1a4"
+  },
+  "src/main/java/com/edu/espp/entity/ExamHistory.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "4b216c0020eccd234bfbfdb4046a4ca8",
+    "semantic_hash": "4b216c0020eccd234bfbfdb4046a4ca8"
+  },
+  "src/main/java/com/edu/espp/entity/LearningProgress.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "c63f886b89ee35425a78d42ef86e5643",
+    "semantic_hash": "c63f886b89ee35425a78d42ef86e5643"
+  },
+  "src/main/java/com/edu/espp/entity/Lesson.java": {
+    "mtime": 1784441945.0391085,
+    "ast_hash": "30b8a8243b010a1018e26e0973b7383d",
+    "semantic_hash": "30b8a8243b010a1018e26e0973b7383d"
+  },
+  "src/main/java/com/edu/espp/entity/LessonContent.java": {
+    "mtime": 1784441945.0391085,
+    "ast_hash": "86c607bcaf1f3863cfc0d45755d07590",
+    "semantic_hash": "86c607bcaf1f3863cfc0d45755d07590"
+  },
+  "src/main/java/com/edu/espp/entity/Question.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "1cc1402d3ed99f5f8111614f8ff9da20",
+    "semantic_hash": "1cc1402d3ed99f5f8111614f8ff9da20"
+  },
+  "src/main/java/com/edu/espp/entity/SRSReview.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "6dbdc24b49306b8b76e5ded5783e4703",
+    "semantic_hash": "6dbdc24b49306b8b76e5ded5783e4703"
+  },
+  "src/main/java/com/edu/espp/entity/StudentUser.java": {
+    "mtime": 1784441329.0332367,
+    "ast_hash": "b8090d90bb8600bc3efd72bfec42fdc0",
+    "semantic_hash": "b8090d90bb8600bc3efd72bfec42fdc0"
+  },
+  "src/main/java/com/edu/espp/entity/SupportTicket.java": {
+    "mtime": 1784441945.0401099,
+    "ast_hash": "b4521f6742ef66f9057b06241136edf8",
+    "semantic_hash": "b4521f6742ef66f9057b06241136edf8"
+  },
+  "src/main/java/com/edu/espp/entity/SystemLog.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "6f64ed266744f4922870ee5156ab522c",
+    "semantic_hash": "6f64ed266744f4922870ee5156ab522c"
+  },
+  "src/main/java/com/edu/espp/entity/User.java": {
+    "mtime": 1784441329.0332367,
+    "ast_hash": "f381d0180728db4627309bfa51acc77b",
+    "semantic_hash": "f381d0180728db4627309bfa51acc77b"
+  },
+  "src/main/java/com/edu/espp/repository/BookMarkRepository.java": {
+    "mtime": 1784442981.8755481,
+    "ast_hash": "a8c9212b768d31c5c16068612335e47b",
+    "semantic_hash": "a8c9212b768d31c5c16068612335e47b"
+  },
+  "src/main/java/com/edu/espp/repository/ExamAttemptDetailRepository.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "01de367c183d9977f34e6820063edd38",
+    "semantic_hash": "01de367c183d9977f34e6820063edd38"
+  },
+  "src/main/java/com/edu/espp/repository/ExamHistoryRepository.java": {
+    "mtime": 1784441945.042353,
+    "ast_hash": "6c66fe61555ef066c438c69ef36ab237",
+    "semantic_hash": "6c66fe61555ef066c438c69ef36ab237"
+  },
+  "src/main/java/com/edu/espp/repository/ExamRepository.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "080d7acbfc6ad8d1618fb7181d3fecbb",
+    "semantic_hash": "080d7acbfc6ad8d1618fb7181d3fecbb"
+  },
+  "src/main/java/com/edu/espp/repository/LearningProgressRepository.java": {
+    "mtime": 1784443004.5928934,
+    "ast_hash": "e51b904c5044df7d39f1f5a68571ada6",
+    "semantic_hash": "e51b904c5044df7d39f1f5a68571ada6"
+  },
+  "src/main/java/com/edu/espp/repository/LessonContentRepository.java": {
+    "mtime": 1784442981.8755481,
+    "ast_hash": "97a77307f4887072aadb9a71ae853c77",
+    "semantic_hash": "97a77307f4887072aadb9a71ae853c77"
+  },
+  "src/main/java/com/edu/espp/repository/LessonRepository.java": {
+    "mtime": 1784442981.8755481,
+    "ast_hash": "26b6993925de09d7e6417c0094ccb43a",
+    "semantic_hash": "26b6993925de09d7e6417c0094ccb43a"
+  },
+  "src/main/java/com/edu/espp/repository/QuestionRepository.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "dd4749c1295890ba10089526d84c2387",
+    "semantic_hash": "dd4749c1295890ba10089526d84c2387"
+  },
+  "src/main/java/com/edu/espp/repository/SRSReviewRepository.java": {
+    "mtime": 1784441945.045608,
+    "ast_hash": "e69fd36a5f6eed5a59e124371b059d42",
+    "semantic_hash": "e69fd36a5f6eed5a59e124371b059d42"
+  },
+  "src/main/java/com/edu/espp/repository/StudentUserRepository.java": {
+    "mtime": 1784441281.2206137,
+    "ast_hash": "8f30c308ba498f55c0ea7d63c7004375",
+    "semantic_hash": "8f30c308ba498f55c0ea7d63c7004375"
+  },
+  "src/main/java/com/edu/espp/repository/SupportTicketRepository.java": {
+    "mtime": 1784441945.0466983,
+    "ast_hash": "685104d2b6f1de7e0fd978a5c04a4f5f",
+    "semantic_hash": "685104d2b6f1de7e0fd978a5c04a4f5f"
+  },
+  "src/main/java/com/edu/espp/repository/UserRepository.java": {
+    "mtime": 1784441329.035317,
+    "ast_hash": "b24002adb4915018265363baa6c08aa3",
+    "semantic_hash": "b24002adb4915018265363baa6c08aa3"
+  },
+  "src/main/java/com/edu/espp/repository/auth/AuthTokenRepository.java": {
+    "mtime": 1784441945.0477915,
+    "ast_hash": "e646349ab45b8c66024f510957746833",
+    "semantic_hash": "e646349ab45b8c66024f510957746833"
+  },
+  "src/main/java/com/edu/espp/service/DashboardService.java": {
+    "mtime": 1784441945.0490599,
+    "ast_hash": "1858120ac4d4a7787623d13f4d2aae73",
+    "semantic_hash": "1858120ac4d4a7787623d13f4d2aae73"
+  },
+  "src/main/java/com/edu/espp/service/DictionaryService.java": {
+    "mtime": 1784442906.4175353,
+    "ast_hash": "6713f37889ca0046dfccd44a8675e8a0",
+    "semantic_hash": "6713f37889ca0046dfccd44a8675e8a0"
+  },
+  "src/main/java/com/edu/espp/service/LearningContentService.java": {
+    "mtime": 1784442906.4175353,
+    "ast_hash": "67b6b008c0e490fdbce7305ad1be9f27",
+    "semantic_hash": "67b6b008c0e490fdbce7305ad1be9f27"
+  },
+  "src/main/java/com/edu/espp/service/LessonService.java": {
+    "mtime": 1784443005.7241218,
+    "ast_hash": "0e206a6639dfa65b7ac87a797f79cdbc",
+    "semantic_hash": "0e206a6639dfa65b7ac87a797f79cdbc"
+  },
+  "src/main/java/com/edu/espp/service/SRSReviewService.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "21eb419fe4e4a5ed96badf8013cdcc01",
+    "semantic_hash": "21eb419fe4e4a5ed96badf8013cdcc01"
+  },
+  "src/main/java/com/edu/espp/service/auth/AuthSessionService.java": {
+    "mtime": 1784443852.6089919,
+    "ast_hash": "5e3582814aa9774c0f355511a23ce7a1",
+    "semantic_hash": "5e3582814aa9774c0f355511a23ce7a1"
+  },
+  "src/main/java/com/edu/espp/service/auth/ChangePasswordService.java": {
+    "mtime": 1784533181.9010289,
+    "ast_hash": "d4aed5cccb106962f7a56c2b59d93d49",
+    "semantic_hash": "d4aed5cccb106962f7a56c2b59d93d49"
+  },
+  "src/main/java/com/edu/espp/service/auth/EmailService.java": {
+    "mtime": 1784441945.0554166,
+    "ast_hash": "3464788901830af114e358b94a4338fa",
+    "semantic_hash": "3464788901830af114e358b94a4338fa"
+  },
+  "src/main/java/com/edu/espp/service/auth/ForgotPasswordService.java": {
+    "mtime": 1784441945.0565298,
+    "ast_hash": "4a5ffed80ed003b8d4d11f783e8465c7",
+    "semantic_hash": "4a5ffed80ed003b8d4d11f783e8465c7"
+  },
+  "src/main/java/com/edu/espp/service/auth/RegisterService.java": {
+    "mtime": 1784441945.0568457,
+    "ast_hash": "cad6848ee37a00f198dbb6a7c93c2d9e",
+    "semantic_hash": "cad6848ee37a00f198dbb6a7c93c2d9e"
+  },
+  "src/main/java/com/edu/espp/service/auth/StudentDetailsService.java": {
+    "mtime": 1784441945.0568457,
+    "ast_hash": "17a9d649ba067769702360a6e6751a99",
+    "semantic_hash": "17a9d649ba067769702360a6e6751a99"
+  },
+  "src/main/java/com/edu/espp/service/exam/ExamService.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "58ac6e6603d87acf93ad5afd75ad08f9",
+    "semantic_hash": "58ac6e6603d87acf93ad5afd75ad08f9"
+  },
+  "src/main/java/com/edu/espp/service/exam/impl/ExamServiceImpl.java": {
+    "mtime": 1784443842.1196692,
+    "ast_hash": "9aed387177caa84192186a7aea47bd85",
+    "semantic_hash": "9aed387177caa84192186a7aea47bd85"
+  },
+  "src/main/java/com/edu/espp/service/history/ExamHistoryService.java": {
+    "mtime": 1784441945.059207,
+    "ast_hash": "3dce1d413d602eee8091cd27303df6a8",
+    "semantic_hash": "3dce1d413d602eee8091cd27303df6a8"
+  },
+  "src/main/java/com/edu/espp/service/history/impl/ExamHistoryServiceImpl.java": {
+    "mtime": 1784441945.059207,
+    "ast_hash": "f9fb155232b800b7dae473caccf6d11c",
+    "semantic_hash": "f9fb155232b800b7dae473caccf6d11c"
+  },
+  "src/main/java/com/edu/espp/service/profile/ProfileService.java": {
+    "mtime": 1784442591.1040988,
+    "ast_hash": "810b7dbf512fefb0c630833c6f0905f6",
+    "semantic_hash": "810b7dbf512fefb0c630833c6f0905f6"
+  },
+  "src/main/java/com/edu/espp/service/profile/impl/ProfileServiceImpl.java": {
+    "mtime": 1784442591.1208706,
+    "ast_hash": "df23b9c876b812fe369844f0968fe162",
+    "semantic_hash": "df23b9c876b812fe369844f0968fe162"
+  },
+  "src/main/java/com/edu/espp/service/question/QuestionService.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "1f6b6f6b6fc5ced94b2ff421fa7eaff9",
+    "semantic_hash": "1f6b6f6b6fc5ced94b2ff421fa7eaff9"
+  },
+  "src/main/java/com/edu/espp/service/question/impl/QuestionServiceImpl.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "aba3526305f293c0e848210f71d9138c",
+    "semantic_hash": "aba3526305f293c0e848210f71d9138c"
+  },
+  "src/main/java/com/edu/espp/service/supportticket/SupportTicketService.java": {
+    "mtime": 1784441945.0617275,
+    "ast_hash": "591bbe230f3f8bcf677bab64f9a24637",
+    "semantic_hash": "591bbe230f3f8bcf677bab64f9a24637"
+  },
+  "src/main/java/com/edu/espp/service/supportticket/impl/SupportTicketServiceImpl.java": {
+    "mtime": 1784441945.0617275,
+    "ast_hash": "48135cf8e2c1f691c3a7a34f95f4ecb5",
+    "semantic_hash": "48135cf8e2c1f691c3a7a34f95f4ecb5"
+  },
+  "src/test/java/com/edu/espp/EnglishSkillPracticePlatformApplicationTests.java": {
+    "mtime": 1784383820.0,
+    "ast_hash": "fb1bbcf5bde91e5376462137c873ca42",
+    "semantic_hash": "fb1bbcf5bde91e5376462137c873ca42"
+  }
+}

@@ -44,14 +44,13 @@ public class RegisterService {
                                                                 form.getPassword()))
                                 .role(Role.STUDENT)
                                 .status(UserStatus.ACTIVE)
+                                .loginAttempts(0)
                                 .build();
 
                 userRepository.save(user);
 
                 StudentUser student = StudentUser.builder()
-                                .email(email)
-                                .fullName(fullName)
-                                .passwordHash(user.getPasswordHash())
+                                .user(user)
                                 .build();
 
                 studentUserRepository.save(student);

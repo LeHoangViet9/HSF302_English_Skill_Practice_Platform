@@ -1,0 +1,86 @@
+{
+  "generated_at": "2026-07-20T13:21:16.465036+00:00",
+  "nodes": {
+    "src_main_java_com_edu_espp_config_securityconfig_securityconfig": {
+      "code_fingerprint": "44e2e1397af739fec43d067f9799580ffe134b1c8986205361911b058d99094c",
+      "label": "SecurityConfig",
+      "last": "2026-07-20T13:09:10.936156+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-20T13:09:10.936156+00:00",
+          "outcome": "useful",
+          "q": "ddocj prj vaf cho tooi luomg chayj Auth"
+        }
+      ],
+      "score": 0.999805999,
+      "source_file": "src/main/java/com/edu/espp/config/SecurityConfig.java",
+      "status": "tentative",
+      "uses": 1
+    },
+    "src_main_java_com_edu_espp_controller_auth_logincontroller_logincontroller": {
+      "code_fingerprint": "069f40c7d8ad2cb4cf24671bcdf96d0a8e0f3311c62eb1cd0e646846d9b64c29",
+      "label": "LoginController",
+      "last": "2026-07-20T13:09:10.936156+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-20T13:09:10.936156+00:00",
+          "outcome": "useful",
+          "q": "ddocj prj vaf cho tooi luomg chayj Auth"
+        }
+      ],
+      "score": 0.999805999,
+      "source_file": "src/main/java/com/edu/espp/controller/auth/LoginController.java",
+      "status": "tentative",
+      "uses": 1
+    },
+    "src_main_java_com_edu_espp_repository_auth_authtokenrepository_authtokenrepository": {
+      "code_fingerprint": "a9cb56339e472ba9f095f9217e8f44f99728c602640aa77603dc7a8ac4efbd12",
+      "label": "AuthTokenRepository",
+      "last": "2026-07-20T13:09:10.936156+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-20T13:09:10.936156+00:00",
+          "outcome": "useful",
+          "q": "ddocj prj vaf cho tooi luomg chayj Auth"
+        }
+      ],
+      "score": 0.999805999,
+      "source_file": "src/main/java/com/edu/espp/repository/auth/AuthTokenRepository.java",
+      "status": "tentative",
+      "uses": 1
+    },
+    "src_main_java_com_edu_espp_service_auth_authsessionservice_authsessionservice": {
+      "code_fingerprint": "6de7ebe38a1c85c922c244246c65c7729436752e623aaa6c2a3942eb36fe6f89",
+      "label": "AuthSessionService",
+      "last": "2026-07-20T13:09:10.936156+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-20T13:09:10.936156+00:00",
+          "outcome": "useful",
+          "q": "ddocj prj vaf cho tooi luomg chayj Auth"
+        }
+      ],
+      "score": 0.999805999,
+      "source_file": "src/main/java/com/edu/espp/service/auth/AuthSessionService.java",
+      "status": "tentative",
+      "uses": 1
+    },
+    "src_main_java_com_edu_espp_service_auth_studentdetailsservice_studentdetailsservice": {
+      "code_fingerprint": "9416c5316013bd64633b2e95ea18248190a89f717c7cb2df8443b9c15d8685dc",
+      "label": "StudentDetailsService",
+      "last": "2026-07-20T13:09:10.936156+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-20T13:09:10.936156+00:00",
+          "outcome": "useful",
+          "q": "ddocj prj vaf cho tooi luomg chayj Auth"
+        }
+      ],
+      "score": 0.999805999,
+      "source_file": "src/main/java/com/edu/espp/service/auth/StudentDetailsService.java",
+      "status": "tentative",
+      "uses": 1
+    }
+  },
+  "version": 1
+}
