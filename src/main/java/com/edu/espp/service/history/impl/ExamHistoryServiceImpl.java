@@ -1,10 +1,7 @@
 package com.edu.espp.service.history.impl;
 
-import com.edu.espp.dto.exam.response.ExamAttemptDetailResponse;
 import com.edu.espp.dto.exam.response.ExamHistoryResponse;
-import com.edu.espp.entity.ExamAttemptDetail;
 import com.edu.espp.entity.ExamHistory;
-import com.edu.espp.repository.ExamAttemptDetailRepository;
 import com.edu.espp.repository.ExamHistoryRepository;
 import com.edu.espp.service.history.ExamHistoryService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExamHistoryServiceImpl implements ExamHistoryService {
     private final ExamHistoryRepository examHistoryRepository;
-    private final ExamAttemptDetailRepository examAttemptDetailRepository;
 
     @Override
     public List<ExamHistoryResponse> getUserExamHistory(Long userId) {
@@ -32,11 +28,6 @@ public class ExamHistoryServiceImpl implements ExamHistoryService {
         return histories.map(this::mapSingleToResponse);
     }
 
-    @Override
-    public List<ExamHistoryResponse> getAllExamHistories() {
-        List<ExamHistory> histories = examHistoryRepository.findAllByOrderByTestedAtDesc();
-        return mapToResponse(histories);
-    }
 
     @Override
     public Page<ExamHistoryResponse> getAllExamHistories(Pageable pageable) {
@@ -63,24 +54,5 @@ public class ExamHistoryServiceImpl implements ExamHistoryService {
     }
 
 
-    @Override
-    public List<ExamAttemptDetailResponse> getExamAttemptDetails(Long examHistoryId) {
-        List<ExamAttemptDetail> details = examAttemptDetailRepository.findByExamHistoryId(examHistoryId);
 
-        return details.stream().map(detail -> {
-            var question = detail.getQuestion();
-
-            return ExamAttemptDetailResponse.builder()
-                    .questionId(question != null ? question.getId() : null)
-                    .questionText(question != null ? question.getQuestionText() : null)
-                    .options(question != null && question.getOptions() != null
-                            ? List.of(question.getOptions())
-                            : null)
-                    .correctAnswer(question != null ? question.getCorrectAnswer() : null)
-                    .selectedAnswer(detail.getSelectedAnswer())
-                    .isCorrect(detail.getIsCorrect())
-                    .explanation(question != null ? question.getExplanation() : null)
-                    .build();
-        }).toList();
-    }
 }

@@ -1,6 +1,5 @@
 package com.edu.espp.service.exam.impl;
 
-import com.edu.espp.common.enums.QuestionSkill;
 import com.edu.espp.common.enums.TypeQuiz;
 import com.edu.espp.common.exception.ConflictException;
 import com.edu.espp.common.exception.ResourceNotFoundException;
@@ -41,16 +40,6 @@ public class ExamServiceImpl implements ExamService {
 
     private static final String EXAM_NOT_FOUND_MSG = "Không tìm thấy bài thi";
 
-    @Override
-    public List<ExamResponse> getAllExams() {
-        List<Exam> exams = examRepository.findByApprovalStatus(ApprovalStatus.APPROVED);
-        return exams.stream().map(this::convertToResponse).toList();
-    }
-
-    @Override
-    public List<ExamResponse> searchExams(String keyword, TypeQuiz type) {
-        return searchExams(keyword, type, false);
-    }
 
     @Override
     public List<ExamResponse> searchExams(String keyword, TypeQuiz type, boolean includeAllStatuses) {
@@ -151,16 +140,6 @@ public class ExamServiceImpl implements ExamService {
                 .build();
     }
 
-    @Override
-    public List<QuestionResponse> getQuestionsByExamAndSkill(Long examId, QuestionSkill skill) {
-        examRepository.findById(examId)
-                .orElseThrow(() -> new ResourceNotFoundException(EXAM_NOT_FOUND_MSG));
-
-        List<Question> questions = questionRepository.findByExamIdAndSkill(examId, skill);
-        return questions.stream()
-                .map(this::convertQuestionToResponse)
-                .toList();
-    }
 
     @Override
     @Transactional
