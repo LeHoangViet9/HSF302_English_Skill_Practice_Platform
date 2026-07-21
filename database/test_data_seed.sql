@@ -74,11 +74,11 @@ BEGIN TRY
     -- ==========================================
     -- 6. CHÈN DỮ LIỆU ĐỀ THI MẪU (Bảng exams)
     -- ==========================================
-    INSERT INTO exams (title, type, duration, total_questions, description)
+    INSERT INTO exams (title, type, duration, total_questions, description, approval_status)
     VALUES 
-        (N'Đề thi thử Tiếng Anh B1 - Đề số 1', 'MOCK_TEST', 60, 4, N'Đề thi thử tổng hợp 4 kỹ năng theo cấu trúc chuẩn B1.'),
-        (N'Bài kiểm tra nhanh kỹ năng Reading', 'QUIZ', 15, 2, N'Kiểm tra đọc hiểu nhanh các biển báo và thông báo ngắn.'),
-        (N'Luyện tập Từ vựng A1 - Chào hỏi', 'QUIZ', 10, 1, N'Bài kiểm tra từ vựng cơ bản A1.');
+        (N'Đề thi thử Tiếng Anh B1 - Đề số 1', 'MOCK_TEST', 60, 4, N'Đề thi thử tổng hợp 4 kỹ năng theo cấu trúc chuẩn B1.', 'APPROVED'),
+        (N'Bài kiểm tra nhanh kỹ năng Reading', 'QUIZ', 15, 2, N'Kiểm tra đọc hiểu nhanh các biển báo và thông báo ngắn.', 'APPROVED'),
+        (N'Luyện tập Từ vựng A1 - Chào hỏi', 'QUIZ', 10, 1, N'Bài kiểm tra từ vựng cơ bản A1.', 'APPROVED');
 
     DECLARE @examB1 BIGINT = (SELECT id FROM exams WHERE title = N'Đề thi thử Tiếng Anh B1 - Đề số 1');
     DECLARE @examReading BIGINT = (SELECT id FROM exams WHERE title = N'Bài kiểm tra nhanh kỹ năng Reading');

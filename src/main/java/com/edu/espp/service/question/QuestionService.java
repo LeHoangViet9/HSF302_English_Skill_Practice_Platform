@@ -3,19 +3,19 @@ package com.edu.espp.service.question;
 import com.edu.espp.common.enums.QuestionSkill;
 import com.edu.espp.dto.question.request.QuestionRequest;
 import com.edu.espp.dto.question.response.QuestionResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 public interface QuestionService {
-    // Lấy câu hỏi
     QuestionResponse getQuestionById(Long id);
-    List<QuestionResponse> getQuestionsByExam(Long examId);
-    List<QuestionResponse> getQuestionsBySkill(QuestionSkill skill);
-    List<QuestionResponse> getQuestionsByExamAndSkill(Long examId, QuestionSkill skill);
+    Page<QuestionResponse> getQuestionsByExam(Long examId, Pageable pageable);
+    
+    Page<QuestionResponse> getQuestionsBySkill(QuestionSkill skill, Pageable pageable);
+    
+    Page<QuestionResponse> getQuestionsByExamAndSkill(Long examId, QuestionSkill skill, Pageable pageable);
 
-    // Quản lý CRUD (Admin)
     QuestionResponse createQuestion(QuestionRequest request);
-    List<QuestionResponse> createBulkQuestions(List<QuestionRequest> requests);
     QuestionResponse updateQuestion(Long id, QuestionRequest request);
     void deleteQuestion(Long id);
 }

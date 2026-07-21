@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @Component
 @RequiredArgsConstructor
@@ -31,7 +30,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Override
     @Transactional
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         log.info("DatabaseSeeder checking and seeding test data...");
 
         String passwordHash = passwordEncoder.encode("123456");
@@ -39,7 +38,10 @@ public class DatabaseSeeder implements CommandLineRunner {
         // 1. Seed Admin
         User admin = seedUser("admin@espp.com", passwordHash, "Admin ESPP", Role.ADMIN);
 
-        // 2. Seed Students
+        // 2. Seed Staff
+        User staff = seedUser("staff@espp.com", passwordHash, "Staff ESPP", Role.STAFF);
+
+        // 3. Seed Students
         User student1 = seedStudentUser("student1@espp.com", passwordHash, "Nguyễn Văn Học Sinh 1");
         User student2 = seedStudentUser("student2@espp.com", passwordHash, "Trần Thị Học Sinh 2");
         User student3 = seedStudentUser("student3@espp.com", passwordHash, "Lê Minh Học Sinh 3");
@@ -48,11 +50,11 @@ public class DatabaseSeeder implements CommandLineRunner {
         if (false && lessonRepository.count() == 0) {
             log.info("Seeding lessons...");
             lessonRepository.saveAll(Arrays.asList(
-                    Lesson.builder().title("Thì hiện tại đơn (Present Simple)").level(LevelLesson.A1).type(TypeLesson.GRAMMAR).createdBy(admin).description("Học về cách sử dụng thì hiện tại đơn trong tiếng Anh hàng ngày.").build(),
-                    Lesson.builder().title("Từ vựng về Gia đình").level(LevelLesson.A1).type(TypeLesson.VOCABULARY).createdBy(admin).description("Các từ vựng cơ bản về các thành viên trong gia đình.").build(),
-                    Lesson.builder().title("Phát âm đuôi -ed và -s/es").level(LevelLesson.A2).type(TypeLesson.PRONUNCIATION).createdBy(admin).description("Quy tắc phát âm đuôi ed và s/es siêu dễ nhớ.").build(),
-                    Lesson.builder().title("Câu điều kiện loại 1 & 2").level(LevelLesson.B1).type(TypeLesson.GRAMMAR).createdBy(admin).description("Hướng dẫn phân biệt và sử dụng If loại 1, 2.").build(),
-                    Lesson.builder().title("Từ vựng chủ đề Công nghệ (Technology)").level(LevelLesson.B2).type(TypeLesson.VOCABULARY).createdBy(admin).description("Nâng cao vốn từ vựng về công nghệ thông tin.").build()
+                    Lesson.builder().title("Thì hiện tại đơn (Present Simple)").level(LevelLesson.A1).type(TypeLesson.GRAMMAR).createdBy(admin).approvalStatus(ApprovalStatus.APPROVED).description("Học về cách sử dụng thì hiện tại đơn trong tiếng Anh hàng ngày.").build(),
+                    Lesson.builder().title("Từ vựng về Gia đình").level(LevelLesson.A1).type(TypeLesson.VOCABULARY).createdBy(admin).approvalStatus(ApprovalStatus.APPROVED).description("Các từ vựng cơ bản về các thành viên trong gia đình.").build(),
+                    Lesson.builder().title("Phát âm đuôi -ed và -s/es").level(LevelLesson.A2).type(TypeLesson.PRONUNCIATION).createdBy(admin).approvalStatus(ApprovalStatus.APPROVED).description("Quy tắc phát âm đuôi ed và s/es siêu dễ nhớ.").build(),
+                    Lesson.builder().title("Câu điều kiện loại 1 & 2").level(LevelLesson.B1).type(TypeLesson.GRAMMAR).createdBy(admin).approvalStatus(ApprovalStatus.APPROVED).description("Hướng dẫn phân biệt và sử dụng If loại 1, 2.").build(),
+                    Lesson.builder().title("Từ vựng chủ đề Công nghệ (Technology)").level(LevelLesson.B2).type(TypeLesson.VOCABULARY).createdBy(admin).approvalStatus(ApprovalStatus.APPROVED).description("Nâng cao vốn từ vựng về công nghệ thông tin.").build()
             ));
         }
 
@@ -60,7 +62,15 @@ public class DatabaseSeeder implements CommandLineRunner {
         log.info("Checking exams and questions...");
         
         if (!examRepository.existsByTitle("Đề kiểm tra Ngữ pháp Cơ bản")) {
-            Exam exam1 = Exam.builder().title("Đề kiểm tra Ngữ pháp Cơ bản").type(TypeQuiz.QUIZ).duration(15).totalQuestions(3).description("Bài kiểm tra 15 phút về thì hiện tại đơn.").build();
+            Exam exam1 = Exam.builder()
+                .title("Đề kiểm tra Ngữ pháp Cơ bản")
+                .type(TypeQuiz.QUIZ)
+                .duration(15)
+                .totalQuestions(3)
+                .description("Bài kiểm tra 15 phút về thì hiện tại đơn.")
+                .createdBy(admin)
+                .approvalStatus(ApprovalStatus.APPROVED)
+                .build();
             exam1 = examRepository.save(exam1);
 
             questionRepository.saveAll(Arrays.asList(
@@ -71,7 +81,15 @@ public class DatabaseSeeder implements CommandLineRunner {
         }
 
         if (!examRepository.existsByTitle("Đề thi thử TOEIC Reading (Mini)")) {
-            Exam exam2 = Exam.builder().title("Đề thi thử TOEIC Reading (Mini)").type(TypeQuiz.MOCK_TEST).duration(30).totalQuestions(2).description("Đề thi thử TOEIC rút gọn phần Đọc hiểu.").build();
+            Exam exam2 = Exam.builder()
+                .title("Đề thi thử TOEIC Reading (Mini)")
+                .type(TypeQuiz.MOCK_TEST)
+                .duration(30)
+                .totalQuestions(2)
+                .description("Đề thi thử TOEIC rút gọn phần Đọc hiểu.")
+                .createdBy(admin)
+                .approvalStatus(ApprovalStatus.APPROVED)
+                .build();
             exam2 = examRepository.save(exam2);
 
             questionRepository.saveAll(Arrays.asList(

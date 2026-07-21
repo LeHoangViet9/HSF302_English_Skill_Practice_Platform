@@ -24,7 +24,7 @@
                         </div>
 
                         <!-- Form -->
-                        <form method="post" th:action="@{/staff/lessons/save}" th:object="${lesson}">
+                        <form method="post" th:action="@{/manage/lessons/save}" th:object="${lesson}">
                             <input type="hidden" th:field="*{id}">
 
                             <div class="mb-3">
@@ -62,7 +62,7 @@
                             </div>
 
                             <div class="d-flex justify-content-end gap-2">
-                                <a th:href="@{/staff/lessons}" class="btn-apple btn-apple-secondary-pill" style="font-size: 14px; padding: 10px 20px; text-decoration: none;">Quay lại</a>
+                                <a th:href="@{/manage/lessons}" class="btn-apple btn-apple-secondary-pill" style="font-size: 14px; padding: 10px 20px; text-decoration: none;">Quay lại</a>
                                 <button class="btn-apple btn-apple-primary btn-action" style="font-size: 14px; padding: 10px 20px;" type="submit">
                                     Lưu thông tin
                                 </button>
@@ -79,7 +79,7 @@
                             <h4 class="apple-tagline mb-0" style="font-size: 21px; display: flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-layer-group text-primary"></i> Nội dung chi tiết
                             </h4>
-                            <a th:href="@{/staff/lessons/{id}/contents/create(id=${lesson.id})}" class="btn-apple btn-apple-primary btn-action" style="font-size: 13px; padding: 6px 12px; text-decoration: none; display: inline-flex; align-items: center;">
+                            <a th:href="@{/manage/lessons/{id}/contents/create(id=${lesson.id})}" class="btn-apple btn-apple-primary btn-action" style="font-size: 13px; padding: 6px 12px; text-decoration: none; display: inline-flex; align-items: center;">
                                 <i class="fa-solid fa-plus me-1"></i> Thêm nội dung mới
                             </a>
                         </div>
@@ -109,11 +109,11 @@
                                         <td class="py-2 text-center">
                                             <div class="d-flex justify-content-center gap-2">
                                                 <a class="btn-apple btn-apple-pearl-capsule btn-action" style="padding: 4px 8px; font-size: 12px; text-decoration: none;"
-                                                   th:href="@{/staff/lessons/{lessonId}/contents/edit/{contentId}(lessonId=${lesson.id}, contentId=${c.id})}">
+                                                   th:href="@{/manage/lessons/{lessonId}/contents/edit/{contentId}(lessonId=${lesson.id}, contentId=${c.id})}">
                                                     Sửa
                                                 </a>
                                                 <a class="btn-apple btn-apple-dark-utility btn-action" style="padding: 4px 8px; font-size: 12px; text-decoration: none;"
-                                                   th:href="@{/staff/lessons/{lessonId}/contents/delete/{contentId}(lessonId=${lesson.id}, contentId=${c.id})}"
+                                                   th:href="@{/manage/lessons/{lessonId}/contents/delete/{contentId}(lessonId=${lesson.id}, contentId=${c.id})}"
                                                    onclick="confirmAction(event, this, 'Bạn có chắc chắn muốn xóa nội dung này?', 'Xóa');">
                                                     Xóa
                                                 </a>

@@ -2,16 +2,14 @@ package com.edu.espp.controller.student;
 
 import com.edu.espp.common.enums.LevelLesson;
 import com.edu.espp.common.enums.TypeLesson;
+import com.edu.espp.common.utils.PageableUtils;
 import com.edu.espp.entity.Lesson;
 import com.edu.espp.entity.User;
 import com.edu.espp.service.LearningContentService;
 import com.edu.espp.service.LessonService;
 import com.edu.espp.service.SRSReviewService;
 import lombok.RequiredArgsConstructor;
-import java.util.Set;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +46,7 @@ public class LearningContentController {
                 keyword,
                 type,
                 level,
-                PageRequest.of(Math.max(page, 0), Math.max(size, 1), Sort.by("id").ascending())
+                PageableUtils.generate(page, size, "id", "asc")
         );
 
         model.addAttribute("lessons", lessonPage.getContent());

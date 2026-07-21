@@ -2,29 +2,34 @@ package com.edu.espp.controller;
 
 import com.edu.espp.common.enums.LevelLesson;
 import com.edu.espp.common.enums.TypeLesson;
+import com.edu.espp.common.utils.PageableUtils;
 import com.edu.espp.entity.Lesson;
 import com.edu.espp.service.LessonService;
 import com.edu.espp.entity.LessonContent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/staff/lessons")
-public class StaffLessonController {
+@RequestMapping("/manage/lessons")
+public class LessonController {
 
     private final LessonService lessonService;
 
     @GetMapping
     public String listLessons(
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) TypeLesson type,
             @RequestParam(required = false) LevelLesson level,
             Model model
     ) {
-        model.addAttribute("lessons", lessonService.searchLessons(keyword, type, level));
+        Pageable pageable = PageableUtils.generate(page, size, "id", "desc");
+        model.addAttribute("lessonPage", lessonService.searchLessons(keyword, type, level, pageable));
 
         model.addAttribute("keyword", keyword);
         model.addAttribute("selectedType", type);
@@ -48,8 +53,7 @@ public class StaffLessonController {
     @PostMapping("/save")
     public String saveLesson(@ModelAttribute Lesson lesson) {
         lessonService.saveLesson(lesson);
-
-        return "redirect:/staff/lessons";
+        return "redirect:/manage/lessons";
     }
 
     @GetMapping("/edit/{id}")
@@ -67,13 +71,12 @@ public class StaffLessonController {
     @GetMapping("/delete/{id}")
     public String deleteLesson(@PathVariable Long id) {
         lessonService.deleteLesson(id);
-
-        return "redirect:/staff/lessons";
+        return "redirect:/manage/lessons";
     }
 
     @GetMapping("/{lessonId}/contents")
     public String listContents(@PathVariable Long lessonId) {
-        return "redirect:/staff/lessons/edit/" + lessonId;
+        return "redirect:/manage/lessons/edit/" + lessonId;
     }
 
     @GetMapping("/{lessonId}/contents/create")
@@ -96,9 +99,8 @@ public class StaffLessonController {
             @PathVariable Long lessonId,
             @ModelAttribute LessonContent content
     ) {
-        Lesson lesson = lessonService.getLessonById(lessonId);
         lessonService.saveLessonContent(lessonId, content);
-        return "redirect:/staff/lessons/edit/" + lessonId;
+        return "redirect:/manage/lessons/edit/" + lessonId;
     }
 
     @GetMapping("/{lessonId}/contents/edit/{contentId}")
@@ -120,8 +122,7 @@ public class StaffLessonController {
             @PathVariable Long lessonId,
             @PathVariable Long contentId
     ) {
-        Lesson lesson = lessonService.getLessonById(lessonId);
         lessonService.deleteLessonContent(contentId);
-        return "redirect:/staff/lessons/edit/" + lessonId;
+        return "redirect:/manage/lessons/edit/" + lessonId;
     }
 }

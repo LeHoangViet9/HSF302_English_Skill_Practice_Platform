@@ -15,6 +15,9 @@ import com.edu.espp.service.exam.ExamService;
 import com.fasterxml.jackson.core.type.TypeReference; // 🌟 Thêm import này
 import com.fasterxml.jackson.databind.ObjectMapper;       // 🌟 Thêm import này
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import com.edu.espp.common.enums.ApprovalStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,18 +37,23 @@ public class ExamServiceImpl implements ExamService {
     private final ExamHistoryRepository examHistoryRepository;
     private final ExamAttemptDetailRepository examAttemptDetailRepository;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private static final String EXAM_NOT_FOUND_MSG = "Không tìm thấy bài thi";
 
     @Override
     public List<ExamResponse> getAllExams() {
-        List<Exam> exams = examRepository.findAll();
+        List<Exam> exams = examRepository.findByApprovalStatus(ApprovalStatus.APPROVED);
         return exams.stream().map(this::convertToResponse).toList();
     }
 
     @Override
     public List<ExamResponse> searchExams(String keyword, TypeQuiz type) {
+        return searchExams(keyword, type, false);
+    }
+
+    @Override
+    public List<ExamResponse> searchExams(String keyword, TypeQuiz type, boolean includeAllStatuses) {
         List<Exam> exams;
         boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
         boolean hasType = type != null;
@@ -57,7 +65,12 @@ public class ExamServiceImpl implements ExamService {
         } else if (hasType) {
             exams = examRepository.findByType(type);
         } else {
-            exams = examRepository.findAll();
+            exams = includeAllStatuses ? examRepository.findAll() : examRepository.findByApprovalStatus(ApprovalStatus.APPROVED);
+        }
+        
+        // Filter out non-approved exams for the searches that don't have custom queries yet
+        if (!includeAllStatuses && (hasKeyword || hasType)) {
+            exams = exams.stream().filter(e -> e.getApprovalStatus() == ApprovalStatus.APPROVED).toList();
         }
         return exams.stream().map(this::convertToResponse).toList();
     }
@@ -155,12 +168,25 @@ public class ExamServiceImpl implements ExamService {
         if(examRepository.existsByTitle(request.getTitle())){
             throw new ConflictException("Bài thi với tiêu đề " + request.getTitle() + " đã tồn tại");
         }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = null;
+        ApprovalStatus status = ApprovalStatus.PENDING;
+        
+        if (auth != null && auth.getName() != null && !auth.getName().equals("anonymousUser")) {
+            currentUser = userRepository.findByEmail(auth.getName()).orElse(null);
+            if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+                status = ApprovalStatus.APPROVED;
+            }
+        }
+
         Exam exam = Exam.builder()
                 .title(request.getTitle())
                 .type(request.getType())
                 .duration(request.getDuration())
                 .description(request.getDescription())
                 .totalQuestions(request.getTotalQuestions())
+                .createdBy(currentUser)
+                .approvalStatus(status)
                 .build();
 
         return convertToResponse(examRepository.save(exam));
@@ -198,6 +224,30 @@ public class ExamServiceImpl implements ExamService {
         examRepository.delete(exam);
     }
 
+    @Override
+    public org.springframework.data.domain.Page<ExamResponse> getPendingExams(org.springframework.data.domain.Pageable pageable) {
+        return examRepository.findByApprovalStatus(ApprovalStatus.PENDING, pageable).map(this::convertToResponse);
+    }
+
+    @Override
+    @Transactional
+    public void approveExam(Long examId) {
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new ResourceNotFoundException(EXAM_NOT_FOUND_MSG + " để duyệt"));
+        exam.setApprovalStatus(ApprovalStatus.APPROVED);
+        examRepository.save(exam);
+    }
+
+    @Override
+    @Transactional
+    public void rejectExam(Long examId, String reason) {
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new ResourceNotFoundException(EXAM_NOT_FOUND_MSG + " để từ chối"));
+        exam.setApprovalStatus(ApprovalStatus.REJECTED);
+        exam.setRejectReason(reason);
+        examRepository.save(exam);
+    }
+
     private ExamResponse convertToResponse(Exam exam) {
         if (exam == null) return null;
         return ExamResponse.builder()
@@ -207,6 +257,8 @@ public class ExamServiceImpl implements ExamService {
                 .duration(exam.getDuration())
                 .description(exam.getDescription())
                 .totalQuestions(exam.getTotalQuestions())
+                .approvalStatus(exam.getApprovalStatus())
+                .rejectReason(exam.getRejectReason())
                 .build();
     }
 
@@ -219,7 +271,8 @@ public class ExamServiceImpl implements ExamService {
                 // Parse chuỗi JSON String từ database sang cấu trúc Map thực thụ
                 parsedOptions = objectMapper.readValue(
                         question.getOptions(),
-                        new TypeReference<Map<String, String>>() {}
+                        new TypeReference<>() {
+                        }
                 );
             }
         } catch (Exception e) {

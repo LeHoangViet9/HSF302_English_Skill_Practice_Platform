@@ -114,12 +114,7 @@
         #sidebar-wrapper .list-group-item:active {
             transform: scale(0.97);
         }
-        
-        #sidebar-wrapper .list-group-item.active {
-            color: var(--apple-on-primary) !important;
-            background-color: var(--apple-primary) !important;
-        }
-        
+
 
         /* Responsive Sidebar toggling */
         @media (max-width: 768px) {
@@ -129,103 +124,21 @@
             #wrapper.toggled #sidebar-wrapper {
                 transform: translateX(0);
             }
-            #page-content-wrapper {
-                width: 100%;
-                margin-left: 0;
-            }
         }
         @media (min-width: 769px) {
             #sidebar-wrapper {
                 transform: translateX(0);
             }
-            #page-content-wrapper {
-                width: calc(100% - 260px);
-                margin-left: 260px;
-            }
+
             #wrapper.toggled #sidebar-wrapper {
                 transform: translateX(-260px);
-            }
-            #wrapper.toggled #page-content-wrapper {
-                width: 100%;
-                margin-left: 0;
             }
         }
         
         /* Navbar custom styles */
-        .navbar-custom {
-            background-color: rgba(255, 255, 255, 0.8) !important;
-            backdrop-filter: saturate(180%) blur(20px);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
-            border-bottom: none;
-        }
-        
-        .navbar-admin {
-            background-color: var(--apple-surface-black) !important;
-            border-bottom: none;
-        }
-        
-        /* Content Styling */
-        .page-header {
-            background: var(--apple-surface-tile-1);
-            color: var(--apple-body-on-dark);
-            border-radius: var(--apple-rounded-lg);
-            padding: 32px;
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .page-header::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background: radial-gradient(circle at 80% 50%, rgba(0, 102, 204, 0.15), transparent 70%);
-            pointer-events: none;
-        }
 
-        .exam-card {
-            border: 1px solid var(--apple-hairline);
-            border-radius: var(--apple-rounded-lg);
-            background-color: var(--apple-canvas);
-            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s ease;
-        }
-        .exam-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04) !important;
-        }
-        .icon-box {
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--apple-rounded-sm);
-        }
-        .icon-box-student {
-            background-color: rgba(0, 102, 204, 0.08);
-            color: var(--apple-primary);
-        }
-        .icon-box-admin {
-            background-color: rgba(255, 193, 7, 0.1);
-            color: #ffc107;
-        }
-        .badge-type {
-            font-family: var(--apple-font-text), sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .btn-action {
-            border-radius: var(--apple-rounded-pill);
-            font-family: var(--apple-font-text), sans-serif;
-            font-weight: 400;
-            transition: transform 0.15s ease, background-color 0.2s;
-        }
-        .btn-action:active {
-            transform: scale(0.95) !important;
-        }
+        /* Content Styling */
+
     </style>
 </head>
 <body>
@@ -281,18 +194,21 @@
     <div class="list-group list-group-flush">
         <!-- Sidebar Menu ADMIN -->
         <th:block th:if="${user.role.name() == 'ADMIN'}">
-            <a class="list-group-item" th:classappend="${activeMenu == 'exams' ? 'active' : ''}" href="/exams">
+            <a class="list-group-item" th:classappend="${activeMenu == 'exams' ? 'active' : ''}" href="/manage/exams">
                 <i class="fa-solid fa-screwdriver-wrench"></i> Quản lý Đề thi
             </a>
-            <a class="list-group-item" th:classappend="${activeMenu == 'questions' ? 'active' : ''}" href="/admin/questions">
+            <a class="list-group-item" th:classappend="${activeMenu == 'questions' ? 'active' : ''}" href="/manage/questions">
                 <i class="fa-solid fa-circle-question"></i> Quản lý Câu hỏi
             </a>
-            <a class="list-group-item" th:classappend="${activeMenu == 'lessons' ? 'active' : ''}" href="/staff/lessons">
+            <a class="list-group-item" th:classappend="${activeMenu == 'lessons' ? 'active' : ''}" href="/manage/lessons">
                 <i class="fa-solid fa-book"></i> Quản lý Bài học
             </a>
 
             <a class="list-group-item" th:classappend="${activeMenu == 'histories' ? 'active' : ''}" href="/admin/histories">
                 <i class="fa-solid fa-clock-rotate-left"></i> Lịch sử Thi
+            </a>
+            <a class="list-group-item" th:classappend="${activeMenu == 'approvals' ? 'active' : ''}" href="/admin/approvals">
+                <i class="fa-solid fa-check-double"></i> Duyệt Nội Dung
             </a>
         </th:block>
 
@@ -301,8 +217,14 @@
             <a class="list-group-item" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}" href="/dashboard">
                 <i class="fa-solid fa-chart-line"></i> Bảng điều khiển
             </a>
-            <a class="list-group-item" th:classappend="${activeMenu == 'lessons' ? 'active' : ''}" href="/staff/lessons">
+            <a class="list-group-item" th:classappend="${activeMenu == 'lessons' ? 'active' : ''}" href="/manage/lessons">
                 <i class="fa-solid fa-book"></i> Quản lý Bài học
+            </a>
+            <a class="list-group-item" th:classappend="${activeMenu == 'exams' ? 'active' : ''}" href="/manage/exams">
+                <i class="fa-solid fa-screwdriver-wrench"></i> Quản lý Đề thi
+            </a>
+            <a class="list-group-item" th:classappend="${activeMenu == 'questions' ? 'active' : ''}" href="/manage/questions">
+                <i class="fa-solid fa-circle-question"></i> Quản lý Câu hỏi
             </a>
         </th:block>
 

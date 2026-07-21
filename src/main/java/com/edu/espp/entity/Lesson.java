@@ -1,6 +1,7 @@
 package com.edu.espp.entity;
 import com.edu.espp.common.enums.LevelLesson;
 import com.edu.espp.common.enums.TypeLesson;
+import com.edu.espp.common.enums.ApprovalStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -49,6 +50,13 @@ public class Lesson {
 
     @Builder.Default
     private Boolean isPublished = true;
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private ApprovalStatus approvalStatus = ApprovalStatus.PENDING;
+
+    @Column(columnDefinition = "NVARCHAR(500)")
+    private String rejectReason;
 
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();

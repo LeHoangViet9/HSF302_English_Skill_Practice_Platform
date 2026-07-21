@@ -1,7 +1,6 @@
 package com.edu.espp.controller.admin;
 
 import com.edu.espp.dto.exam.request.ExamRequest;
-import com.edu.espp.dto.exam.response.ExamResponse;
 import com.edu.espp.service.exam.ExamService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +10,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
 
 @Controller
-@RequestMapping("/admin/exams")
+@RequestMapping("/manage/exams")
 @RequiredArgsConstructor
 public class AdminExamController {
 
@@ -41,7 +39,7 @@ public class AdminExamController {
         }
         examService.createExam(examRequest);
         redirectAttributes.addFlashAttribute("successMessage", "Tạo đề thi mới thành công!");
-        return "redirect:/admin/exams";
+        return "redirect:/manage/exams";
     }
 
     // Màn hình cập nhật thông tin đề thi (Admin)
@@ -63,7 +61,7 @@ public class AdminExamController {
         }
         examService.updateExam(examId, examRequest);
         redirectAttributes.addFlashAttribute("successMessage", "Cập nhật đề thi thành công!");
-        return "redirect:/admin/exams";
+        return "redirect:/manage/exams";
     }
 
     // Xử lý xóa đề thi
@@ -71,6 +69,6 @@ public class AdminExamController {
     public String deleteExam(@PathVariable Long examId, RedirectAttributes redirectAttributes) {
         examService.deleteExam(examId);
         redirectAttributes.addFlashAttribute("successMessage", "Xóa đề thi thành công!");
-        return "redirect:/admin/exams";
+        return "redirect:/manage/exams";
     }
 }

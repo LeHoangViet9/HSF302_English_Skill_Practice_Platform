@@ -15,6 +15,7 @@ import java.util.Map;
 public class QuestionResponse {
     private Long id;
     private Long examId;
+    private String examTitle;
     private QuestionSkill skill;
     private String questionText;
     private String audioUrl;

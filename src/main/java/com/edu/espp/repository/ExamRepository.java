@@ -14,4 +14,7 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
     List<Exam> findByTitleContainingIgnoreCase(String title);
     List<Exam> findByType(TypeQuiz type);
     List<Exam> findByTitleContainingIgnoreCaseAndType(String title, TypeQuiz type);
+
+    org.springframework.data.domain.Page<Exam> findByApprovalStatus(com.edu.espp.common.enums.ApprovalStatus status, org.springframework.data.domain.Pageable pageable);
+    List<Exam> findByApprovalStatus(com.edu.espp.common.enums.ApprovalStatus status);
 }

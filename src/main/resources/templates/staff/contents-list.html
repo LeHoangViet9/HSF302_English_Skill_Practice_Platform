@@ -19,10 +19,10 @@
                     </p>
                 </div>
                 <div class="d-flex gap-2">
-                    <a th:href="@{/staff/lessons}" class="btn-apple btn-apple-secondary-pill btn-action" style="font-size: 14px; padding: 10px 20px; text-decoration: none; display: inline-flex; align-items: center;">
+                    <a th:href="@{/manage/lessons}" class="btn-apple btn-apple-secondary-pill btn-action" style="font-size: 14px; padding: 10px 20px; text-decoration: none; display: inline-flex; align-items: center;">
                         <i class="fa-solid fa-arrow-left me-1"></i> Quay lại
                     </a>
-                    <a th:href="@{/staff/lessons/{id}/contents/create(id=${lesson.id})}" class="btn-apple btn-apple-primary btn-action" style="font-size: 14px; padding: 10px 20px; text-decoration: none; display: inline-flex; align-items: center;">
+                    <a th:href="@{/manage/lessons/{id}/contents/create(id=${lesson.id})}" class="btn-apple btn-apple-primary btn-action" style="font-size: 14px; padding: 10px 20px; text-decoration: none; display: inline-flex; align-items: center;">
                         <i class="fa-solid fa-plus me-1"></i> Thêm nội dung mới
                     </a>
                 </div>
@@ -59,11 +59,11 @@
                                 <td class="py-3 text-center">
                                     <div class="d-flex justify-content-center gap-2">
                                         <a class="btn-apple btn-apple-pearl-capsule btn-action" style="padding: 6px 12px; font-size: 13px; text-decoration: none;"
-                                           th:href="@{/staff/lessons/{lessonId}/contents/edit/{contentId}(lessonId=${lesson.id}, contentId=${c.id})}">
+                                           th:href="@{/manage/lessons/{lessonId}/contents/edit/{contentId}(lessonId=${lesson.id}, contentId=${c.id})}">
                                             Sửa
                                         </a>
                                         <a class="btn-apple btn-apple-dark-utility btn-action" style="padding: 6px 12px; font-size: 13px; text-decoration: none;"
-                                           th:href="@{/staff/lessons/{lessonId}/contents/delete/{contentId}(lessonId=${lesson.id}, contentId=${c.id})}"
+                                           th:href="@{/manage/lessons/{lessonId}/contents/delete/{contentId}(lessonId=${lesson.id}, contentId=${c.id})}"
                                            onclick="confirmAction(event, this, 'Bạn có chắc chắn muốn xóa nội dung này?', 'Xóa');">
                                             Xóa
                                         </a>

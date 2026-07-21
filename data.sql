@@ -2,23 +2,23 @@
 -- XÓA SẠCH DỮ LIỆU CŨ THEO THỨ TỰ PHẢI TRƯỚC TRÁI SAU (TRÁNH LỖI KHÓA NGOẠI)
 -- ====================================================================
 
--- 1. Xóa các bảng con (bảng chứa khóa ngoại trỏ đi) trước
-DELETE FROM exam_histories;
-DELETE FROM questions;
-DELETE FROM lesson_contents;
-DELETE FROM lessons;
-DELETE FROM exams;
-DELETE FROM student_users;
-DELETE FROM users;
-
--- 2. RESET LẠI GIÁ TRỊ ID TỰ TĂNG VỀ 0 ĐỂ BẮT ĐẦU TỪ 1
-DBCC CHECKIDENT ('exam_histories', RESEED, 0);
-DBCC CHECKIDENT ('questions', RESEED, 0);
-DBCC CHECKIDENT ('lesson_contents', RESEED, 0);
-DBCC CHECKIDENT ('lessons', RESEED, 0);
-DBCC CHECKIDENT ('exams', RESEED, 0);
-DBCC CHECKIDENT ('student_users', RESEED, 0);
-DBCC CHECKIDENT ('users', RESEED, 0);
+-- -- 1. Xóa các bảng con (bảng chứa khóa ngoại trỏ đi) trước
+-- DELETE FROM exam_histories;
+-- DELETE FROM questions;
+-- DELETE FROM lesson_contents;
+-- DELETE FROM lessons;
+-- DELETE FROM exams;
+-- DELETE FROM student_users;
+-- DELETE FROM users;
+--
+-- -- 2. RESET LẠI GIÁ TRỊ ID TỰ TĂNG VỀ 0 ĐỂ BẮT ĐẦU TỪ 1
+-- DBCC CHECKIDENT ('exam_histories', RESEED, 0);
+-- DBCC CHECKIDENT ('questions', RESEED, 0);
+-- DBCC CHECKIDENT ('lesson_contents', RESEED, 0);
+-- DBCC CHECKIDENT ('lessons', RESEED, 0);
+-- DBCC CHECKIDENT ('exams', RESEED, 0);
+-- DBCC CHECKIDENT ('student_users', RESEED, 0);
+-- DBCC CHECKIDENT ('users', RESEED, 0);
 
 -- ====================================================================
 -- 3. CHÈN DỮ LIỆU TÀI KHOẢN MẪU (Bảng users)
@@ -48,16 +48,16 @@ VALUES
 -- ====================================================================
 -- 5. CHÈN DỮ LIỆU BÀI HỌC (Bảng lessons)
 -- ====================================================================
-INSERT INTO lessons (title, level, type, created_by, description, is_published, created_at, updated_at)
+INSERT INTO lessons (title, level, type, created_by, description, is_published, approval_status, created_at, updated_at)
 VALUES
-    (N'Thì hiện tại đơn (Present Simple)', 'A1', 'GRAMMAR', 2, N'Bài học về thì hiện tại đơn cơ bản, cách sử dụng và cấu trúc', 1, GETDATE(), GETDATE()),
-    (N'Thì quá khứ đơn (Past Simple)', 'A2', 'GRAMMAR', 2, N'Bài học về thì quá khứ đơn, động từ bất quy tắc', 1, GETDATE(), GETDATE()),
-    (N'Từ vựng chủ đề Gia đình (Family)', 'A1', 'VOCABULARY', 3, N'Các từ vựng cơ bản về các thành viên trong gia đình', 1, GETDATE(), GETDATE()),
-    (N'Từ vựng chủ đề Công việc (Jobs)', 'B1', 'VOCABULARY', 3, N'Các từ vựng phổ biến mô tả nghề nghiệp và nơi làm việc', 1, GETDATE(), GETDATE()),
-    (N'Phát âm đuôi -s, -es', 'A2', 'PRONUNCIATION', 2, N'Cách phát âm đuôi s, es chuẩn xác trong tiếng Anh', 1, GETDATE(), GETDATE()),
-    (N'Câu điều kiện loại 1, 2', 'B1', 'GRAMMAR', 2, N'Ngữ pháp câu điều kiện loại 1 và loại 2, cách áp dụng', 1, GETDATE(), GETDATE()),
-    (N'Phát âm đuôi -ed', 'A2', 'PRONUNCIATION', 3, N'Quy tắc phát âm đuôi -ed với các động từ có quy tắc', 1, GETDATE(), GETDATE()),
-    (N'Mệnh đề quan hệ (Relative Clauses)', 'B2', 'GRAMMAR', 2, N'Cách sử dụng đại từ quan hệ who, whom, which, that', 1, GETDATE(), GETDATE());
+    (N'Thì hiện tại đơn (Present Simple)', 'A1', 'GRAMMAR', 2, N'Bài học về thì hiện tại đơn cơ bản, cách sử dụng và cấu trúc', 1, 'APPROVED', GETDATE(), GETDATE()),
+    (N'Thì quá khứ đơn (Past Simple)', 'A2', 'GRAMMAR', 2, N'Bài học về thì quá khứ đơn, động từ bất quy tắc', 1, 'APPROVED', GETDATE(), GETDATE()),
+    (N'Từ vựng chủ đề Gia đình (Family)', 'A1', 'VOCABULARY', 3, N'Các từ vựng cơ bản về các thành viên trong gia đình', 1, 'APPROVED', GETDATE(), GETDATE()),
+    (N'Từ vựng chủ đề Công việc (Jobs)', 'B1', 'VOCABULARY', 3, N'Các từ vựng phổ biến mô tả nghề nghiệp và nơi làm việc', 1, 'APPROVED', GETDATE(), GETDATE()),
+    (N'Phát âm đuôi -s, -es', 'A2', 'PRONUNCIATION', 2, N'Cách phát âm đuôi s, es chuẩn xác trong tiếng Anh', 1, 'APPROVED', GETDATE(), GETDATE()),
+    (N'Câu điều kiện loại 1, 2', 'B1', 'GRAMMAR', 2, N'Ngữ pháp câu điều kiện loại 1 và loại 2, cách áp dụng', 1, 'APPROVED', GETDATE(), GETDATE()),
+    (N'Phát âm đuôi -ed', 'A2', 'PRONUNCIATION', 3, N'Quy tắc phát âm đuôi -ed với các động từ có quy tắc', 1, 'APPROVED', GETDATE(), GETDATE()),
+    (N'Mệnh đề quan hệ (Relative Clauses)', 'B2', 'GRAMMAR', 2, N'Cách sử dụng đại từ quan hệ who, whom, which, that', 1, 'APPROVED', GETDATE(), GETDATE());
 
 -- ====================================================================
 -- 6. CHÈN NỘI DUNG BÀI HỌC (Bảng lesson_contents)
@@ -96,13 +96,13 @@ VALUES
 -- ====================================================================
 -- 7. CHÈN DỮ LIỆU ĐỀ THI (Bảng exams)
 -- ====================================================================
-INSERT INTO exams (title, type, duration, total_questions, description)
+INSERT INTO exams (title, type, duration, total_questions, description, approval_status)
 VALUES
-    (N'Đề thi thử Tiếng Anh B1 - Đề số 1', 'MOCK_TEST', 60, 10, N'Đề thi thử 4 kỹ năng chuẩn B1, bao gồm Nghe, Đọc, Nói, Viết'),
-    (N'Bài kiểm tra nhanh kỹ năng Reading', 'QUIZ', 15, 6, N'Kiểm tra kỹ năng đọc hiểu văn bản ngắn'),
-    (N'Đề thi thử Tiếng Anh A2 - Đề số 1', 'MOCK_TEST', 45, 10, N'Đề thi thử 4 kỹ năng chuẩn A2 cho người mới bắt đầu'),
-    (N'Kiểm tra từ vựng Gia đình', 'QUIZ', 10, 5, N'Kiểm tra nhanh từ vựng bài 3'),
-    (N'Kiểm tra Grammar - Thì hiện tại', 'QUIZ', 15, 5, N'Bài tập tổng hợp về thì hiện tại đơn và hiện tại tiếp diễn');
+    (N'Đề thi thử Tiếng Anh B1 - Đề số 1', 'MOCK_TEST', 60, 10, N'Đề thi thử 4 kỹ năng chuẩn B1, bao gồm Nghe, Đọc, Nói, Viết', 'APPROVED'),
+    (N'Bài kiểm tra nhanh kỹ năng Reading', 'QUIZ', 15, 6, N'Kiểm tra kỹ năng đọc hiểu văn bản ngắn', 'APPROVED'),
+    (N'Đề thi thử Tiếng Anh A2 - Đề số 1', 'MOCK_TEST', 45, 10, N'Đề thi thử 4 kỹ năng chuẩn A2 cho người mới bắt đầu', 'APPROVED'),
+    (N'Kiểm tra từ vựng Gia đình', 'QUIZ', 10, 5, N'Kiểm tra nhanh từ vựng bài 3', 'APPROVED'),
+    (N'Kiểm tra Grammar - Thì hiện tại', 'QUIZ', 15, 5, N'Bài tập tổng hợp về thì hiện tại đơn và hiện tại tiếp diễn', 'APPROVED');
 
 -- ====================================================================
 -- 8. CHÈN CÂU HỎI (Bảng questions)

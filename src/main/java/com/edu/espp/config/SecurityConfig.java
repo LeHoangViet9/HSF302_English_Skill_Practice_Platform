@@ -29,8 +29,8 @@ public class SecurityConfig {
                                                 .requestMatchers("/admin/**")
                                                 .hasRole("ADMIN")
 
-                                                // Chỉ STAFF được truy cập
-                                                .requestMatchers("/staff/**")
+                                                // Quản lý chung (ADMIN & STAFF)
+                                                .requestMatchers("/staff/**", "/manage/**")
                                                 .hasAnyRole("STAFF", "ADMIN")
                                                 // Chỉ STUDENT được truy cập
                                                 .requestMatchers(
@@ -77,9 +77,9 @@ public class SecurityConfig {
                                                                                         .equals("ROLE_STAFF"));
 
                                                         if (isAdmin) {
-                                                                response.sendRedirect("/admin/exams");
+                                                                response.sendRedirect("/manage/exams");
                                                         } else if (isStaff) {
-                                                                response.sendRedirect("/staff/lessons");
+                                                                response.sendRedirect("/manage/lessons");
                                                         } else {
                                                                 response.sendRedirect("/dashboard");
                                                         }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
-<head th:replace="~{fragments/layout :: head('Thêm Đề Thi Mới - Admin')}"></head>
+<head th:replace="~{fragments/layout :: head('Thêm Đề Thi Mới - Admin')}"><title>Thêm Đề Thi</title></head>
 <body class="apple-theme">
 <div id="wrapper">
     <!-- Sidebar -->
@@ -21,7 +21,7 @@
                 </div>
 
                 <!-- Form -->
-                <form th:action="@{/admin/exams}" th:object="${examRequest}" method="post">
+                <form th:action="@{/manage/exams}" th:object="${examRequest}" method="post">
                     
                     <!-- Hiển thị lỗi chung -->
                     <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger border-0 shadow-none mb-4" 

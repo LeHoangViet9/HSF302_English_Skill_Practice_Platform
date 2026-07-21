@@ -9,14 +9,15 @@ import com.edu.espp.entity.Question;
 import com.edu.espp.repository.ExamRepository;
 import com.edu.espp.repository.QuestionRepository;
 import com.edu.espp.service.question.QuestionService;
-import com.fasterxml.jackson.core.type.TypeReference; // 🌟 Thêm import này
-import com.fasterxml.jackson.databind.ObjectMapper;       // 🌟 Thêm import này
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap; // 🌟 Thêm import này
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -25,7 +26,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
     private final ExamRepository examRepository;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public QuestionResponse getQuestionById(Long id) {
@@ -34,28 +35,32 @@ public class QuestionServiceImpl implements QuestionService {
         return convertToResponse(question);
     }
 
+
     @Override
-    public List<QuestionResponse> getQuestionsByExam(Long examId) {
+    public Page<QuestionResponse> getQuestionsByExam(Long examId, Pageable pageable) {
         if (!examRepository.existsById(examId)) {
             throw new ResourceNotFoundException("Không tìm thấy bài thi với ID: " + examId);
         }
-        List<Question> questions = questionRepository.findByExamId(examId);
-        return questions.stream().map(this::convertToResponse).toList();
+        Page<Question> questions = questionRepository.findByExamId(examId, pageable);
+        return questions.map(this::convertToResponse);
     }
 
-    @Override
-    public List<QuestionResponse> getQuestionsBySkill(QuestionSkill skill) {
-        List<Question> questions = questionRepository.findBySkill(skill);
-        return questions.stream().map(this::convertToResponse).toList();
-    }
 
     @Override
-    public List<QuestionResponse> getQuestionsByExamAndSkill(Long examId, QuestionSkill skill) {
+    public Page<QuestionResponse> getQuestionsBySkill(QuestionSkill skill, Pageable pageable) {
+        Page<Question> questions = questionRepository.findBySkill(skill, pageable);
+        return questions.map(this::convertToResponse);
+    }
+
+
+
+    @Override
+    public Page<QuestionResponse> getQuestionsByExamAndSkill(Long examId, QuestionSkill skill, Pageable pageable) {
         if (!examRepository.existsById(examId)) {
             throw new ResourceNotFoundException("Không tìm thấy bài thi với ID: " + examId);
         }
-        List<Question> questions = questionRepository.findByExamIdAndSkill(examId, skill);
-        return questions.stream().map(this::convertToResponse).toList();
+        Page<Question> questions = questionRepository.findByExamIdAndSkill(examId, skill, pageable);
+        return questions.map(this::convertToResponse);
     }
 
     @Override
@@ -78,31 +83,6 @@ public class QuestionServiceImpl implements QuestionService {
         return convertToResponse(saved);
     }
 
-    @Override
-    @Transactional
-    public List<QuestionResponse> createBulkQuestions(List<QuestionRequest> requests) {
-        if (requests == null || requests.isEmpty()) {
-            return List.of();
-        }
-
-        List<Question> questions = requests.stream().map(request -> {
-            Exam exam = examRepository.findById(request.getExamId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy bài thi với ID: " + request.getExamId()));
-
-            return Question.builder()
-                    .exam(exam)
-                    .skill(request.getSkill())
-                    .questionText(request.getQuestionText())
-                    .audioUrl(request.getAudioUrl())
-                    .options(request.getOptions())
-                    .correctAnswer(request.getCorrectAnswer())
-                    .explanation(request.getExplanation())
-                    .build();
-        }).toList();
-
-        List<Question> savedQuestions = questionRepository.saveAll(questions);
-        return savedQuestions.stream().map(this::convertToResponse).toList();
-    }
 
     @Override
     @Transactional
@@ -141,7 +121,8 @@ public class QuestionServiceImpl implements QuestionService {
             if (question.getOptions() != null && !question.getOptions().isBlank()) {
                 parsedOptions = objectMapper.readValue(
                         question.getOptions(),
-                        new TypeReference<Map<String, String>>() {}
+                        new TypeReference<>() {
+                        }
                 );
             }
         } catch (Exception e) {
@@ -151,6 +132,7 @@ public class QuestionServiceImpl implements QuestionService {
         return QuestionResponse.builder()
                 .id(question.getId())
                 .examId(question.getExam() != null ? question.getExam().getId() : null)
+                .examTitle(question.getExam() != null ? question.getExam().getTitle() : null)
                 .skill(question.getSkill())
                 .questionText(question.getQuestionText())
                 .audioUrl(question.getAudioUrl())

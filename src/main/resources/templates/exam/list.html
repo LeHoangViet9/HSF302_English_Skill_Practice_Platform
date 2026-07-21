@@ -38,9 +38,9 @@
                     <h2 class="apple-display-lg mb-1"><i class="fa-solid fa-file-signature me-2"></i> Kho Đề Thi & Luyện Tập</h2>
                     <p class="apple-lead" style="font-size: 17px; color: var(--apple-body-muted); margin-bottom: 0;">Hệ thống tổng hợp đề thi thử chuẩn cấu trúc đầy đủ kỹ năng</p>
                 </div>
-                <!-- Chỉ hiển thị nút "Thêm đề thi mới" đối với vai trò ADMIN -->
-                <div th:if="${user.role.name() == 'ADMIN' || user.role == 'ADMIN'}">
-                    <a href="/admin/exams/create" class="btn-apple btn-apple-primary btn-action" style="font-size: 14px; padding: 10px 20px;">
+                <!-- Chỉ hiển thị nút "Thêm đề thi mới" đối với vai trò ADMIN hoặc STAFF -->
+                <div th:if="${user.role.name() == 'ADMIN' || user.role.name() == 'STAFF'}">
+                    <a href="/manage/exams/create" class="btn-apple btn-apple-primary btn-action" style="font-size: 14px; padding: 10px 20px;">
                         <i class="fa-solid fa-plus me-1"></i> Thêm Đề Thi Mới
                     </a>
                 </div>
@@ -92,7 +92,14 @@
                             </div>
 
                             <!-- Tên và Mô tả Đề thi -->
-                            <h5 class="card-title" th:text="${exam.title}">Đề thi mẫu</h5>
+                            <div class="d-flex align-items-center mb-1">
+                                <h5 class="card-title mb-0 me-2" th:text="${exam.title}">Đề thi mẫu</h5>
+                                <span th:if="${user.role.name() == 'ADMIN' || user.role.name() == 'STAFF'}">
+                                    <span class="badge bg-warning text-dark" th:if="${exam.approvalStatus != null and exam.approvalStatus.name() == 'PENDING'}">Chờ duyệt</span>
+                                    <span class="badge bg-success" th:if="${exam.approvalStatus != null and exam.approvalStatus.name() == 'APPROVED'}">Đã duyệt</span>
+                                    <span class="badge bg-danger" th:if="${exam.approvalStatus != null and exam.approvalStatus.name() == 'REJECTED'}" th:title="${exam.rejectReason}">Từ chối</span>
+                                </span>
+                            </div>
                             <p class="card-description" th:text="${exam.description}">Mô tả</p>
 
                             <!-- Thời gian làm bài -->
@@ -113,15 +120,15 @@
                                     </a>
                                 </div>
 
-                                <!-- ADMIN: Chỉ hiển thị nút quản lý "Câu hỏi", "Sửa" và "Xóa" -->
-                                <div th:if="${user.role.name() == 'ADMIN' || user.role == 'ADMIN'}" class="d-flex gap-2">
-                                    <a th:href="@{/admin/questions(examId=${exam.id})}" class="btn-apple btn-apple-secondary-pill flex-grow-1 btn-action" style="padding: 8px 12px; font-size: 14px;">
+                                <!-- ADMIN hoặc STAFF: Hiển thị nút quản lý "Câu hỏi", "Sửa" và "Xóa" -->
+                                <div th:if="${user.role.name() == 'ADMIN' || user.role.name() == 'STAFF'}" class="d-flex gap-2">
+                                    <a th:href="@{/manage/questions(examId=${exam.id})}" class="btn-apple btn-apple-secondary-pill flex-grow-1 btn-action" style="padding: 8px 12px; font-size: 14px;">
                                         <i class="fa-solid fa-circle-question me-1"></i> Câu hỏi
                                     </a>
-                                    <a th:href="@{/admin/exams/{id}/edit(id=${exam.id})}" class="btn-apple btn-apple-pearl-capsule btn-action" style="padding: 8px 12px; font-size: 14px;">
+                                    <a th:href="@{/manage/exams/{id}/edit(id=${exam.id})}" class="btn-apple btn-apple-pearl-capsule btn-action" style="padding: 8px 12px; font-size: 14px;">
                                         <i class="fa-solid fa-pen-to-square"></i> Sửa
                                     </a>
-                                    <form th:action="@{/admin/exams/{id}/delete(id=${exam.id})}" method="post" class="d-inline m-0" onsubmit="confirmAction(event, this, 'Bạn có chắc chắn muốn xóa đề thi này?', 'Xóa');">
+                                    <form th:action="@{/manage/exams/{id}/delete(id=${exam.id})}" method="post" class="d-inline m-0" onsubmit="confirmAction(event, this, 'Bạn có chắc chắn muốn xóa đề thi này?', 'Xóa');">
                                         <button type="submit" class="btn-apple btn-apple-dark-utility btn-action" style="padding: 8px 12px; font-size: 14px;">
                                             <i class="fa-solid fa-trash"></i> Xóa
                                         </button>

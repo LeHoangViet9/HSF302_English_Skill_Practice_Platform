@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<body>
+
+<!--
+  Generic Pagination Fragment
+  Usage: <div th:replace="~{fragments/pagination :: pagination(page=${yourPageObject}, entityName='bài học')}"></div>
+-->
+<div th:fragment="pagination(page, entityName)">
+    <nav class="mt-4" th:if="${page != null && page.totalPages > 1}">
+        <ul class="pagination justify-content-center mb-0">
+            <!-- Nút Trước -->
+            <li class="page-item" th:classappend="${page.first} ? 'disabled'">
+                <a class="page-link"
+                   th:href="${page.first ? '#' : urlUtils.replacePageParam(page.number - 1)}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo; Trước</span>
+                </a>
+            </li>
+
+            <!-- Các trang số (hiển thị trang hiện tại và 2 trang lân cận để tránh quá dài) -->
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                th:classappend="${i == page.number} ? 'active'"
+                th:if="${i >= page.number - 2 and i <= page.number + 2}">
+                <a class="page-link"
+                   th:text="${i + 1}"
+                   th:href="${urlUtils.replacePageParam(i)}">
+                    1
+                </a>
+            </li>
+
+            <!-- Nút Sau -->
+            <li class="page-item" th:classappend="${page.last} ? 'disabled'">
+                <a class="page-link"
+                   th:href="${page.last ? '#' : urlUtils.replacePageParam(page.number + 1)}"
+                   aria-label="Next">
+                    <span aria-hidden="true">Sau &raquo;</span>
+                </a>
+            </li>
+        </ul>
+        <!-- Hiển thị thông tin tổng quan -->
+        <p class="text-center text-muted mt-2 mb-0 apple-caption"
+           th:if="${entityName != null && !entityName.isEmpty()}"
+           th:text="${'Hiển thị ' + page.numberOfElements + ' / ' + page.totalElements + ' ' + entityName}">
+            Hiển thị 0 / 0 bản ghi
+        </p>
+    </nav>
+</div>
+
+</body>
+</html>

@@ -1,5 +1,6 @@
 package com.edu.espp.entity;
 import com.edu.espp.common.enums.TypeQuiz;
+import com.edu.espp.common.enums.ApprovalStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +33,17 @@ public class Exam {
 
     @Column(columnDefinition = "NVARCHAR(MAX)")
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private User createdBy;
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private ApprovalStatus approvalStatus = ApprovalStatus.PENDING;
+
+    @Column(columnDefinition = "NVARCHAR(500)")
+    private String rejectReason;
 
     @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;

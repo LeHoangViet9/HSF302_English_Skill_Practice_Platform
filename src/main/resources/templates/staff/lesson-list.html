@@ -19,7 +19,7 @@
                     <p class="apple-lead" style="font-size: 17px; color: var(--apple-body-muted); margin-bottom: 0;">Danh sách bài học và tài liệu lý thuyết trong hệ thống</p>
                 </div>
                 <div>
-                    <a th:href="@{/staff/lessons/create}" class="btn-apple btn-apple-primary btn-action" style="font-size: 14px; padding: 10px 20px;">
+                    <a th:href="@{/manage/lessons/create}" class="btn-apple btn-apple-primary btn-action" style="font-size: 14px; padding: 10px 20px;">
                         <i class="fa-solid fa-plus me-1"></i> Thêm Bài Học Mới
                     </a>
                 </div>
@@ -27,7 +27,7 @@
 
             <!-- Form tìm kiếm bộ lọc -->
             <div class="apple-store-utility-card p-3 mb-4" style="height: auto;">
-                <form class="row g-3" method="get" th:action="@{/staff/lessons}">
+                <form class="row g-3" method="get" th:action="@{/manage/lessons}">
                     <div class="col-md-4">
                         <input class="apple-text-field" style="height: 40px; padding: 8px 16px; font-size: 15px;"
                                type="text"
@@ -77,28 +77,34 @@
                                 <th class="pb-3" style="font-size: 14px; font-weight: 600;">Tiêu đề</th>
                                 <th class="pb-3" style="font-size: 14px; font-weight: 600;">Loại</th>
                                 <th class="pb-3" style="font-size: 14px; font-weight: 600;">Cấp độ</th>
+                                <th class="pb-3" style="font-size: 14px; font-weight: 600;">Trạng thái</th>
                                 <th class="pb-3" style="font-size: 14px; font-weight: 600;">Mô tả</th>
                                 <th class="pb-3 text-center" style="font-size: 14px; font-weight: 600;">Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:if="${lessons == null || lessons.isEmpty()}">
+                            <tr th:if="${lessonPage == null || lessonPage.isEmpty()}">
                                 <td colspan="6" class="text-center py-5 text-muted">Chưa có bài học nào được tạo.</td>
                             </tr>
-                            <tr th:each="lesson : ${lessons}" style="border-bottom: 1px solid var(--apple-divider-soft);">
+                            <tr th:each="lesson : ${lessonPage}" style="border-bottom: 1px solid var(--apple-divider-soft);">
                                 <td class="py-3 fw-bold" th:text="${lesson.id}"></td>
                                 <td class="py-3 fw-semibold text-dark" th:text="${lesson.title}"></td>
                                 <td class="py-3"><span class="badge bg-light text-dark border px-2 py-1" th:text="${lesson.type}"></span></td>
                                 <td class="py-3"><span class="badge bg-light text-dark border px-2 py-1" th:text="${lesson.level}"></span></td>
+                                <td class="py-3">
+                                    <span class="badge bg-warning text-dark" th:if="${lesson.approvalStatus != null and lesson.approvalStatus.name() == 'PENDING'}">Chờ duyệt</span>
+                                    <span class="badge bg-success" th:if="${lesson.approvalStatus != null and lesson.approvalStatus.name() == 'APPROVED'}">Đã duyệt</span>
+                                    <span class="badge bg-danger" th:if="${lesson.approvalStatus != null and lesson.approvalStatus.name() == 'REJECTED'}" th:title="${lesson.rejectReason}">Từ chối</span>
+                                </td>
                                 <td class="py-3 text-truncate" style="max-width: 250px;" th:text="${lesson.description}"></td>
                                 <td class="py-3 text-center">
                                     <div class="d-flex justify-content-center gap-2">
                                         <a class="btn-apple btn-apple-pearl-capsule btn-action" style="padding: 6px 12px; font-size: 13px;"
-                                           th:href="@{/staff/lessons/edit/{id}(id=${lesson.id})}">
+                                           th:href="@{/manage/lessons/edit/{id}(id=${lesson.id})}">
                                             Sửa
                                         </a>
                                         <a class="btn-apple btn-apple-dark-utility btn-action" style="padding: 6px 12px; font-size: 13px;"
-                                           th:href="@{/staff/lessons/delete/{id}(id=${lesson.id})}"
+                                           th:href="@{/manage/lessons/delete/{id}(id=${lesson.id})}"
                                            onclick="confirmAction(event, this, 'Bạn có chắc chắn muốn xóa bài học này?', 'Xóa');">
                                             Xóa
                                         </a>
@@ -108,35 +114,8 @@
                         </tbody>
                     </table>
                 </div>
-                <nav class="mt-4" th:if="${lessonPage != null && lessonPage.totalPages > 1}">
-                    <ul class="pagination justify-content-center mb-0">
-                        <li class="page-item" th:classappend="${lessonPage.first} ? 'disabled'">
-                            <a class="page-link"
-                               th:href="@{/staff/lessons(page=${lessonPage.number - 1}, size=${size}, keyword=${keyword}, type=${selectedType}, level=${selectedLevel})}">
-                                Trước
-                            </a>
-                        </li>
-                        <li class="page-item"
-                            th:each="i : ${#numbers.sequence(0, lessonPage.totalPages - 1)}"
-                            th:classappend="${i == lessonPage.number} ? 'active'">
-                            <a class="page-link"
-                               th:text="${i + 1}"
-                               th:href="@{/staff/lessons(page=${i}, size=${size}, keyword=${keyword}, type=${selectedType}, level=${selectedLevel})}">
-                                1
-                            </a>
-                        </li>
-                        <li class="page-item" th:classappend="${lessonPage.last} ? 'disabled'">
-                            <a class="page-link"
-                               th:href="@{/staff/lessons(page=${lessonPage.number + 1}, size=${size}, keyword=${keyword}, type=${selectedType}, level=${selectedLevel})}">
-                                Sau
-                            </a>
-                        </li>
-                    </ul>
-                    <p class="text-center text-muted mt-2 mb-0 apple-caption"
-                       th:text="${'Hiển thị ' + lessonPage.numberOfElements + ' / ' + lessonPage.totalElements + ' bài học'}">
-                        Hiển thị bài học
-                    </p>
-                </nav>
+                
+                <div th:replace="~{fragments/pagination :: pagination(page=${lessonPage}, entityName='bài học')}"></div>
             </div>
         </div>
 

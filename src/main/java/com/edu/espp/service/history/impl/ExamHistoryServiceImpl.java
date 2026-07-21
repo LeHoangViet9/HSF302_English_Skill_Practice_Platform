@@ -8,6 +8,8 @@ import com.edu.espp.repository.ExamAttemptDetailRepository;
 import com.edu.espp.repository.ExamHistoryRepository;
 import com.edu.espp.service.history.ExamHistoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,13 +27,29 @@ public class ExamHistoryServiceImpl implements ExamHistoryService {
     }
 
     @Override
+    public Page<ExamHistoryResponse> getUserExamHistory(Long userId, Pageable pageable) {
+        Page<ExamHistory> histories = examHistoryRepository.findByUserId(userId, pageable);
+        return histories.map(this::mapSingleToResponse);
+    }
+
+    @Override
     public List<ExamHistoryResponse> getAllExamHistories() {
         List<ExamHistory> histories = examHistoryRepository.findAllByOrderByTestedAtDesc();
         return mapToResponse(histories);
     }
 
+    @Override
+    public Page<ExamHistoryResponse> getAllExamHistories(Pageable pageable) {
+        Page<ExamHistory> histories = examHistoryRepository.findAll(pageable);
+        return histories.map(this::mapSingleToResponse);
+    }
+
     private List<ExamHistoryResponse> mapToResponse(List<ExamHistory> histories) {
-        return histories.stream().map(history -> ExamHistoryResponse.builder()
+        return histories.stream().map(this::mapSingleToResponse).toList();
+    }
+
+    private ExamHistoryResponse mapSingleToResponse(ExamHistory history) {
+        return ExamHistoryResponse.builder()
                 .id(history.getId())
                 .userId(history.getUser().getId())
                 .fullName(history.getUser().getFullName())
@@ -41,9 +59,9 @@ public class ExamHistoryServiceImpl implements ExamHistoryService {
                 .correctAnswersCount(history.getCorrectAnswersCount())
                 .timeSpent(history.getTimeSpent())
                 .testedAt(history.getTestedAt())
-                .build()
-        ).toList();
+                .build();
     }
+
 
     @Override
     public List<ExamAttemptDetailResponse> getExamAttemptDetails(Long examHistoryId) {

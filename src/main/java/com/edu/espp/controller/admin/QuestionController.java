@@ -1,21 +1,23 @@
 package com.edu.espp.controller.admin;
 
 import com.edu.espp.common.enums.QuestionSkill;
+import com.edu.espp.common.utils.PageableUtils;
 import com.edu.espp.dto.question.request.QuestionRequest;
 import com.edu.espp.dto.question.response.QuestionResponse;
 import com.edu.espp.service.question.QuestionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
 
 @Controller
-@RequestMapping("/admin/questions")
+@RequestMapping("/manage/questions")
 @RequiredArgsConstructor
 public class QuestionController {
 
@@ -24,22 +26,26 @@ public class QuestionController {
     // 1. Quản lý danh sách câu hỏi tổng quan hoặc theo đề thi (Admin)
     @GetMapping
     public String listQuestions(
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
             @RequestParam(required = false) Long examId,
             @RequestParam(required = false) QuestionSkill skill,
             Model model) {
 
-        List<QuestionResponse> questions;
+        Pageable pageable = PageableUtils.generate(page, size, "id", "desc");
+        Page<QuestionResponse> questionPage;
+        
         if (examId != null && skill != null) {
-            questions = questionService.getQuestionsByExamAndSkill(examId, skill);
+            questionPage = questionService.getQuestionsByExamAndSkill(examId, skill, pageable);
         } else if (examId != null) {
-            questions = questionService.getQuestionsByExam(examId);
+            questionPage = questionService.getQuestionsByExam(examId, pageable);
         } else if (skill != null) {
-            questions = questionService.getQuestionsBySkill(skill);
+            questionPage = questionService.getQuestionsBySkill(skill, pageable);
         } else {
-            questions = questionService.getQuestionsBySkill(QuestionSkill.READING);
+            questionPage = questionService.getQuestionsBySkill(QuestionSkill.READING, pageable);
         }
 
-        model.addAttribute("questions", questions);
+        model.addAttribute("questionPage", questionPage);
         return "admin/question/list"; // Trả về templates/admin/question/list.html
     }
 
@@ -52,8 +58,12 @@ public class QuestionController {
 
     // 3. Màn hình thêm mới câu hỏi (Admin)
     @GetMapping("/create")
-    public String showCreateForm(Model model) {
-        model.addAttribute("questionRequest", new QuestionRequest());
+    public String showCreateForm(@RequestParam(required = false) Long examId, Model model) {
+        QuestionRequest request = new QuestionRequest();
+        if (examId != null) {
+            request.setExamId(examId);
+        }
+        model.addAttribute("questionRequest", request);
         return "admin/question/create";
     }
 
@@ -68,13 +78,13 @@ public class QuestionController {
         }
         questionService.createQuestion(request);
         redirectAttributes.addFlashAttribute("successMessage", "Tạo câu hỏi thành công!");
-        return "redirect:/admin/questions";
+        return "redirect:/manage/questions";
     }
 
     // 5. Màn hình sửa câu hỏi (Admin)
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
-        com.edu.espp.dto.question.response.QuestionResponse question = questionService.getQuestionById(id);
+        QuestionResponse question = questionService.getQuestionById(id);
         model.addAttribute("question", question);
         
         String optionsJson = "";
@@ -82,7 +92,7 @@ public class QuestionController {
             if (question.getOptions() != null) {
                 optionsJson = new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(question.getOptions());
             }
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
         model.addAttribute("optionsJson", optionsJson);
         
         return "admin/question/edit";
@@ -100,7 +110,7 @@ public class QuestionController {
         }
         questionService.updateQuestion(id, request);
         redirectAttributes.addFlashAttribute("successMessage", "Cập nhật câu hỏi thành công!");
-        return "redirect:/admin/questions";
+        return "redirect:/manage/questions";
     }
 
     // 7. Xóa câu hỏi khỏi hệ thống
@@ -108,6 +118,6 @@ public class QuestionController {
     public String deleteQuestion(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         questionService.deleteQuestion(id);
         redirectAttributes.addFlashAttribute("successMessage", "Xóa câu hỏi thành công!");
-        return "redirect:/admin/questions";
+        return "redirect:/manage/questions";
     }
 }
