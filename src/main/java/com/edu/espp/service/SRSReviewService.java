@@ -2,9 +2,11 @@ package com.edu.espp.service;
 
 
 import com.edu.espp.common.enums.ReviewResult;
+import com.edu.espp.entity.BookMark;
 import com.edu.espp.entity.LessonContent;
 import com.edu.espp.entity.SRSReview;
 import com.edu.espp.entity.User;
+import com.edu.espp.repository.BookMarkRepository;
 import com.edu.espp.repository.LessonContentRepository;
 import com.edu.espp.repository.SRSReviewRepository;
 import com.edu.espp.repository.UserRepository;
@@ -25,71 +27,110 @@ public class SRSReviewService {
     private final SRSReviewRepository srsReviewRepository;
     private final UserRepository userRepository;
     private final LessonContentRepository lessonContentRepository;
+    private final BookMarkRepository bookMarkRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
+    public void syncReviewsWithBookmarks(Long userId) {
+        List<BookMark> bookmarks = bookMarkRepository.findByUser_Id(userId);
+        Set<Long> bookmarkedContentIds = bookmarks.stream()
+                .map(bm -> bm.getContent().getId())
+                .collect(Collectors.toSet());
+
+        List<SRSReview> existingReviews = srsReviewRepository.findByUser_Id(userId);
+        for (SRSReview review : existingReviews) {
+            if (!bookmarkedContentIds.contains(review.getContent().getId())) {
+                srsReviewRepository.delete(review);
+            }
+        }
+
+        Set<Long> existingContentIds = existingReviews.stream()
+                .map(r -> r.getContent().getId())
+                .collect(Collectors.toSet());
+
+        for (BookMark bm : bookmarks) {
+            Long contentId = bm.getContent().getId();
+            if (!existingContentIds.contains(contentId)) {
+                SRSReview review = SRSReview.builder()
+                        .user(bm.getUser())
+                        .content(bm.getContent())
+                        .repetition(0)
+                        .srsInterval(1)
+                        .easeFactor(2.5)
+                        .nextReviewDate(LocalDateTime.now())
+                        .build();
+                srsReviewRepository.save(review);
+            }
+        }
+    }
+
+    @Transactional
     public List<SRSReview> getDueReviews(Long userId) {
+        syncReviewsWithBookmarks(userId);
         return srsReviewRepository.findByUser_IdAndNextReviewDateLessThanEqual(
                 userId,
                 LocalDateTime.now()
         );
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Set<Long> getDeckContentIds(Long userId) {
+        syncReviewsWithBookmarks(userId);
         return srsReviewRepository.findByUser_Id(userId).stream()
                 .map(review -> review.getContent().getId())
                 .collect(Collectors.toSet());
     }
 
     @Transactional
+    public List<SRSReview> getUpcomingReviews(Long userId) {
+        syncReviewsWithBookmarks(userId);
+        return srsReviewRepository.findByUser_IdOrderByNextReviewDateAsc(userId);
+    }
+
+    @Transactional
     public void addToDeck(Long userId, Long contentId) {
-        if (srsReviewRepository.findByUser_IdAndContent_Id(userId, contentId).isPresent()) {
-            return;
-        }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy user"));
         LessonContent content = lessonContentRepository.findById(contentId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy lesson content"));
 
-        SRSReview review = SRSReview.builder()
-                .user(user)
-                .content(content)
-                .repetition(0)
-                .srsInterval(1)
-                .easeFactor(2.5)
-                .nextReviewDate(LocalDateTime.now())
-                .build();
-        srsReviewRepository.save(review);
+        if (!bookMarkRepository.existsByUser_IdAndContent_Id(userId, contentId)) {
+            BookMark bookmark = BookMark.builder()
+                    .user(user)
+                    .content(content)
+                    .bookmarkedAt(LocalDateTime.now())
+                    .build();
+            bookMarkRepository.save(bookmark);
+        }
+
+        if (srsReviewRepository.findByUser_IdAndContent_Id(userId, contentId).isEmpty()) {
+            SRSReview review = SRSReview.builder()
+                    .user(user)
+                    .content(content)
+                    .repetition(0)
+                    .srsInterval(1)
+                    .easeFactor(2.5)
+                    .nextReviewDate(LocalDateTime.now())
+                    .build();
+            srsReviewRepository.save(review);
+        }
     }
 
     @Transactional
     public void removeFromDeck(Long userId, Long contentId) {
+        bookMarkRepository.deleteByUser_IdAndContent_Id(userId, contentId);
         srsReviewRepository.findByUser_IdAndContent_Id(userId, contentId)
                 .ifPresent(srsReviewRepository::delete);
     }
 
     @Transactional
     public void toggleDeck(Long userId, Long contentId) {
-        srsReviewRepository.findByUser_IdAndContent_Id(userId, contentId)
-                .ifPresentOrElse(
-                        srsReviewRepository::delete,
-                        () -> {
-                            User user = userRepository.findById(userId)
-                                    .orElseThrow(() -> new RuntimeException("Không tìm thấy user"));
-                            LessonContent content = lessonContentRepository.findById(contentId)
-                                    .orElseThrow(() -> new RuntimeException("Không tìm thấy lesson content"));
-
-                            SRSReview review = SRSReview.builder()
-                                    .user(user)
-                                    .content(content)
-                                    .repetition(0)
-                                    .srsInterval(1)
-                                    .easeFactor(2.5)
-                                    .nextReviewDate(LocalDateTime.now())
-                                    .build();
-                            srsReviewRepository.save(review);
-                        }
-                );
+        if (bookMarkRepository.existsByUser_IdAndContent_Id(userId, contentId)) {
+            bookMarkRepository.deleteByUser_IdAndContent_Id(userId, contentId);
+            srsReviewRepository.findByUser_IdAndContent_Id(userId, contentId)
+                    .ifPresent(srsReviewRepository::delete);
+        } else {
+            addToDeck(userId, contentId);
+        }
     }
 
     @Transactional(readOnly = true)

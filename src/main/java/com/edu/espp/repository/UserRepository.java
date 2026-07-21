@@ -11,4 +11,8 @@ public interface UserRepository
     Optional<User> findByEmail(String email);
 
     boolean existsByEmail(String email);
+
+    long countByRole(com.edu.espp.common.enums.Role role);
+
+    java.util.List<User> findTop5ByOrderByIdDesc();
 }

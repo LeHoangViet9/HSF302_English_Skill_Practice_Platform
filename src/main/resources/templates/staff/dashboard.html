@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{fragments/layout :: head('Bảng điều khiển Staff')}"></head>
+<body class="apple-theme">
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/layout :: sidebar(${user}, 'dashboard')}"></div>
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper" class="d-flex flex-column">
+        <!-- Navbar -->
+        <nav th:replace="~{fragments/layout :: navbar(${user})}"></nav>
+
+        <div class="container-fluid my-4 flex-grow-1 px-4">
+            <!-- Header Bảng điều khiển Staff -->
+            <div class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-4">
+                <div class="mb-3 mb-sm-0">
+                    <h2 class="apple-display-lg mb-1">
+                        Bảng Điều Khiển Quản Lý Nội Dung
+                    </h2>
+                    <p class="apple-lead" style="font-size: 17px; color: var(--apple-body-muted); margin-bottom: 0;"
+                       th:text="${'Xin chào, ' + dashboard.staffName}">
+                        Xin chào, Staff
+                    </p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a class="btn-apple btn-apple-primary btn-action" th:href="@{/manage/lessons/create}">
+                        Thêm Bài Học Mới
+                    </a>
+                </div>
+            </div>
+
+            <!-- Grid Thống kê cho Staff -->
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 mb-4">
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <div class="mb-2">
+                            <span style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80);">Tổng số bài học</span>
+                        </div>
+                        <div class="apple-display-md text-primary" th:text="${dashboard.totalLessons}">0</div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <div class="mb-2">
+                            <span style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80);">Đã xuất bản (Approved)</span>
+                        </div>
+                        <div class="apple-display-md text-success" th:text="${dashboard.publishedLessons}">0</div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <div class="mb-2">
+                            <span style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80);">Ngân hàng câu hỏi</span>
+                        </div>
+                        <div class="apple-display-md text-warning" th:text="${dashboard.totalQuestions}">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thao Tác Tác Nghiệp Nhanh (Quick Actions) -->
+            <div class="apple-card p-4 mb-4">
+                <h3 class="apple-tagline mb-3">Thao Tác Tác Nghiệp Nhanh</h3>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <a th:href="@{/manage/lessons}" class="card text-decoration-none border-0 shadow-sm p-3 h-100 bg-light hover-shadow">
+                            <div>
+                                <h6 class="fw-bold text-dark mb-1">Danh sách Bài học</h6>
+                                <small class="text-muted">Quản lý & Chỉnh sửa</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a th:href="@{/manage/questions}" class="card text-decoration-none border-0 shadow-sm p-3 h-100 bg-light hover-shadow">
+                            <div>
+                                <h6 class="fw-bold text-dark mb-1">Ngân hàng Câu hỏi</h6>
+                                <small class="text-muted">Quản lý bộ đề & đáp án</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a th:href="@{/manage/exams}" class="card text-decoration-none border-0 shadow-sm p-3 h-100 bg-light hover-shadow">
+                            <div>
+                                <h6 class="fw-bold text-dark mb-1">Quản lý Đề thi</h6>
+                                <small class="text-muted">Đề thi kiểm tra đánh giá</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bài học mới cập nhật -->
+            <div class="apple-card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="apple-tagline mb-0">Bài Học Mới Tạo / Cập Nhật</h3>
+                    <a th:href="@{/manage/lessons}" class="btn-apple btn-apple-pearl-capsule btn-sm">Xem tất cả</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Tiêu đề bài học</th>
+                            <th scope="col">Loại</th>
+                            <th scope="col">Cấp độ</th>
+                            <th scope="col">Trạng thái duyệt</th>
+                            <th scope="col" class="text-end">Hành động</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="lesson : ${dashboard.recentLessons}">
+                            <td th:text="${'#' + lesson.id}">#1</td>
+                            <td class="fw-bold text-dark" th:text="${lesson.title}">Title</td>
+                            <td>
+                                <span class="badge bg-secondary-subtle text-secondary" th:text="${lesson.type}">VOCABULARY</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-info-subtle text-info" th:text="${lesson.level}">INTERMEDIATE</span>
+                            </td>
+                            <td>
+                                <span th:if="${lesson.approvalStatus != null}"
+                                      class="badge"
+                                      th:classappend="${lesson.approvalStatus.name() == 'APPROVED' ? 'bg-success' : (lesson.approvalStatus.name() == 'PENDING' ? 'bg-warning text-dark' : 'bg-danger')}"
+                                      th:text="${lesson.approvalStatus}">APPROVED</span>
+                            </td>
+                            <td class="text-end">
+                                <a th:href="@{/manage/lessons/edit/{id}(id=${lesson.id})}" class="btn btn-sm btn-outline-primary">
+                                    Chỉnh sửa
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(dashboard.recentLessons)}">
+                            <td colspan="6" class="text-center py-4 text-muted">Chưa có bài học nào trong hệ thống.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

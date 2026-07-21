@@ -71,4 +71,8 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     );
 
     Page<Lesson> findByApprovalStatus(com.edu.espp.common.enums.ApprovalStatus status, Pageable pageable);
+
+    long countByApprovalStatus(com.edu.espp.common.enums.ApprovalStatus status);
+
+    List<Lesson> findTop5ByOrderByIdDesc();
 }

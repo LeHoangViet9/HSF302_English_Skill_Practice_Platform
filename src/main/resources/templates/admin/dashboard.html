@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{fragments/layout :: head('Bảng điều khiển Admin')}"></head>
+<body class="apple-theme">
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/layout :: sidebar(${user}, 'dashboard')}"></div>
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper" class="d-flex flex-column">
+        <!-- Navbar -->
+        <nav th:replace="~{fragments/layout :: navbar(${user})}"></nav>
+
+        <div class="container-fluid my-4 flex-grow-1 px-4">
+            <!-- Header Bảng điều khiển Admin -->
+            <div class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-4">
+                <div class="mb-3 mb-sm-0">
+                    <h2 class="apple-display-lg mb-1">
+                        Tổng Quan Quản Trị Hệ Thống
+                    </h2>
+                    <p class="apple-lead" style="font-size: 17px; color: var(--apple-body-muted); margin-bottom: 0;"
+                       th:text="${'Xin chào Administrator, ' + dashboard.adminName}">
+                        Xin chào Administrator
+                    </p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a class="btn-apple btn-apple-primary btn-action" th:href="@{/admin/approvals}">
+                        Duyệt Nội Dung
+                    </a>
+                    <a class="btn-apple btn-apple-pearl-capsule" th:href="@{/manage/exams}">
+                        Quản Lý Đề Thi
+                    </a>
+                </div>
+            </div>
+
+            <!-- Grid Thống kê Người Dùng & Hệ Thống -->
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-4">
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <div class="mb-2">
+                            <span style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80);">Tổng Người Dùng</span>
+                        </div>
+                        <div class="apple-display-md text-primary" th:text="${dashboard.totalUsers}">0</div>
+                        <div class="mt-2 text-muted" style="font-size: 12px;">
+                            <span class="badge bg-primary-subtle text-primary me-1" th:text="${dashboard.totalStudents + ' Học viên'}">0 Học viên</span>
+                            <span class="badge bg-info-subtle text-info me-1" th:text="${dashboard.totalStaff + ' Staff'}">0 Staff</span>
+                            <span class="badge bg-warning-subtle text-warning" th:text="${dashboard.totalAdmins + ' Admin'}">0 Admin</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <div class="mb-2">
+                            <span style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80);">Tổng Số Đề Thi</span>
+                        </div>
+                        <div class="apple-display-md text-info" th:text="${dashboard.totalExams}">0</div>
+                        <div class="mt-2 text-muted" style="font-size: 12px;">Đề thi trong kho bài tập</div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <div class="mb-2">
+                            <span style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80);">Lượt Thi Toàn Hệ Thống</span>
+                        </div>
+                        <div class="apple-display-md text-success" th:text="${dashboard.totalExamAttempts}">0</div>
+                        <div class="mt-2 text-muted" style="font-size: 12px;">Lượt hoàn thành của học viên</div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="apple-store-utility-card p-3">
+                        <div class="mb-2">
+                            <span style="font-size: 13px; font-weight: 600; color: var(--apple-ink-muted-80);">Điểm TB Platform</span>
+                        </div>
+                        <div class="apple-display-md text-warning" th:text="${#numbers.formatDecimal(dashboard.systemAverageScore, 1, 1)}">0.0</div>
+                        <div class="mt-2 text-muted" style="font-size: 12px;">Trung bình tất cả bài thi</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Navigation Row -->
+            <div class="apple-card p-4 mb-4">
+                <h3 class="apple-tagline mb-3">Điều Hướng Quản Trị Nhanh</h3>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <a th:href="@{/admin/approvals}" class="card text-decoration-none border-0 shadow-sm p-3 h-100 bg-light hover-shadow">
+                            <div>
+                                <h6 class="fw-bold text-dark mb-1">Duyệt Nội Dung</h6>
+                                <small class="text-muted">Phê duyệt bài học Staff</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a th:href="@{/admin/histories}" class="card text-decoration-none border-0 shadow-sm p-3 h-100 bg-light hover-shadow">
+                            <div>
+                                <h6 class="fw-bold text-dark mb-1">Lịch Sử Luyện Thi</h6>
+                                <small class="text-muted">Xem kết quả thi sinh viên</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a th:href="@{/manage/exams}" class="card text-decoration-none border-0 shadow-sm p-3 h-100 bg-light hover-shadow">
+                            <div>
+                                <h6 class="fw-bold text-dark mb-1">Quản Lý Đề Thi</h6>
+                                <small class="text-muted">Tạo mới, sửa đề thi</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a th:href="@{/manage/questions}" class="card text-decoration-none border-0 shadow-sm p-3 h-100 bg-light hover-shadow">
+                            <div>
+                                <h6 class="fw-bold text-dark mb-1">Ngân Hàng Câu Hỏi</h6>
+                                <small class="text-muted">Xem tổng thể câu hỏi</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two-Column Recent Activity Data Tables -->
+            <div class="row g-4">
+                <!-- Cột 1: Người dùng mới -->
+                <div class="col-lg-6">
+                    <div class="apple-card p-4 h-100">
+                        <h3 class="apple-tagline mb-3">Tài Khoản Mới Tạo</h3>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Họ và Tên</th>
+                                    <th>Email</th>
+                                    <th>Vai trò</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="u : ${dashboard.recentUserRegistrations}">
+                                    <td th:text="${'#' + u.id}">#1</td>
+                                    <td class="fw-bold text-dark" th:text="${u.fullName}">Name</td>
+                                    <td style="font-size: 13px;" th:text="${u.email}">email@example.com</td>
+                                    <td>
+                                        <span class="badge"
+                                              th:classappend="${u.role.name() == 'ADMIN' ? 'bg-warning text-dark' : (u.role.name() == 'STAFF' ? 'bg-info text-dark' : 'bg-primary')}"
+                                              th:text="${u.role}">STUDENT</span>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(dashboard.recentUserRegistrations)}">
+                                    <td colspan="4" class="text-center py-3 text-muted">Chưa có người dùng mới.</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cột 2: Bài thi gần đây nhất toàn hệ thống -->
+                <div class="col-lg-6">
+                    <div class="apple-card p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="apple-tagline mb-0">Lượt Thi Mới Nhất</h3>
+                            <a th:href="@{/admin/histories}" class="btn-apple btn-apple-pearl-capsule btn-sm">Xem tất cả</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>Thí sinh</th>
+                                    <th>Đề thi</th>
+                                    <th>Điểm</th>
+                                    <th>Thời gian</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="h : ${dashboard.recentSystemExams}">
+                                    <td class="fw-bold text-dark" th:text="${h.user != null ? h.user.fullName : 'Học viên'}">User</td>
+                                    <td class="text-truncate" style="max-width: 160px;" th:text="${h.exam != null ? h.exam.title : 'Đề thi'}">Exam</td>
+                                    <td>
+                                        <span class="badge bg-success-subtle text-success fw-bold" th:text="${h.score + ' điểm'}">10.0</span>
+                                    </td>
+                                    <td style="font-size: 12px; color: var(--apple-body-muted);"
+                                        th:text="${h.testedAt != null ? #temporals.format(h.testedAt, 'dd/MM/yyyy HH:mm') : ''}">22/07/2026</td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(dashboard.recentSystemExams)}">
+                                    <td colspan="4" class="text-center py-3 text-muted">Chưa có lượt thi nào trên hệ thống.</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer th:replace="~{fragments/layout :: footer}"></footer>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

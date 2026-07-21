@@ -24,6 +24,7 @@ public class DictionaryService {
     private final LessonContentRepository lessonContentRepository;
     private final BookMarkRepository bookMarkRepository;
     private final UserRepository userRepository;
+    private final SRSReviewService srsReviewService;
 
     @Transactional(readOnly = true)
     public List<LessonContent> search(String keyword, Long lessonId) {
@@ -49,26 +50,12 @@ public class DictionaryService {
 
     @Transactional
     public void addBookmark(Long userId, Long contentId) {
-        if (bookMarkRepository.existsByUser_IdAndContent_Id(userId, contentId)) {
-            return;
-        }
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Khong tim thay nguoi dung"));
-        LessonContent content = lessonContentRepository.findById(contentId)
-                .orElseThrow(() -> new RuntimeException("Khong tim thay tu vung"));
-
-        BookMark bookmark = BookMark.builder()
-                .user(user)
-                .content(content)
-                .bookmarkedAt(LocalDateTime.now())
-                .build();
-        bookMarkRepository.save(bookmark);
+        srsReviewService.addToDeck(userId, contentId);
     }
 
     @Transactional
     public void removeBookmark(Long userId, Long contentId) {
-        bookMarkRepository.deleteByUser_IdAndContent_Id(userId, contentId);
+        srsReviewService.removeFromDeck(userId, contentId);
     }
 
     private String normalizeKeyword(String keyword) {
