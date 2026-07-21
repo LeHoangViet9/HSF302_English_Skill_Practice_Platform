@@ -52,7 +52,11 @@ public class LessonController {
 
     @PostMapping("/save")
     public String saveLesson(@ModelAttribute Lesson lesson) {
+        boolean isNewLesson = lesson.getId() == null;
         lessonService.saveLesson(lesson);
+        if (isNewLesson) {
+            return "redirect:/manage/lessons/edit/" + lesson.getId();
+        }
         return "redirect:/manage/lessons";
     }
 
