@@ -27,5 +27,6 @@ public class SystemLog {
     private String action;
 
     private String ipAddress;
+    @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now();
 }

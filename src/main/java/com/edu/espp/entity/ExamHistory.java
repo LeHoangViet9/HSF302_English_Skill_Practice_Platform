@@ -30,5 +30,6 @@ public class ExamHistory {
     private Double score;
     private Integer correctAnswersCount;
     private Integer timeSpent;
+    @Builder.Default
     private LocalDateTime testedAt = LocalDateTime.now();
 }

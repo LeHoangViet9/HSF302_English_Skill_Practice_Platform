@@ -138,7 +138,20 @@
         /* Navbar custom styles */
 
         /* Content Styling */
+        #page-content-wrapper {
+            width: 100%;
+            transition: padding-left 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
 
+        @media (min-width: 769px) {
+            #page-content-wrapper {
+                padding-left: 260px;
+            }
+
+            #wrapper.toggled #page-content-wrapper {
+                padding-left: 0;
+            }
+        }
     </style>
 </head>
 <body>

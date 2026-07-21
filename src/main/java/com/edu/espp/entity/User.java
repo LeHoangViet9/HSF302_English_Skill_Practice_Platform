@@ -37,5 +37,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus status; // ACTIVE, BANNED
 
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 }

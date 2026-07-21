@@ -31,6 +31,7 @@ public class BookMark {
     @JoinColumn(name = "content_id", nullable = false)
     private LessonContent content;
 
+    @Builder.Default
     private LocalDateTime bookmarkedAt = LocalDateTime.now();
 
 }
