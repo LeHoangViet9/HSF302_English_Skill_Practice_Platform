@@ -1,5 +1,7 @@
 package com.edu.espp.entity;
 import jakarta.persistence.*;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,10 +23,12 @@ public class ExamHistory {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @NotFound(action = NotFoundAction.IGNORE)
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "exam_id", nullable = false)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Exam exam;
 
     private Double score;

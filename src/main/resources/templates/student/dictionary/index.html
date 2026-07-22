@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
-<head th:replace="~{fragments/layout :: head('Từ điển')}"></head>
+<head th:replace="~{fragments/layout :: head('Từ điển')}"><title>Từ điển</title></head>
 <body class="apple-theme">
 <div id="wrapper">
     <div th:replace="~{fragments/layout :: sidebar(${user}, 'dictionary')}"></div>
@@ -26,19 +26,23 @@
             <div class="apple-store-utility-card p-3 mb-4" style="height: auto;">
                 <form class="row g-3" method="get" th:action="@{/student/dictionary}">
                     <div class="col-md-6">
-                        <input class="apple-text-field" style="height: 40px; padding: 8px 16px; font-size: 15px;"
-                               type="text" name="keyword" placeholder="Nhập từ khóa, nghĩa, cấu trúc..."
-                               th:value="${keyword}">
+                        <label>
+                            <input class="apple-text-field" style="height: 40px; padding: 8px 16px; font-size: 15px;"
+                                   type="text" name="keyword" placeholder="Nhập từ khóa, nghĩa, cấu trúc..."
+                                   th:value="${keyword}">
+                        </label>
                     </div>
                     <div class="col-md-4">
-                        <select class="apple-text-field" style="height: 40px; padding: 0 16px; font-size: 15px;" name="lessonId">
-                            <option value="">Tất cả bài học</option>
-                            <option th:each="lesson : ${lessons}"
-                                    th:value="${lesson.id}"
-                                    th:text="${lesson.title}"
-                                    th:selected="${selectedLessonId == lesson.id}">
-                            </option>
-                        </select>
+                        <label>
+                            <select class="apple-text-field" style="height: 40px; padding: 0 16px; font-size: 15px;" name="lessonId">
+                                <option value="">Tất cả bài học</option>
+                                <option th:each="lesson : ${lessons}"
+                                        th:value="${lesson.id}"
+                                        th:text="${lesson.title}"
+                                        th:selected="${selectedLessonId == lesson.id}">
+                                </option>
+                            </select>
+                        </label>
                     </div>
                     <div class="col-md-2">
                         <button class="btn-apple btn-apple-primary w-100 btn-action" style="height: 40px; font-size: 14px;" type="submit">
@@ -72,7 +76,7 @@
                             <td class="py-3 text-primary" th:text="${content.ipa}">/ipa/</td>
                             <td class="py-3" th:text="${content.meaning}">meaning</td>
                             <td class="py-3">
-                                <a class="text-decoration-none" th:href="@{/student/lessons/{id}(id=${content.lesson.id})}" th:text="${content.lesson.title}">
+                                <a class="text-decoration-none" th:href="@{/student/lessons/{id}(id=${content.lessonId})}" th:text="${content.lessonTitle}">
                                     Lesson
                                 </a>
                             </td>

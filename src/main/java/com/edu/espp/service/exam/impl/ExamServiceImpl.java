@@ -43,24 +43,17 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public List<ExamResponse> searchExams(String keyword, TypeQuiz type, boolean includeAllStatuses) {
-        List<Exam> exams;
-        boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
-        boolean hasType = type != null;
+        // Chuẩn hóa keyword: nếu rỗng ("  ") thì chuyển thành null để Query bỏ qua điều kiện này
+        String queryKeyword = (keyword != null && !keyword.trim().isEmpty()) ? keyword.trim() : null;
 
-        if (hasKeyword && hasType) {
-            exams = examRepository.findByTitleContainingIgnoreCaseAndType(keyword.trim(), type);
-        } else if (hasKeyword) {
-            exams = examRepository.findByTitleContainingIgnoreCase(keyword.trim());
-        } else if (hasType) {
-            exams = examRepository.findByType(type);
-        } else {
-            exams = includeAllStatuses ? examRepository.findAll() : examRepository.findByApprovalStatus(ApprovalStatus.APPROVED);
-        }
-        
-        // Filter out non-approved exams for the searches that don't have custom queries yet
-        if (!includeAllStatuses && (hasKeyword || hasType)) {
-            exams = exams.stream().filter(e -> e.getApprovalStatus() == ApprovalStatus.APPROVED).toList();
-        }
+        // Gọi 1 method duy nhất với query động từ DB
+        List<Exam> exams = examRepository.searchByFilters(
+                queryKeyword,
+                type,
+                includeAllStatuses,
+                ApprovalStatus.APPROVED
+        );
+
         return exams.stream().map(this::convertToResponse).toList();
     }
 

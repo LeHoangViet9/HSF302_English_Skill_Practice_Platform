@@ -7,9 +7,10 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ExamHistoryService {
-    List<ExamHistoryResponse> getUserExamHistory(Long userId);
     Page<ExamHistoryResponse> getUserExamHistory(Long userId, Pageable pageable);
     
+    // Thêm method trả về List không phân trang cho ProfileService
+    List<ExamHistoryResponse> getUserExamHistory(Long userId);
     Page<ExamHistoryResponse> getAllExamHistories(Pageable pageable);
     
 }

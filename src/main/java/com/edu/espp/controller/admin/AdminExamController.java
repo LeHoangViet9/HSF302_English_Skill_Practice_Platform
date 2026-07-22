@@ -28,14 +28,14 @@ public class AdminExamController {
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("examRequest", new ExamRequest());
-        return "admin/exam/create"; // Trả về templates/admin/exam/create.html
+        return "admin/exam/create"; // Trả về đúng thư mục templates/admin/exam/create.html
     }
 
     // Xử lý thêm đề thi mới (Admin)
     @PostMapping
     public String createExam(@Valid @ModelAttribute ExamRequest examRequest, BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            return "admin/exam/create";
+            return "admin/exam/create"; // Trả về form nếu có lỗi validation
         }
         examService.createExam(examRequest);
         redirectAttributes.addFlashAttribute("successMessage", "Tạo đề thi mới thành công!");

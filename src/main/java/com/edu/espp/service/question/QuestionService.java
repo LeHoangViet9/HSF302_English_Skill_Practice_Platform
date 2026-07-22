@@ -9,11 +9,15 @@ import org.springframework.data.domain.Pageable;
 
 public interface QuestionService {
     QuestionResponse getQuestionById(Long id);
-    Page<QuestionResponse> getQuestionsByExam(Long examId, Pageable pageable);
-    
-    Page<QuestionResponse> getQuestionsBySkill(QuestionSkill skill, Pageable pageable);
-    
-    Page<QuestionResponse> getQuestionsByExamAndSkill(Long examId, QuestionSkill skill, Pageable pageable);
+
+    /**
+     * Lọc câu hỏi động: truyền null vào tham số nào thì bỏ qua điều kiện đó.
+     * Thay thế cho 3 method: getQuestionsByExam, getQuestionsBySkill, getQuestionsByExamAndSkill
+     *
+     * @param examId  null = không lọc theo đề thi
+     * @param skill   null = không lọc theo kỹ năng
+     */
+    Page<QuestionResponse> getQuestions(Long examId, QuestionSkill skill, Pageable pageable);
 
     QuestionResponse createQuestion(QuestionRequest request);
     QuestionResponse updateQuestion(Long id, QuestionRequest request);

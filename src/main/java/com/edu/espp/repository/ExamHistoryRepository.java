@@ -13,7 +13,6 @@ public interface ExamHistoryRepository extends JpaRepository<ExamHistory, Long> 
     List<ExamHistory> findByUserIdOrderByTestedAtDesc(Long userId);
     Page<ExamHistory> findByUserId(Long userId, Pageable pageable);
     
-    List<ExamHistory> findAllByOrderByTestedAtDesc();
 
     List<ExamHistory> findTop5ByOrderByTestedAtDesc();
 }

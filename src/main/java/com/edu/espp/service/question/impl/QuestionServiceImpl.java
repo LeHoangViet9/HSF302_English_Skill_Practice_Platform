@@ -36,31 +36,22 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
 
+    /**
+     * Gộp 3 method cũ thành 1:
+     * - getQuestionsByExam      → truyền examId, skill=null
+     * - getQuestionsBySkill     → truyền examId=null, skill
+     * - getQuestionsByExamAndSkill → truyền cả examId và skill
+     * - Lấy tất cả              → truyền examId=null, skill=null
+     * Repository dùng @Query với IS NULL để bỏ qua điều kiện khi null.
+     */
     @Override
-    public Page<QuestionResponse> getQuestionsByExam(Long examId, Pageable pageable) {
-        if (!examRepository.existsById(examId)) {
+    public Page<QuestionResponse> getQuestions(Long examId, QuestionSkill skill, Pageable pageable) {
+        // Chỉ validate examId khi nó được truyền vào (không null)
+        if (examId != null && !examRepository.existsById(examId)) {
             throw new ResourceNotFoundException("Không tìm thấy bài thi với ID: " + examId);
         }
-        Page<Question> questions = questionRepository.findByExamId(examId, pageable);
-        return questions.map(this::convertToResponse);
-    }
-
-
-    @Override
-    public Page<QuestionResponse> getQuestionsBySkill(QuestionSkill skill, Pageable pageable) {
-        Page<Question> questions = questionRepository.findBySkill(skill, pageable);
-        return questions.map(this::convertToResponse);
-    }
-
-
-
-    @Override
-    public Page<QuestionResponse> getQuestionsByExamAndSkill(Long examId, QuestionSkill skill, Pageable pageable) {
-        if (!examRepository.existsById(examId)) {
-            throw new ResourceNotFoundException("Không tìm thấy bài thi với ID: " + examId);
-        }
-        Page<Question> questions = questionRepository.findByExamIdAndSkill(examId, skill, pageable);
-        return questions.map(this::convertToResponse);
+        return questionRepository.findByFilters(examId, skill, pageable)
+                                 .map(this::convertToResponse);
     }
 
     @Override

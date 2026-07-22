@@ -7,7 +7,6 @@ import com.edu.espp.dto.question.response.QuestionResponse;
 import com.edu.espp.service.question.QuestionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +22,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
 
-    // 1. Quản lý danh sách câu hỏi tổng quan hoặc theo đề thi (Admin)
+    // Quản lý danh sách câu hỏi tổng quan hoặc theo đề thi (Admin)
     @GetMapping
     public String listQuestions(
             @RequestParam(required = false, defaultValue = "0") int page,
@@ -33,19 +32,8 @@ public class QuestionController {
             Model model) {
 
         Pageable pageable = PageableUtils.generate(page, size, "id", "desc");
-        Page<QuestionResponse> questionPage;
-        
-        if (examId != null && skill != null) {
-            questionPage = questionService.getQuestionsByExamAndSkill(examId, skill, pageable);
-        } else if (examId != null) {
-            questionPage = questionService.getQuestionsByExam(examId, pageable);
-        } else if (skill != null) {
-            questionPage = questionService.getQuestionsBySkill(skill, pageable);
-        } else {
-            questionPage = questionService.getQuestionsBySkill(QuestionSkill.READING, pageable);
-        }
 
-        model.addAttribute("questionPage", questionPage);
+        model.addAttribute("questionPage", questionService.getQuestions(examId, skill, pageable));
         return "admin/question/list"; // Trả về templates/admin/question/list.html
     }
 
