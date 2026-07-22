@@ -1,6 +1,6 @@
 package com.edu.espp.dto;
 
-import com.edu.espp.entity.Lesson;
+import com.edu.espp.dto.lesson.response.LessonResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,5 +20,5 @@ public class StaffDashboardData {
     private long totalContents;
     private long totalQuestions;
     private long lessonsNeedingContent;
-    private List<Lesson> recentLessons;
+    private List<LessonResponse> recentLessons;
 }

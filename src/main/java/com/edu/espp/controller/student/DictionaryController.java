@@ -1,8 +1,8 @@
 package com.edu.espp.controller.student;
 
-import com.edu.espp.entity.BookMark;
-import com.edu.espp.entity.Lesson;
-import com.edu.espp.entity.LessonContent;
+import com.edu.espp.dto.bookmark.response.BookmarkResponse;
+import com.edu.espp.dto.lesson.response.LessonContentResponse;
+import com.edu.espp.dto.lesson.response.LessonResponse;
 import com.edu.espp.entity.User;
 import com.edu.espp.service.DictionaryService;
 import com.edu.espp.service.LessonService;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -39,12 +38,14 @@ public class DictionaryController {
             @ModelAttribute("user") User user,
             Model model
     ) {
-        Page<LessonContent> dictionaryPage = dictionaryService.search(
+        Page<LessonContentResponse> dictionaryPage = dictionaryService.search(
                 keyword,
                 lessonId,
                 PageRequest.of(Math.max(page, 0), Math.max(size, 1), Sort.by("id").ascending())
+        ).map(lessonService::toLessonContentResponse);
+        List<LessonResponse> lessons = lessonService.toLessonResponses(
+                lessonService.searchPublishedLessons(null, null, null)
         );
-        List<Lesson> lessons = lessonService.searchPublishedLessons(null, null, null);
 
         model.addAttribute("results", dictionaryPage.getContent());
         model.addAttribute("dictionaryPage", dictionaryPage);
@@ -60,7 +61,7 @@ public class DictionaryController {
 
     @GetMapping("/student/bookmarks")
     public String bookmarks(@ModelAttribute("user") User user, Model model) {
-        List<BookMark> bookmarks = dictionaryService.getBookmarks(user.getId());
+        List<BookmarkResponse> bookmarks = dictionaryService.getBookmarkResponses(user.getId());
         model.addAttribute("bookmarks", bookmarks);
         return "student/dictionary/bookmarks";
     }
@@ -87,20 +88,12 @@ public class DictionaryController {
 
     @GetMapping("/student/dictionary/api")
     @ResponseBody
-    public List<Map<String, Object>> apiDictionary(
+    public List<LessonContentResponse> apiDictionary(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long lessonId
     ) {
         return dictionaryService.search(keyword, lessonId).stream()
-                .map(content -> Map.<String, Object>of(
-                        "id", content.getId(),
-                        "wordOrStructure", content.getWordOrStructure(),
-                        "ipa", content.getIpa() == null ? "" : content.getIpa(),
-                        "meaning", content.getMeaning() == null ? "" : content.getMeaning(),
-                        "example", content.getExample() == null ? "" : content.getExample(),
-                        "lessonId", content.getLesson().getId(),
-                        "lessonTitle", content.getLesson().getTitle()
-                ))
+                .map(lessonService::toLessonContentResponse)
                 .toList();
     }
 

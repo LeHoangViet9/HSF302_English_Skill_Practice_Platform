@@ -5,6 +5,7 @@ import com.edu.espp.common.enums.Role;
 import com.edu.espp.dto.AdminDashboardData;
 import com.edu.espp.dto.StaffDashboardData;
 import com.edu.espp.dto.StudentDashboardData;
+import com.edu.espp.dto.lesson.response.LessonResponse;
 import com.edu.espp.entity.ExamHistory;
 import com.edu.espp.entity.LearningProgress;
 import com.edu.espp.entity.Lesson;
@@ -26,6 +27,7 @@ public class DashboardService {
     private final SRSReviewService srsReviewService;
     private final BookMarkRepository bookMarkRepository;
     private final LessonRepository lessonRepository;
+    private final LessonService lessonService;
     private final LearningProgressRepository learningProgressRepository;
     private final UserRepository userRepository;
     private final ExamHistoryRepository examHistoryRepository;
@@ -38,26 +40,20 @@ public class DashboardService {
         srsReviewService.syncReviewsWithBookmarks(userId);
 
         long totalFlashcards = bookMarkRepository.countByUser_Id(userId);
-
-        long dueFlashcardsToday = srsReviewRepository
-                .countByUser_IdAndNextReviewDateLessThanEqual(userId, LocalDateTime.now());
-
+        long dueFlashcardsToday = srsReviewRepository.countByUser_IdAndNextReviewDateLessThanEqual(userId, LocalDateTime.now());
         long learnedLessons = learningProgressRepository.countByUser_Id(userId);
-
         long completedLessons = learningProgressRepository.countByUser_IdAndIsCompletedTrue(userId);
 
         long totalLessons = lessonRepository.count();
+        double completionPercent = totalLessons == 0 ? 0 : (completedLessons * 100.0) / totalLessons;
 
-        double completionPercent = totalLessons == 0
-                ? 0
-                : (completedLessons * 100.0) / totalLessons;
-
-        Lesson recentLesson = learningProgressRepository
+        LessonResponse recentLesson = learningProgressRepository
                 .findTopByUserIdOrderByUpdatedAtDesc(userId)
                 .map(LearningProgress::getLesson)
+                .map(lessonService::toLessonResponse)
                 .orElse(null);
 
-        Lesson suggestedLesson = findSuggestedLesson(userId, recentLesson);
+        LessonResponse suggestedLesson = findSuggestedLesson(userId, recentLesson);
 
         List<SRSReview> upcomingReviews = srsReviewService.getUpcomingReviews(userId);
 
@@ -67,7 +63,9 @@ public class DashboardService {
 
         List<ExamHistory> examHistories = examHistoryRepository.findByUserIdOrderByTestedAtDesc(userId);
         long totalExamsTaken = examHistories.size();
-        double averageExamScore = totalExamsTaken == 0 ? 0 : examHistories.stream().mapToDouble(h -> h.getScore() != null ? h.getScore() : 0.0).average().orElse(0.0);
+        double averageExamScore = totalExamsTaken == 0
+                ? 0
+                : examHistories.stream().mapToDouble(h -> h.getScore() != null ? h.getScore() : 0.0).average().orElse(0.0);
         ExamHistory recentExam = totalExamsTaken > 0 ? examHistories.getFirst() : null;
 
         return new StudentDashboardData(
@@ -96,7 +94,9 @@ public class DashboardService {
         long publishedLessons = lessonRepository.countByApprovalStatus(ApprovalStatus.APPROVED);
         long totalContents = lessonContentRepository.count();
         long totalQuestions = questionRepository.count();
-        List<Lesson> recentLessons = lessonRepository.findTop5ByOrderByIdDesc();
+        List<LessonResponse> recentLessons = lessonRepository.findTop5ByOrderByIdDesc().stream()
+                .map(lessonService::toLessonResponse)
+                .toList();
 
         long lessonsNeedingContent = lessonRepository.countByApprovalStatus(ApprovalStatus.PENDING)
                 + lessonRepository.countByApprovalStatus(ApprovalStatus.REJECTED);
@@ -127,8 +127,9 @@ public class DashboardService {
         long totalExamAttempts = examHistoryRepository.count();
 
         List<ExamHistory> allHistories = examHistoryRepository.findAll();
-        double systemAverageScore = allHistories.isEmpty() ? 0.0 :
-                allHistories.stream().mapToDouble(h -> h.getScore() != null ? h.getScore() : 0.0).average().orElse(0.0);
+        double systemAverageScore = allHistories.isEmpty()
+                ? 0.0
+                : allHistories.stream().mapToDouble(h -> h.getScore() != null ? h.getScore() : 0.0).average().orElse(0.0);
 
         List<User> recentUsers = userRepository.findTop5ByOrderByIdDesc();
         List<ExamHistory> recentSystemExams = examHistoryRepository.findTop5ByOrderByTestedAtDesc();
@@ -147,17 +148,19 @@ public class DashboardService {
                 .build();
     }
 
-    private Lesson findSuggestedLesson(Long userId, Lesson recentLesson) {
+    private LessonResponse findSuggestedLesson(Long userId, LessonResponse recentLesson) {
         return learningProgressRepository
                 .findTopByUser_IdAndIsCompletedFalseOrderByUpdatedAtDesc(userId)
                 .map(LearningProgress::getLesson)
+                .map(lessonService::toLessonResponse)
                 .orElseGet(() -> {
                     if (recentLesson != null) {
                         return lessonRepository
                                 .findFirstByIdGreaterThanOrderByIdAsc(recentLesson.getId())
-                                .orElseGet(() -> lessonRepository.findFirstByOrderByIdAsc().orElse(null));
+                                .map(lessonService::toLessonResponse)
+                                .orElseGet(() -> lessonRepository.findFirstByOrderByIdAsc().map(lessonService::toLessonResponse).orElse(null));
                     }
-                    return lessonRepository.findFirstByOrderByIdAsc().orElse(null);
+                    return lessonRepository.findFirstByOrderByIdAsc().map(lessonService::toLessonResponse).orElse(null);
                 });
     }
 }

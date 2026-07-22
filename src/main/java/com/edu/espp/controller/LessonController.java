@@ -3,14 +3,20 @@ package com.edu.espp.controller;
 import com.edu.espp.common.enums.LevelLesson;
 import com.edu.espp.common.enums.TypeLesson;
 import com.edu.espp.common.utils.PageableUtils;
-import com.edu.espp.entity.Lesson;
+import com.edu.espp.dto.lesson.request.LessonContentRequest;
+import com.edu.espp.dto.lesson.request.LessonRequest;
+import com.edu.espp.dto.lesson.response.LessonResponse;
 import com.edu.espp.service.LessonService;
-import com.edu.espp.entity.LessonContent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,46 +35,42 @@ public class LessonController {
             Model model
     ) {
         Pageable pageable = PageableUtils.generate(page, size, "id", "desc");
-        model.addAttribute("lessonPage", lessonService.searchLessons(keyword, type, level, pageable));
-
+        model.addAttribute(
+                "lessonPage",
+                lessonService.searchLessons(keyword, type, level, pageable).map(lessonService::toLessonResponse)
+        );
         model.addAttribute("keyword", keyword);
         model.addAttribute("selectedType", type);
         model.addAttribute("selectedLevel", level);
-
         model.addAttribute("types", TypeLesson.values());
         model.addAttribute("levels", LevelLesson.values());
-
         return "staff/lesson-list";
     }
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
-        model.addAttribute("lesson", new Lesson());
+        model.addAttribute("lesson", new LessonRequest());
         model.addAttribute("types", TypeLesson.values());
         model.addAttribute("levels", LevelLesson.values());
-
         return "staff/lesson-form";
     }
 
     @PostMapping("/save")
-    public String saveLesson(@ModelAttribute Lesson lesson) {
+    public String saveLesson(@ModelAttribute LessonRequest lesson) {
         boolean isNewLesson = lesson.getId() == null;
-        lessonService.saveLesson(lesson);
+        LessonResponse savedLesson = lessonService.toLessonResponse(lessonService.saveLesson(lesson));
         if (isNewLesson) {
-            return "redirect:/manage/lessons/edit/" + lesson.getId();
+            return "redirect:/manage/lessons/edit/" + savedLesson.getId();
         }
         return "redirect:/manage/lessons";
     }
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
-        Lesson lesson = lessonService.getLessonById(id);
-
-        model.addAttribute("lesson", lesson);
+        model.addAttribute("lesson", lessonService.toLessonRequest(lessonService.getLessonById(id)));
         model.addAttribute("types", TypeLesson.values());
         model.addAttribute("levels", LevelLesson.values());
-        model.addAttribute("contents", lessonService.getContentsByLesson(id));
-
+        model.addAttribute("contents", lessonService.toLessonContentResponses(lessonService.getContentsByLesson(id)));
         return "staff/lesson-form";
     }
 
@@ -79,17 +81,18 @@ public class LessonController {
     }
 
     @GetMapping("/{lessonId}/contents")
-    public String listContents(@PathVariable Long lessonId) {
-        return "redirect:/manage/lessons/edit/" + lessonId;
+    public String listContents(@PathVariable Long lessonId, Model model) {
+        model.addAttribute("lesson", lessonService.toLessonResponse(lessonService.getLessonById(lessonId)));
+        model.addAttribute("contents", lessonService.toLessonContentResponses(lessonService.getContentsByLesson(lessonId)));
+        return "staff/contents-list";
     }
 
     @GetMapping("/{lessonId}/contents/create")
     public String showCreateContentForm(@PathVariable Long lessonId, Model model) {
-        Lesson lesson = lessonService.getLessonById(lessonId);
+        LessonResponse lesson = lessonService.toLessonResponse(lessonService.getLessonById(lessonId));
         int nextOrder = lessonService.getContentsByLesson(lessonId).size() + 1;
 
-        LessonContent content = LessonContent.builder()
-                .lesson(lesson)
+        LessonContentRequest content = LessonContentRequest.builder()
                 .contentOrder(nextOrder)
                 .build();
 
@@ -101,7 +104,7 @@ public class LessonController {
     @PostMapping("/{lessonId}/contents/save")
     public String saveContent(
             @PathVariable Long lessonId,
-            @ModelAttribute LessonContent content
+            @ModelAttribute LessonContentRequest content
     ) {
         lessonService.saveLessonContent(lessonId, content);
         return "redirect:/manage/lessons/edit/" + lessonId;
@@ -113,9 +116,8 @@ public class LessonController {
             @PathVariable Long contentId,
             Model model
     ) {
-        Lesson lesson = lessonService.getLessonById(lessonId);
-        LessonContent content = lessonService.getContentById(contentId);
-
+        LessonResponse lesson = lessonService.toLessonResponse(lessonService.getLessonById(lessonId));
+        LessonContentRequest content = lessonService.toLessonContentRequest(lessonService.getContentById(contentId));
         model.addAttribute("lesson", lesson);
         model.addAttribute("content", content);
         return "staff/contents-form";

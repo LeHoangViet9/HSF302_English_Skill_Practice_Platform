@@ -3,7 +3,7 @@ package com.edu.espp.controller.student;
 import com.edu.espp.common.enums.LevelLesson;
 import com.edu.espp.common.enums.TypeLesson;
 import com.edu.espp.common.utils.PageableUtils;
-import com.edu.espp.entity.Lesson;
+import com.edu.espp.dto.lesson.response.LessonResponse;
 import com.edu.espp.entity.User;
 import com.edu.espp.service.LearningContentService;
 import com.edu.espp.service.LessonService;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -42,12 +41,12 @@ public class LearningContentController {
             @ModelAttribute("user") User user,
             Model model
     ) {
-        Page<Lesson> lessonPage = lessonService.searchPublishedLessons(
+        Page<LessonResponse> lessonPage = lessonService.searchPublishedLessons(
                 keyword,
                 type,
                 level,
                 PageableUtils.generate(page, size, "id", "asc")
-        );
+        ).map(lessonService::toLessonResponse);
 
         model.addAttribute("lessons", lessonPage.getContent());
         model.addAttribute("lessonPage", lessonPage);
@@ -59,7 +58,6 @@ public class LearningContentController {
         model.addAttribute("selectedLevel", level);
         model.addAttribute("types", TypeLesson.values());
         model.addAttribute("levels", LevelLesson.values());
-
         return "student/lessons/list";
     }
 
@@ -69,8 +67,8 @@ public class LearningContentController {
             @ModelAttribute("user") User user,
             Model model
     ) {
-        model.addAttribute("lesson", lessonService.getLessonById(id));
-        model.addAttribute("contents", lessonService.getContentsByLesson(id));
+        model.addAttribute("lesson", lessonService.toLessonResponse(lessonService.getLessonById(id)));
+        model.addAttribute("contents", lessonService.toLessonContentResponses(lessonService.getContentsByLesson(id)));
         model.addAttribute("completed", learningContentService.isCompleted(user.getId(), id));
         model.addAttribute("deckContentIds", srsReviewService.getDeckContentIds(user.getId()));
         return "student/lessons/detail";
@@ -84,19 +82,13 @@ public class LearningContentController {
 
     @GetMapping("/api")
     @ResponseBody
-    public List<Map<String, Object>> apiLessons(
+    public List<LessonResponse> apiLessons(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) TypeLesson type,
             @RequestParam(required = false) LevelLesson level
     ) {
         return lessonService.searchPublishedLessons(keyword, type, level).stream()
-                .map(lesson -> Map.<String, Object>of(
-                        "id", lesson.getId(),
-                        "title", lesson.getTitle(),
-                        "type", lesson.getType(),
-                        "level", lesson.getLevel(),
-                        "description", lesson.getDescription() == null ? "" : lesson.getDescription()
-                ))
+                .map(lessonService::toLessonResponse)
                 .toList();
     }
 }

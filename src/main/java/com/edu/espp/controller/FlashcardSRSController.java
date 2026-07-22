@@ -2,8 +2,9 @@ package com.edu.espp.controller;
 
 import com.edu.espp.common.enums.ReviewResult;
 import com.edu.espp.common.enums.TypeLesson;
-import com.edu.espp.entity.Lesson;
-import com.edu.espp.entity.LessonContent;
+import com.edu.espp.dto.flashcard.response.FlashcardReviewResponse;
+import com.edu.espp.dto.lesson.response.LessonContentResponse;
+import com.edu.espp.dto.lesson.response.LessonResponse;
 import com.edu.espp.entity.SRSReview;
 import com.edu.espp.entity.User;
 import com.edu.espp.service.LessonService;
@@ -38,7 +39,6 @@ public class FlashcardSRSController {
             if (specReview.isPresent()) {
                 reviews = List.of(specReview.get());
             } else {
-                // Auto add to deck if not already there
                 srsReviewService.addToDeck(userId, contentId);
                 reviews = srsReviewService.getReviewByUserAndContent(userId, contentId)
                         .map(List::of)
@@ -48,9 +48,13 @@ public class FlashcardSRSController {
             reviews = srsReviewService.getDueReviews(userId);
         }
 
+        List<FlashcardReviewResponse> reviewResponses = reviews.stream()
+                .map(this::toFlashcardReviewResponse)
+                .toList();
+
         ModelAndView mv = new ModelAndView();
         mv.setViewName("student/flashcards/review");
-        mv.addObject("reviews", reviews);
+        mv.addObject("reviews", reviewResponses);
         mv.addObject("returnUrl", returnUrl);
 
         return mv;
@@ -80,16 +84,18 @@ public class FlashcardSRSController {
     ) {
         Long userId = (user != null) ? user.getId() : 1L;
 
-        List<Lesson> lessons = lessonService.searchPublishedLessons(null, TypeLesson.VOCABULARY, null);
+        List<LessonResponse> lessons = lessonService.toLessonResponses(
+                lessonService.searchPublishedLessons(null, TypeLesson.VOCABULARY, null)
+        );
 
         Long selectedLessonId = lessonId;
         if (selectedLessonId == null && !lessons.isEmpty()) {
-            selectedLessonId = lessons.get(0).getId();
+            selectedLessonId = lessons.getFirst().getId();
         }
 
-        List<LessonContent> contents = List.of();
+        List<LessonContentResponse> contents = List.of();
         if (selectedLessonId != null) {
-            contents = lessonService.getContentsByLesson(selectedLessonId);
+            contents = lessonService.toLessonContentResponses(lessonService.getContentsByLesson(selectedLessonId));
         }
 
         Set<Long> deckContentIds = srsReviewService.getDeckContentIds(userId);
@@ -116,7 +122,19 @@ public class FlashcardSRSController {
         if (returnUrl != null && !returnUrl.isBlank()) {
             return "redirect:" + returnUrl;
         }
-        LessonContent content = lessonService.getContentById(contentId);
-        return "redirect:/student/flashcards/manage?lessonId=" + content.getLesson().getId();
+        return "redirect:/student/flashcards/manage?lessonId=" + lessonService.getLessonById(
+                lessonService.getContentById(contentId).getLesson().getId()
+        ).getId();
+    }
+
+    private FlashcardReviewResponse toFlashcardReviewResponse(SRSReview review) {
+        return FlashcardReviewResponse.builder()
+                .id(review.getId())
+                .content(lessonService.toLessonContentResponse(review.getContent()))
+                .repetition(review.getRepetition())
+                .srsInterval(review.getSrsInterval())
+                .easeFactor(review.getEaseFactor())
+                .nextReviewDate(review.getNextReviewDate())
+                .build();
     }
 }

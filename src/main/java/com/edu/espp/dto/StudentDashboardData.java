@@ -1,6 +1,7 @@
 package com.edu.espp.dto;
 
-import com.edu.espp.entity.Lesson;
+import com.edu.espp.dto.lesson.response.LessonResponse;
+import com.edu.espp.entity.ExamHistory;
 import com.edu.espp.entity.SRSReview;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,12 +23,12 @@ public class StudentDashboardData {
     private long completedLessons;
     private double completionPercent;
 
-    private Lesson recentLesson;
-    private Lesson suggestedLesson;
+    private LessonResponse recentLesson;
+    private LessonResponse suggestedLesson;
 
     private long totalExamsTaken;
     private double averageExamScore;
-    private com.edu.espp.entity.ExamHistory recentExam;
+    private ExamHistory recentExam;
 
     private List<SRSReview> upcomingReviews;
 }

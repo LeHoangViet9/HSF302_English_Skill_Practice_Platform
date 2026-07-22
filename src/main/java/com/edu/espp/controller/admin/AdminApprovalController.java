@@ -1,6 +1,7 @@
 package com.edu.espp.controller.admin;
 
 import com.edu.espp.common.utils.PageableUtils;
+import com.edu.espp.dto.lesson.response.LessonResponse;
 import com.edu.espp.service.LessonService;
 import com.edu.espp.service.exam.ExamService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class AdminApprovalController {
         // Use "id" instead of "createdAt" because createdAt might not be mapped in all projections, or "id" is safer.
         Pageable pageable = PageableUtils.generate(page, size, "id", "desc");
         
-        model.addAttribute("lessonPage", lessonService.getPendingLessons(pageable));
+        model.addAttribute("lessonPage", lessonService.getPendingLessons(pageable).map(lessonService::toLessonResponse));
         model.addAttribute("examPage", examService.getPendingExams(pageable));
 
         return "admin/approval/list";

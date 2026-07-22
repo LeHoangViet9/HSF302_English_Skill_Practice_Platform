@@ -1,5 +1,7 @@
 package com.edu.espp.service;
 
+import com.edu.espp.dto.bookmark.response.BookmarkResponse;
+import com.edu.espp.dto.lesson.response.LessonContentResponse;
 import com.edu.espp.entity.BookMark;
 import com.edu.espp.entity.LessonContent;
 import com.edu.espp.entity.User;
@@ -24,6 +26,7 @@ public class DictionaryService {
     private final LessonContentRepository lessonContentRepository;
     private final BookMarkRepository bookMarkRepository;
     private final UserRepository userRepository;
+    private final LessonService lessonService;
     private final SRSReviewService srsReviewService;
 
     @Transactional(readOnly = true)
@@ -42,6 +45,13 @@ public class DictionaryService {
     }
 
     @Transactional(readOnly = true)
+    public List<BookmarkResponse> getBookmarkResponses(Long userId) {
+        return getBookmarks(userId).stream()
+                .map(this::toBookmarkResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public Set<Long> getBookmarkedContentIds(Long userId) {
         return getBookmarks(userId).stream()
                 .map(bookmark -> bookmark.getContent().getId())
@@ -56,6 +66,14 @@ public class DictionaryService {
     @Transactional
     public void removeBookmark(Long userId, Long contentId) {
         srsReviewService.removeFromDeck(userId, contentId);
+    }
+
+    private BookmarkResponse toBookmarkResponse(BookMark bookmark) {
+        return BookmarkResponse.builder()
+                .id(bookmark.getId())
+                .content(lessonService.toLessonContentResponse(bookmark.getContent()))
+                .bookmarkedAt(bookmark.getBookmarkedAt())
+                .build();
     }
 
     private String normalizeKeyword(String keyword) {
