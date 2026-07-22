@@ -194,6 +194,10 @@ public class ExamServiceImpl implements ExamService {
         exam.setDescription(request.getDescription());
         exam.setTotalQuestions(request.getTotalQuestions());
 
+        if (exam.getApprovalStatus() == ApprovalStatus.REJECTED) {
+            exam.setApprovalStatus(ApprovalStatus.PENDING);
+            exam.setRejectReason(null);
+        }
         return convertToResponse(examRepository.save(exam));
     }
 

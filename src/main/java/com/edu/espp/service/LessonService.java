@@ -114,7 +114,7 @@ public class LessonService {
         Lesson lesson = request.getId() == null
                 ? new Lesson()
                 : lessonRepository.findById(request.getId())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy bài học"));
+                        .orElseThrow(() -> new RuntimeException("Không tìm thấy bài học"));
 
         lesson.setTitle(request.getTitle());
         lesson.setLevel(request.getLevel());
@@ -143,6 +143,10 @@ public class LessonService {
                 lesson.setApprovalStatus(ApprovalStatus.PENDING);
             }
         }
+        if (lesson.getApprovalStatus() == ApprovalStatus.REJECTED) {
+            lesson.setApprovalStatus(ApprovalStatus.PENDING);
+            lesson.setRejectReason(null);
+        }
 
         return lessonRepository.save(lesson);
     }
@@ -160,6 +164,7 @@ public class LessonService {
                 }
             }
         }
+
         lessonRepository.save(lesson);
     }
 
@@ -168,7 +173,7 @@ public class LessonService {
         LessonContent content = request.getId() == null
                 ? new LessonContent()
                 : lessonContentRepository.findById(request.getId())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy nội dung bài học"));
+                        .orElseThrow(() -> new RuntimeException("Không tìm thấy nội dung bài học"));
 
         content.setLesson(lesson);
         content.setWordOrStructure(request.getWordOrStructure());
