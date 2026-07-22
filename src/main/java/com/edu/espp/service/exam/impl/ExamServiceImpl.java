@@ -220,6 +220,16 @@ public class ExamServiceImpl implements ExamService {
         examRepository.save(exam);
     }
 
+    @Override
+    public ExamResponse getApprovedExamById(Long examId) {
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new ResourceNotFoundException(EXAM_NOT_FOUND_MSG + " với ID: " + examId));
+        if (exam.getApprovalStatus() != ApprovalStatus.APPROVED) {
+            throw new ResourceNotFoundException("Bài thi chưa được duyệt hoặc không tồn tại!");
+        }
+        return convertToResponse(exam);
+    }
+
     private ExamResponse convertToResponse(Exam exam) {
         if (exam == null) return null;
         return ExamResponse.builder()
