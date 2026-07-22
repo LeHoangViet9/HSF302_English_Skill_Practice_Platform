@@ -3,7 +3,6 @@ package com.edu.espp.controller.auth;
 import com.edu.espp.dto.RegisterForm;
 import com.edu.espp.service.auth.RegisterService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,7 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class RegisterController {
@@ -27,7 +25,7 @@ public class RegisterController {
                 "registerForm",
                 new RegisterForm());
 
-        return "register";
+        return "auth/register";
     }
 
     @PostMapping("/register")
@@ -38,7 +36,7 @@ public class RegisterController {
         checkConfirmPassword(form, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return "register";
+            return "auth/register";
         }
 
         try {
@@ -49,7 +47,7 @@ public class RegisterController {
                     "email.exists",
                     "Email này đã được sử dụng");
 
-            return "register";
+            return "auth/register";
         }
 
         return "redirect:/login?registered";

@@ -33,7 +33,7 @@ public class DashboardService {
     private final QuestionRepository questionRepository;
     private final ExamRepository examRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public StudentDashboardData getStudentDashboard(Long userId) {
         srsReviewService.syncReviewsWithBookmarks(userId);
 
@@ -68,7 +68,7 @@ public class DashboardService {
         List<ExamHistory> examHistories = examHistoryRepository.findByUserIdOrderByTestedAtDesc(userId);
         long totalExamsTaken = examHistories.size();
         double averageExamScore = totalExamsTaken == 0 ? 0 : examHistories.stream().mapToDouble(h -> h.getScore() != null ? h.getScore() : 0.0).average().orElse(0.0);
-        ExamHistory recentExam = totalExamsTaken > 0 ? examHistories.get(0) : null;
+        ExamHistory recentExam = totalExamsTaken > 0 ? examHistories.getFirst() : null;
 
         return new StudentDashboardData(
                 studentName,

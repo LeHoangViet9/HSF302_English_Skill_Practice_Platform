@@ -27,22 +27,22 @@ public class SecurityConfig {
 
                                                 // Chỉ ADMIN được truy cập
                                                 .requestMatchers("/admin/**")
-                                                .hasRole("ADMIN")
+                                                .hasAuthority("ROLE_ADMIN")
 
                                                 // Chỉ STAFF được truy cập
                                                 .requestMatchers("/staff/**")
-                                                .hasAnyRole("STAFF", "ADMIN")
+                                                .hasAnyAuthority("ROLE_STAFF", "ROLE_ADMIN")
 
                                                 // Chỉ STUDENT được truy cập
                                                 .requestMatchers(
                                                                 "/student/**",
                                                                 "/dashboard",
                                                                 "/histories/**")
-                                                .hasRole("STUDENT")
+                                                .hasAuthority("ROLE_STUDENT")
 
                                                 // Trang dùng chung cho ADMIN và STUDENT
                                                 .requestMatchers("/exams/**")
-                                                .hasAnyRole("ADMIN", "STUDENT", "STAFF")
+                                                .hasAnyAuthority("ROLE_ADMIN", "ROLE_STUDENT", "ROLE_STAFF")
 
                                                 // Các URL còn lại cần đăng nhập
                                                 .anyRequest()

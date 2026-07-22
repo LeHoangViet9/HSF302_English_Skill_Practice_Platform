@@ -39,7 +39,7 @@ public class StudentDetailsService
                                 .builder()
                                 .username(user.getEmail())
                                 .password(user.getPasswordHash())
-                                .roles(user.getRole().name())
+                                .authorities("ROLE_" + user.getRole().name())
                                 .build();
         }
 }

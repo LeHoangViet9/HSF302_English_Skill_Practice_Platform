@@ -138,19 +138,9 @@
         /* Navbar custom styles */
 
         /* Content Styling */
-        #page-content-wrapper {
-            width: 100%;
-            transition: padding-left 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-        }
 
         @media (min-width: 769px) {
-            #page-content-wrapper {
-                padding-left: 260px;
-            }
 
-            #wrapper.toggled #page-content-wrapper {
-                padding-left: 0;
-            }
         }
     </style>
 </head>
@@ -207,7 +197,7 @@
     <div class="list-group list-group-flush">
         <!-- Sidebar Menu ADMIN -->
         <th:block th:if="${user.role.name() == 'ADMIN'}">
-            <a class="list-group-item" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}" href="/dashboard">
+            <a class="list-group-item" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}" href="/admin/dashboard">
                 <i class="fa-solid fa-chart-line"></i> Bảng điều khiển
             </a>
             <a class="list-group-item" th:classappend="${activeMenu == 'exams' ? 'active' : ''}" href="/manage/exams">
@@ -230,7 +220,7 @@
 
         <!-- Sidebar Menu STAFF -->
         <th:block th:if="${user.role.name() == 'STAFF'}">
-            <a class="list-group-item" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}" href="/dashboard">
+            <a class="list-group-item" th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}" href="/staff/dashboard">
                 <i class="fa-solid fa-chart-line"></i> Bảng điều khiển
             </a>
             <a class="list-group-item" th:classappend="${activeMenu == 'lessons' ? 'active' : ''}" href="/manage/lessons">

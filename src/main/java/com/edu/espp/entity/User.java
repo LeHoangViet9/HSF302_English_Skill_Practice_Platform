@@ -21,10 +21,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 255)
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(name = "password_hash", nullable = false, length = 255)
+    @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
     @Column(name = "full_name", nullable = false, length = 150)
@@ -38,7 +38,7 @@ public class User {
     @Column(nullable = false, length = 20)
     private UserStatus status;
 
-    @Column(name = "login_attempts", nullable = false)
+    @Column(name = "login_attempts", nullable = false, columnDefinition = "int default 0")
     @Builder.Default
     private Integer loginAttempts = 0;
 
@@ -57,7 +57,7 @@ public class User {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at", nullable = false, columnDefinition = "datetime2(6) default getutcdate()")
     private LocalDateTime updatedAt;
 
     @PrePersist

@@ -8,15 +8,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 
+import com.edu.espp.repository.UserRepository;
+import com.edu.espp.entity.User;
+import java.security.Principal;
+
 @Controller
 @RequiredArgsConstructor
 public class StudentDashboardController {
 
     private final DashboardService dashboardService;
+    private final UserRepository userRepository;
 
     @GetMapping("/dashboard")
-    public ModelAndView dashboard() {
-        Long userId = 1L;
+    public ModelAndView dashboard(Principal principal) {
+        Long userId = 1L; // Fallback
+        if (principal != null) {
+            User user = userRepository.findByEmail(principal.getName()).orElse(null);
+            if (user != null) {
+                userId = user.getId();
+            }
+        }
 
         StudentDashboardData dashboard = dashboardService.getStudentDashboard(userId);
 
