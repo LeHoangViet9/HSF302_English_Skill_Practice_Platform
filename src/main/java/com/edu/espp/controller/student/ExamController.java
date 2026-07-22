@@ -26,7 +26,7 @@ public class ExamController {
     // Vào làm bài thi (lấy danh sách câu hỏi kèm theo đề)
     @GetMapping("/{examId}/take")
     public String takeExam(@PathVariable Long examId, Model model) {
-        model.addAttribute("exam", examService.getExamById(examId));
+        model.addAttribute("exam", examService.getApprovedExamById(examId));
         model.addAttribute("questions", examService.getQuestionsByExam(examId));
         model.addAttribute("submitForm", new ExamSubmitRequest()); // Form để hứng data nộp bài
         return "student/exam/take-exam"; // Trả về templates/student/exam/take-exam.html

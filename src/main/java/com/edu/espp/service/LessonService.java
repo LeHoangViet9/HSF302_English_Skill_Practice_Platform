@@ -3,6 +3,7 @@ package com.edu.espp.service;
 import com.edu.espp.common.enums.ApprovalStatus;
 import com.edu.espp.common.enums.LevelLesson;
 import com.edu.espp.common.enums.TypeLesson;
+import com.edu.espp.common.exception.ForbiddenException;
 import com.edu.espp.dto.lesson.request.LessonContentRequest;
 import com.edu.espp.dto.lesson.request.LessonRequest;
 import com.edu.espp.dto.lesson.response.LessonContentResponse;
@@ -37,6 +38,12 @@ public class LessonService {
     public Lesson getLessonById(Long id) {
         return lessonRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy bài học"));
+    }
+
+    public Lesson getApprovedLessonById(Long id) {
+        return lessonRepository
+                .findByIdAndApprovalStatus(id, ApprovalStatus.APPROVED)
+                .orElseThrow(() -> new ForbiddenException("Bài học chưa được phê duyệt"));
     }
 
     public LessonRequest toLessonRequest(Lesson lesson) {
