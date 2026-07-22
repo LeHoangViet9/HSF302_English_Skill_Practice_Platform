@@ -38,6 +38,16 @@ public class ForgotPasswordController {
 
         ForgotPasswordService.PasswordResetRequestResult result = forgotPasswordService
                 .requestPasswordReset(form.getEmail());
+
+        if (result.userNotFound()) {
+            bindingResult.rejectValue(
+                    "email",
+                    "email.notFound",
+                    "Không tìm thấy tài khoản với email này.");
+
+            return "auth/forgot-password";
+        }
+
         if (result.rateLimited()) {
             model.addAttribute("rateLimitError",
                     "Quá nhiều yêu cầu vui lòng đăng nhập lại sau" + result.retryAfterSeconds() + " phút.");

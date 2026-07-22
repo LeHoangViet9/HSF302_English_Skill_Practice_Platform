@@ -28,8 +28,7 @@ public class AdminApprovalController {
         // projections, or "id" is safer.
         Pageable pageable = PageableUtils.generate(page, size, "id", "desc");
 
-        model.addAttribute("lessonPage",
-                lessonService.getPendingLessons(pageable).map(lessonService::toLessonResponse));
+        model.addAttribute("lessonPage", lessonService.getPendingLessons(pageable).map(lessonService::toLessonResponse));
 
         model.addAttribute("examPage", examService.getPendingExams(pageable));
 

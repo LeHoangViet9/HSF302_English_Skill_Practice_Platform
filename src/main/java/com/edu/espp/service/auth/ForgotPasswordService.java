@@ -46,7 +46,7 @@ public class ForgotPasswordService {
                                 normalizeEmail(email));
 
                 if (optionalUser.isEmpty()) {
-                        return PasswordResetRequestResult.ok();
+                        return PasswordResetRequestResult.notFound();
                 }
 
                 User user = optionalUser.get();
@@ -142,9 +142,7 @@ public class ForgotPasswordService {
                                 .user(user)
                                 .tokenType(AuthTokenType.PASSWORD_RESET)
                                 .tokenValue(tokenValue)
-                                .expiresAt(
-                                                now.plusMinutes(
-                                                                PASSWORD_RESET_VALIDITY_MINUTES))
+                                .expiresAt(now.plusMinutes(PASSWORD_RESET_VALIDITY_MINUTES))
                                 .build();
 
                 authTokenRepository.save(token);
@@ -179,20 +177,27 @@ public class ForgotPasswordService {
 
         public record PasswordResetRequestResult(
                         boolean rateLimited,
+                        boolean userNotFound,
                         long retryAfterSeconds) {
 
                 static PasswordResetRequestResult ok() {
-
                         return new PasswordResetRequestResult(
+                                        false,
                                         false,
                                         0);
                 }
 
-                static PasswordResetRequestResult rateLimited(
-                                long seconds) {
+                static PasswordResetRequestResult notFound() {
+                        return new PasswordResetRequestResult(
+                                        false,
+                                        true,
+                                        0);
+                }
 
+                static PasswordResetRequestResult rateLimited(long seconds) {
                         return new PasswordResetRequestResult(
                                         true,
+                                        false,
                                         seconds);
                 }
         }
