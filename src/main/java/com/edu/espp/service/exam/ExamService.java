@@ -14,15 +14,24 @@ import org.springframework.data.domain.Pageable;
 
 public interface ExamService {
     List<ExamResponse> searchExams(String keyword, TypeQuiz type, boolean includeAllStatuses);
+
     List<QuestionResponse> getQuestionsByExam(Long examId);
+
     ExamResultResponse submitExam(Long examId, Long userId, ExamSubmitRequest request);
 
     ExamResponse createExam(ExamRequest request);
+
     ExamResponse getExamById(Long examId);
+
     ExamResponse updateExam(Long examId, ExamRequest request);
+
     void deleteExam(Long examId);
 
     Page<ExamResponse> getPendingExams(Pageable pageable);
+
     void approveExam(Long examId);
+
     void rejectExam(Long examId, String reason);
+
+    ExamResponse getApprovedExamById(Long examId);
 }

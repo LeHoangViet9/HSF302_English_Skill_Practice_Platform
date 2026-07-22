@@ -67,7 +67,7 @@ public class LearningContentController {
             @ModelAttribute("user") User user,
             Model model
     ) {
-        model.addAttribute("lesson", lessonService.toLessonResponse(lessonService.getLessonById(id)));
+        model.addAttribute("lesson", lessonService.toLessonResponse(lessonService.getApprovedLessonById(id)));
         model.addAttribute("contents", lessonService.toLessonContentResponses(lessonService.getContentsByLesson(id)));
         model.addAttribute("completed", learningContentService.isCompleted(user.getId(), id));
         model.addAttribute("deckContentIds", srsReviewService.getDeckContentIds(user.getId()));

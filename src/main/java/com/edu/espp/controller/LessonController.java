@@ -32,13 +32,11 @@ public class LessonController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) TypeLesson type,
             @RequestParam(required = false) LevelLesson level,
-            Model model
-    ) {
+            Model model) {
         Pageable pageable = PageableUtils.generate(page, size, "id", "desc");
         model.addAttribute(
                 "lessonPage",
-                lessonService.searchLessons(keyword, type, level, pageable).map(lessonService::toLessonResponse)
-        );
+                lessonService.searchLessons(keyword, type, level, pageable).map(lessonService::toLessonResponse));
         model.addAttribute("keyword", keyword);
         model.addAttribute("selectedType", type);
         model.addAttribute("selectedLevel", level);
@@ -83,7 +81,8 @@ public class LessonController {
     @GetMapping("/{lessonId}/contents")
     public String listContents(@PathVariable Long lessonId, Model model) {
         model.addAttribute("lesson", lessonService.toLessonResponse(lessonService.getLessonById(lessonId)));
-        model.addAttribute("contents", lessonService.toLessonContentResponses(lessonService.getContentsByLesson(lessonId)));
+        model.addAttribute("contents",
+                lessonService.toLessonContentResponses(lessonService.getContentsByLesson(lessonId)));
         return "staff/contents-list";
     }
 
@@ -104,8 +103,7 @@ public class LessonController {
     @PostMapping("/{lessonId}/contents/save")
     public String saveContent(
             @PathVariable Long lessonId,
-            @ModelAttribute LessonContentRequest content
-    ) {
+            @ModelAttribute LessonContentRequest content) {
         lessonService.saveLessonContent(lessonId, content);
         return "redirect:/manage/lessons/edit/" + lessonId;
     }
@@ -123,7 +121,7 @@ public class LessonController {
         return "staff/contents-form";
     }
 
-    @GetMapping("/{lessonId}/contents/delete/{contentId}")
+@GetMapping("/{lessonId}/contents/delete/{contentId}")
     public String deleteContent(
             @PathVariable Long lessonId,
             @PathVariable Long contentId

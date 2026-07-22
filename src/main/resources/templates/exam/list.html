@@ -1,151 +1,218 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
-<head th:replace="~{fragments/layout :: head('Danh Sách Đề Thi - ES Platform')}"><title>Danh Sách Đề Thi</title></head>
+
+<head th:replace="~{fragments/layout :: head('Danh Sách Đề Thi - ES Platform')}">
+    <title>Danh Sách Đề Thi</title>
+</head>
+
 <body class="apple-theme">
-<div id="wrapper">
-    <!-- Sidebar -->
-    <div th:replace="~{fragments/layout :: sidebar(${user}, 'exams')}"></div>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div th:replace="~{fragments/layout :: sidebar(${user}, 'exams')}"></div>
 
-    <!-- Page Content -->
-    <div id="page-content-wrapper" class="d-flex flex-column">
-        <!-- Navbar -->
-        <nav th:replace="~{fragments/layout :: navbar(${user})}"></nav>
+        <!-- Page Content -->
+        <div id="page-content-wrapper" class="d-flex flex-column">
+            <!-- Navbar -->
+            <nav th:replace="~{fragments/layout :: navbar(${user})}"></nav>
 
-        <div class="container-fluid my-4 flex-grow-1 px-4">
-            <!-- Hộp thông báo chế độ kiểm thử (Mock) -->
-            <div class="alert alert-info alert-dismissible fade show border-0 shadow-none mb-4 d-flex align-items-center justify-content-between" 
-                 style="background-color: var(--apple-surface-pearl); border: 1px solid var(--apple-hairline) !important; border-radius: var(--apple-rounded-md);" role="alert">
-                <div class="apple-caption">
-                    <i class="fa-solid fa-circle-info me-2 text-primary fs-5"></i>
-                    <span style="color: var(--apple-ink-muted-80);">Vai trò hiện tại: </span>
-                    <strong class="text-primary" th:text="${user.fullName + ' (' + user.role + ')'}">Học viên (STUDENT)</strong>
+            <div class="container-fluid my-4 flex-grow-1 px-4">
+                <!-- Hộp thông báo chế độ kiểm thử (Mock) -->
+                <div class="alert alert-info alert-dismissible fade show border-0 shadow-none mb-4 d-flex align-items-center justify-content-between"
+                    style="background-color: var(--apple-surface-pearl); border: 1px solid var(--apple-hairline) !important; border-radius: var(--apple-rounded-md);"
+                    role="alert">
+                    <div class="apple-caption">
+                        <i class="fa-solid fa-circle-info me-2 text-primary fs-5"></i>
+                        <span style="color: var(--apple-ink-muted-80);">Vai trò hiện tại: </span>
+                        <strong class="text-primary" th:text="${user.fullName + ' (' + user.role + ')'}">Học viên
+                            (STUDENT)</strong>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
 
-            <!-- Thông báo thành công từ RedirectAttributes -->
-            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show border-0 shadow-none mb-4" 
-                 style="background-color: #e6f4ea; border: 1px solid #ceead6 !important; color: #137333; border-radius: var(--apple-rounded-md);" role="alert">
-                <div class="apple-caption">
-                    <i class="fa-solid fa-circle-check me-2 fs-5"></i> <span th:text="${successMessage}">Thao tác thành công!</span>
+                <!-- Thông báo thành công từ RedirectAttributes -->
+                <div th:if="${successMessage}"
+                    class="alert alert-success alert-dismissible fade show border-0 shadow-none mb-4"
+                    style="background-color: #e6f4ea; border: 1px solid #ceead6 !important; color: #137333; border-radius: var(--apple-rounded-md);"
+                    role="alert">
+                    <div class="apple-caption">
+                        <i class="fa-solid fa-circle-check me-2 fs-5"></i> <span th:text="${successMessage}">Thao tác
+                            thành công!</span>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
 
-            <!-- Header Trang danh sách đề thi -->
-            <div class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
-                <div class="mb-3 mb-sm-0">
-                    <h2 class="apple-display-lg mb-1"><i class="fa-solid fa-file-signature me-2"></i> Kho Đề Thi & Luyện Tập</h2>
-                    <p class="apple-lead" style="font-size: 17px; color: var(--apple-body-muted); margin-bottom: 0;">Hệ thống tổng hợp đề thi thử chuẩn cấu trúc đầy đủ kỹ năng</p>
-                </div>
-                <!-- Chỉ hiển thị nút "Thêm đề thi mới" đối với vai trò ADMIN hoặc STAFF -->
-                <div th:if="${user.role.name() == 'ADMIN' || user.role.name() == 'STAFF'}">
-                    <a href="/manage/exams/create" class="btn-apple btn-apple-primary btn-action" style="font-size: 14px; padding: 10px 20px;">
-                        <i class="fa-solid fa-plus me-1"></i> Thêm Đề Thi Mới
-                    </a>
-                </div>
-            </div>
-
-            <!-- Form Tìm kiếm -->
-            <div class="card shadow-sm border-0 mb-4" style="background-color: var(--apple-surface-pearl); border-radius: var(--apple-rounded-md);">
-                <div class="card-body p-3">
-                    <form th:action="@{/exams}" method="get" class="row g-2 align-items-center">
-                        <div class="col-md-5">
-                            <input type="text" name="keyword" th:value="${keyword}" class="form-control" aria-label="Tên bài thi" placeholder="Tên bài thi..." style="border-radius: var(--apple-rounded-sm);">
-                        </div>
-                        <div class="col-md-4">
-                            <select name="type" class="form-select" aria-label="Loại đề thi" style="border-radius: var(--apple-rounded-sm);">
-                                <option value="">-- Tất cả loại đề --</option>
-                                <option value="QUIZ" th:selected="${type != null && type.name() == 'QUIZ'}">Luyện tập (QUIZ)</option>
-                                <option value="MOCK_TEST" th:selected="${type != null && type.name() == 'MOCK_TEST'}">Thi thử (MOCK_TEST)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <button type="submit" class="btn-apple btn-apple-primary w-100 m-0" style="padding: 10px 0; border-radius: var(--apple-rounded-sm);">
-                                <i class="fa-solid fa-filter me-1"></i> Lọc
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Grid chứa Danh sách thẻ Card Đề Thi -->
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                <!-- Khi không có đề thi nào -->
-                <div th:if="${exams == null || exams.isEmpty()}" class="col-12 text-center py-5">
-                    <div class="apple-store-utility-card p-5 justify-content-center align-items-center">
-                        <i class="fa-solid fa-folder-open text-muted fs-1 mb-3"></i>
-                        <h5 class="card-title">Không tìm thấy đề thi nào</h5>
+                <!-- Header Trang danh sách đề thi -->
+                <div class="page-header d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+                    <div class="mb-3 mb-sm-0">
+                        <h2 class="apple-display-lg mb-1"><i class="fa-solid fa-file-signature me-2"></i> Kho Đề Thi &
+                            Luyện Tập</h2>
+                        <p class="apple-lead"
+                            style="font-size: 17px; color: var(--apple-body-muted); margin-bottom: 0;">Hệ thống tổng hợp
+                            đề thi thử chuẩn cấu trúc đầy đủ kỹ năng</p>
+                    </div>
+                    <!-- Chỉ hiển thị nút "Thêm đề thi mới" đối với vai trò ADMIN hoặc STAFF -->
+                    <div th:if="${user.role.name() == 'ADMIN' || user.role.name() == 'STAFF'}">
+                        <a href="/manage/exams/create" class="btn-apple btn-apple-primary btn-action"
+                            style="font-size: 14px; padding: 10px 20px;">
+                            <i class="fa-solid fa-plus me-1"></i> Thêm Đề Thi Mới
+                        </a>
                     </div>
                 </div>
 
-                <!-- Duyệt qua danh sách đề thi -->
-                <div th:each="exam : ${exams}" class="col">
-                    <div class="apple-store-utility-card">
-                        <div class="d-flex flex-column h-100">
-                            <!-- Icon và Loại đề thi -->
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div class="icon-box" th:classappend="${user.role.name() == 'ADMIN' || user.role == 'ADMIN' ? 'icon-box-admin' : 'icon-box-student'}">
-                                    <i class="fa-solid fa-file-lines fs-4"></i>
+                <!-- Form Tìm kiếm -->
+                <div class="card shadow-sm border-0 mb-4"
+                    style="background-color: var(--apple-surface-pearl); border-radius: var(--apple-rounded-md);">
+                    <div class="card-body p-3">
+                        <form th:action="@{/exams}" method="get" class="row g-2 align-items-center">
+                            <div class="col-md-5">
+                                <input type="text" name="keyword" th:value="${keyword}" class="form-control"
+                                    aria-label="Tên bài thi" placeholder="Tên bài thi..."
+                                    style="border-radius: var(--apple-rounded-sm);">
+                            </div>
+                            <div class="col-md-4">
+                                <select name="type" class="form-select" aria-label="Loại đề thi"
+                                    style="border-radius: var(--apple-rounded-sm);">
+                                    <option value="">-- Tất cả loại đề --</option>
+                                    <option value="QUIZ" th:selected="${type != null && type.name() == 'QUIZ'}">Luyện
+                                        tập (QUIZ)</option>
+                                    <option value="MOCK_TEST"
+                                        th:selected="${type != null && type.name() == 'MOCK_TEST'}">Thi thử (MOCK_TEST)
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn-apple btn-apple-primary w-100 m-0"
+                                    style="padding: 10px 0; border-radius: var(--apple-rounded-sm);">
+                                    <i class="fa-solid fa-filter me-1"></i> Lọc
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Grid chứa Danh sách thẻ Card Đề Thi -->
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    <!-- Khi không có đề thi nào -->
+                    <div th:if="${exams == null || exams.isEmpty()}" class="col-12 text-center py-5">
+                        <div class="apple-store-utility-card p-5 justify-content-center align-items-center">
+                            <i class="fa-solid fa-folder-open text-muted fs-1 mb-3"></i>
+                            <h5 class="card-title">Không tìm thấy đề thi nào</h5>
+                        </div>
+                    </div>
+
+                    <!-- Duyệt qua danh sách đề thi -->
+                    <div th:each="exam : ${exams}" class="col">
+                        <div class="apple-store-utility-card">
+                            <div class="d-flex flex-column h-100">
+                                <!-- Icon và Loại đề thi -->
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div class="icon-box"
+                                        th:classappend="${user.role.name() == 'ADMIN' || user.role == 'ADMIN' ? 'icon-box-admin' : 'icon-box-student'}">
+                                        <i class="fa-solid fa-file-lines fs-4"></i>
+                                    </div>
+                                    <span class="badge rounded-pill bg-light text-dark border badge-type px-3 py-2"
+                                        th:text="${exam.type}">MOCK_TEST</span>
                                 </div>
-                                <span class="badge rounded-pill bg-light text-dark border badge-type px-3 py-2" th:text="${exam.type}">MOCK_TEST</span>
-                            </div>
 
-                            <!-- Tên và Mô tả Đề thi -->
-                            <div class="d-flex align-items-center mb-1">
-                                <h5 class="card-title mb-0 me-2" th:text="${exam.title}">Đề thi mẫu</h5>
-                                <span th:if="${user.role.name() == 'ADMIN' || user.role.name() == 'STAFF'}">
-                                    <span class="badge bg-warning text-dark" th:if="${exam.approvalStatus != null and exam.approvalStatus.name() == 'PENDING'}">Chờ duyệt</span>
-                                    <span class="badge bg-success" th:if="${exam.approvalStatus != null and exam.approvalStatus.name() == 'APPROVED'}">Đã duyệt</span>
-                                    <span class="badge bg-danger" th:if="${exam.approvalStatus != null and exam.approvalStatus.name() == 'REJECTED'}" th:title="${exam.rejectReason}">Từ chối</span>
-                                </span>
-                            </div>
-                            <p class="card-description" th:text="${exam.description}">Mô tả</p>
+                                <!-- Tên và Mô tả Đề thi -->
+                                <div class="d-flex align-items-center mb-1">
+                                    <h5 class="card-title mb-0 me-2" th:text="${exam.title}">Đề thi mẫu</h5>
+                                    <span th:if="${user.role.name() == 'ADMIN' || user.role.name() == 'STAFF'}">
+                                        <span class="badge bg-warning text-dark"
+                                            th:if="${exam.approvalStatus != null and exam.approvalStatus.name() == 'PENDING'}">Chờ
+                                            duyệt</span>
 
-                            <!-- Thời gian làm bài -->
-                            <div class="d-flex align-items-center mb-3 apple-caption" style="color: var(--apple-ink-muted-80);">
-                                <i class="fa-solid fa-clock me-2 text-primary"></i>
-                                <span>Thời gian làm bài: </span>
-                                <strong class="ms-1 text-dark" th:text="${exam.duration + ' phút'}">60 phút</strong>
-                            </div>
 
-                            <hr style="border-top: 1px solid var(--apple-hairline); margin: 16px 0; opacity: 1;">
+                                        <span class="badge bg-success"
+                                            th:if="${exam.approvalStatus != null and exam.approvalStatus.name() == 'APPROVED'}">Đã
+                                            duyệt</span>
 
-                            <!-- Phân quyền nút thao tác theo vai trò -->
-                            <div class="mt-auto">
-                                <!-- STUDENT: Chỉ hiển thị nút "Làm bài" -->
-                                <div th:if="${user.role.name() == 'STUDENT' || user.role == 'STUDENT'}">
-                                    <a th:href="@{/student/exams/{id}/take(id=${exam.id})}" class="btn-apple btn-apple-primary w-100 btn-action" style="padding: 10px 0;">
-                                        <i class="fa-solid fa-pen-to-square me-1"></i> Bắt Đầu Làm Bài
-                                    </a>
+                                        <!-- láy reject -->
+                                        <span
+                                            th:if="${exam.approvalStatus != null and exam.approvalStatus.name() == 'REJECTED'}">
+
+                                            <button type="button" class="badge bg-danger border-0"
+                                                style="cursor: pointer;" data-bs-toggle="collapse"
+                                                th:data-bs-target="'#examRejectReason-' + ${exam.id}"
+                                                aria-expanded="false">
+                                                Từ chối
+                                            </button>
+                                        </span>
+                                    </span>
+                                </div>
+                                <p class="card-description" th:text="${exam.description}">Mô tả</p>
+                                <!-- hien thi ly do reject -->
+                                <div class="collapse" th:id="'examRejectReason-' + ${exam.id}">
+
+                                    <div class="alert alert-danger py-2 px-3 mt-2 mb-2">
+                                        <div class="fw-bold mb-1">
+                                            <i class="fa-solid fa-circle-exclamation me-1"></i>
+                                            Lý do từ chối
+                                        </div>
+
+                                        <span th:text="${exam.rejectReason != null  and !exam.rejectReason.isBlank()
+                                               ? exam.rejectReason
+                                               : 'Admin không cung cấp lý do.'}">
+                                        </span>
+                                    </div>
                                 </div>
 
-                                <!-- ADMIN hoặc STAFF: Hiển thị nút quản lý "Câu hỏi", "Sửa" và "Xóa" -->
-                                <div th:if="${user.role.name() == 'ADMIN' || user.role.name() == 'STAFF'}" class="d-flex gap-2">
-                                    <a th:href="@{/manage/questions(examId=${exam.id})}" class="btn-apple btn-apple-secondary-pill flex-grow-1 btn-action" style="padding: 8px 12px; font-size: 14px;">
-                                        <i class="fa-solid fa-circle-question me-1"></i> Câu hỏi
-                                    </a>
-                                    <a th:href="@{/manage/exams/{id}/edit(id=${exam.id})}" class="btn-apple btn-apple-pearl-capsule btn-action" style="padding: 8px 12px; font-size: 14px;">
-                                        <i class="fa-solid fa-pen-to-square"></i> Sửa
-                                    </a>
-                                    <form th:action="@{/manage/exams/{id}/delete(id=${exam.id})}" method="post" class="d-inline m-0" onsubmit="confirmAction(event, this, 'Bạn có chắc chắn muốn xóa đề thi này?', 'Xóa');">
-                                        <button type="submit" class="btn-apple btn-apple-dark-utility btn-action" style="padding: 8px 12px; font-size: 14px;">
-                                            <i class="fa-solid fa-trash"></i> Xóa
-                                        </button>
-                                    </form>
+                                <!-- Thời gian làm bài -->
+                                <div class="d-flex align-items-center mb-3 apple-caption"
+                                    style="color: var(--apple-ink-muted-80);">
+                                    <i class="fa-solid fa-clock me-2 text-primary"></i>
+                                    <span>Thời gian làm bài: </span>
+                                    <strong class="ms-1 text-dark" th:text="${exam.duration + ' phút'}">60 phút</strong>
+                                </div>
+
+                                <hr style="border-top: 1px solid var(--apple-hairline); margin: 16px 0; opacity: 1;">
+
+                                <!-- Phân quyền nút thao tác theo vai trò -->
+                                <div class="mt-auto">
+                                    <!-- STUDENT: Chỉ hiển thị nút "Làm bài" -->
+                                    <div th:if="${user.role.name() == 'STUDENT' || user.role == 'STUDENT'}">
+                                        <a th:href="@{/student/exams/{id}/take(id=${exam.id})}"
+                                            class="btn-apple btn-apple-primary w-100 btn-action"
+                                            style="padding: 10px 0;">
+                                            <i class="fa-solid fa-pen-to-square me-1"></i> Bắt Đầu Làm Bài
+                                        </a>
+                                    </div>
+
+                                    <!-- ADMIN hoặc STAFF: Hiển thị nút quản lý "Câu hỏi", "Sửa" và "Xóa" -->
+                                    <div th:if="${user.role.name() == 'ADMIN' || user.role.name() == 'STAFF'}"
+                                        class="d-flex gap-2">
+                                        <a th:href="@{/manage/questions(examId=${exam.id})}"
+                                            class="btn-apple btn-apple-secondary-pill flex-grow-1 btn-action"
+                                            style="padding: 8px 12px; font-size: 14px;">
+                                            <i class="fa-solid fa-circle-question me-1"></i> Câu hỏi
+                                        </a>
+                                        <a th:href="@{/manage/exams/{id}/edit(id=${exam.id})}"
+                                            class="btn-apple btn-apple-pearl-capsule btn-action"
+                                            style="padding: 8px 12px; font-size: 14px;">
+                                            <i class="fa-solid fa-pen-to-square"></i> Sửa
+                                        </a>
+                                        <form th:action="@{/manage/exams/{id}/delete(id=${exam.id})}" method="post"
+                                            class="d-inline m-0"
+                                            onsubmit="confirmAction(event, this, 'Bạn có chắc chắn muốn xóa đề thi này?', 'Xóa');">
+                                            <button type="submit" class="btn-apple btn-apple-dark-utility btn-action"
+                                                style="padding: 8px 12px; font-size: 14px;">
+                                                <i class="fa-solid fa-trash"></i> Xóa
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Footer -->
+            <footer th:replace="~{fragments/layout :: footer}"></footer>
         </div>
-
-        <!-- Footer -->
-        <footer th:replace="~{fragments/layout :: footer}"></footer>
     </div>
-</div>
 
-<div th:replace="~{fragments/layout :: scripts}"></div>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
+
 </html>
